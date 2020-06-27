@@ -3,12 +3,12 @@
 # https://github.com/huanruomengyun/Aria2-Termux
 # Description: Aria2 One-click installation management script for Termux
 # System Required: Android
-# Version: 1.6.26
+# Version: 1.6.27
 # Author: huanruomengyun
 # Blog: https://qingxu.ga
 #=============================================================
 
-sh_ver="1.6.26.4"
+sh_ver="1.6.27"
 PATH=/data/data/com.termux/files/usr/bin
 export PATH
 aria2_conf_dir="$HOME/.aria2"
@@ -521,7 +521,7 @@ Update_Shell() {
     if [ -f "$PREFIX/etc/tconfig/aria2.sh.bak" ];then
 	    mv $PREFIX/etc/tconfig/aria2.sh.bak $PREFIX/etc/tconfig/aria2.sh.bak2
     fi
-    cp aria2.sh $PREFIX/etc/tconfig/aria2.sh.bak
+    cp $(pwd)/aria2.sh $PREFIX/etc/tconfig/aria2.sh.bak
     wget -N "https://raw.githubusercontent.com/huanruomengyun/Aria2-Termux/master/aria2.sh" && chmod +x aria2.sh
     echo -e "脚本已更新为最新版本[ ${sh_new_ver} ] !(注意：因为更新方式为直接覆盖当前运行的脚本，所以可能下面会提示一些报错，无视即可)" && exit 0
 }

@@ -67,7 +67,7 @@ wget -N https://raw.githubusercontent.com/huanruomengyun/Aria2-Termux/master/ari
 
 * 选择你要执行的选项
 ```
- Aria2 一键安装管理脚本 (Termux 移植版) [v1.6.26] by Qingxu(huanruomengyun)
+ Aria2 一键安装管理脚本 (Termux 移植版) [v1.6.27] by Qingxu(huanruomengyun)
  
   0. 退出
  ———————————————————————
@@ -106,16 +106,14 @@ RPC 密钥：随机生成，可使用选项`7. 修改 配置文件`自定义
 
 ## 更新日志
 
-### 2020-06-27 v1.6.26.4
+### 2020-06-27 v1.6.27
 
-- 修复因[原项目](https://github.com/P3TERX/aria2.sh)的某个不明所以的提交造成的下载失败
+- 修复因合并[原项目](https://github.com/P3TERX/aria2.sh)的某个不明所以的提交造成的下载失败
 - 解决了某些报错
 - 细节优化，使之符合 Termux Tools 操作逻辑
 - 更正 README 某个奇怪的问题
-
-### 2020-06-27 v1.6.26.1
-
-- 合并[原项目](https://github.com/P3TERX/aria2.sh)的提交
+- 完善更新脚本时的备份机制
+- 完善对 Termux Tools 的支持
 
 ### 2020-06-26 v1.6.26
 
