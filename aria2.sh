@@ -117,7 +117,6 @@ Install_aria2() {
     echo -e "${Info} 开始下载/安装 Aria2 完美配置..."
     Download_aria2_conf
     echo -e "${Info} 开始下载/安装 服务脚本(init)..."
-    aria2config
     Read_config
     aria2_RPC_port=${aria2_port}
     echo -e "${Info} 开始创建 下载目录..."
