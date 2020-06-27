@@ -29,7 +29,7 @@ Aria2 是目前最强大的全能型下载工具，它支持 BT、磁力、HTTP�
     - [百度网盘转存到 OneDrive 、Google Drive 等其他网盘](https://p3terx.com/archives/baidunetdisk-transfer-to-onedrive-and-google-drive.html)
 
 - 支持新一代互联网协议 IPv6
-- 定时自动更新 BT tracker 列表（需要 [Termux Tools](https://github.com/huanruomengyun/Termux-Tools) 支持）
+- 自动更新 BT tracker 列表（需要 [Termux Tools](https://github.com/huanruomengyun/Termux-Tools) 支持）
 
 ## 项目地址
 原项目地址: https://github.com/P3TERX/aria2.sh
@@ -67,7 +67,7 @@ wget -N https://raw.githubusercontent.com/huanruomengyun/Aria2-Termux/master/ari
 
 * 选择你要执行的选项
 ```
- Aria2 一键安装管理脚本 (Termux 移植版 [v1.6.26] by Qingxu(huanruomengyun)
+ Aria2 一键安装管理脚本 (Termux 移植版) [v1.6.26] by Qingxu(huanruomengyun)
  
   0. 退出
  ———————————————————————
