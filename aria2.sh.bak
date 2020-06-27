@@ -63,6 +63,40 @@ check_ver_comparison() {
     fi
 }
 Download_aria2_conf() {
+    PROFILE_URL1="https://p3terx.github.io/aria2.conf"
+    PROFILE_URL2="https://aria2c.now.sh"
+    PROFILE_URL3="https://gh.p3terx.workers.dev/aria2.conf/master"
+    PROFILE_LIST="
+aria2.conf
+clean.sh
+upload.sh
+delete.sh
+dht.dat
+dht6.dat
+move.sh
+LICENSE
+"
+    mkdir -p "${aria2_conf_dir}" && cd "${aria2_conf_dir}"
+    for PROFILE in $PROFILE_LIST; do
+        [[ ! -f ${PROFILE} ]] && rm -rf ${PROFILE}
+        wget -N -t2 -T3 ${PROFILE_URL1}/${PROFILE} ||
+            wget -N -t2 -T3 ${PROFILE_URL2}/${PROFILE} ||
+            wget -N -t2 -T3 ${PROFILE_URL3}/${PROFILE}
+        [[ ! -s ${PROFILE} ]] && {
+            echo -e "${Error} '${PROFILE}' 下载失败！清理残留文件..."
+            rm -vrf "${aria2_conf_dir}"
+            exit 1
+        }
+    done
+    sed -i "s@^\(DOWNLOAD_PATH='\).*@\1${download_path}'@" ${aria2_conf_dir}/*.sh
+    sed -i "s@^\(dir=\).*@\1${download_path}@" ${aria2_conf}
+    sed -i "s@/root/.aria2/@${aria2_conf_dir}/@" ${aria2_conf_dir}/{*.sh,aria2.conf}
+    sed -i "s@^\(rpc-secret=\).*@\1$(date +%s%N | md5sum | head -c 20)@" ${aria2_conf}
+    touch aria2.session
+    chmod +x *.sh
+    echo -e "${Info} Aria2 完美配置下载完成！"
+}
+Download_aria2_conf() {
     mkdir -p "${aria2_conf_dir}" && cd "${aria2_conf_dir}"
     wget -N -t2 -T3 "https://p3terx.github.io/aria2.conf/aria2.conf" ||
         wget -N -t2 -T3 "https://aria2c.now.sh/aria2.conf" ||
