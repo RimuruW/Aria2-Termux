@@ -521,7 +521,7 @@ Update_Shell() {
     if [ -f "$PREFIX/etc/tconfig/aria2.sh.bak" ];then
 	    mv $PREFIX/etc/tconfig/aria2.sh.bak $PREFIX/etc/tconfig/aria2.sh.bak2
     fi
-    cp $(pwd)/aria2.sh $PREFIX/etc/tconfig/aria2.sh.bak
+    [[ -d "$PREFix/etc/tconfig" ]] && mv aria2.sh $PREFIX/etc/tconfig/aria2.sh.bak
     wget -N "https://raw.githubusercontent.com/huanruomengyun/Aria2-Termux/master/aria2.sh" && chmod +x aria2.sh
     echo -e "脚本已更新为最新版本[ ${sh_new_ver} ] !(注意：因为更新方式为直接覆盖当前运行的脚本，所以可能下面会提示一些报错，无视即可)" && exit 0
 }
