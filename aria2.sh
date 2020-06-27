@@ -8,7 +8,7 @@
 # Blog: https://qingxu.ga
 #=============================================================
 
-sh_ver="1.6.26.3"
+sh_ver="1.6.26.4"
 PATH=/data/data/com.termux/files/usr/bin
 export PATH
 aria2_conf_dir="$HOME/.aria2"
