@@ -69,7 +69,7 @@ wget -N https://git.io/Jfjb5 && chmod +x aria2.sh
 ```
  Aria2 一键安装管理脚本 (Termux 移植版 [v1.6.26] by Qingxu(huanruomengyun)
  
-  0. 升级脚本
+  0. 退出
  ———————————————————————
   1. 安装 Aria2
   2. 更新 Aria2
@@ -86,7 +86,7 @@ wget -N https://git.io/Jfjb5 && chmod +x aria2.sh
  ———————————————————————
  11. 手动更新 BT-Tracker
  12. 自动更新 BT-Tracker
- 13. 退出
+ 13. 升级脚本
  ———————————————————————
 
  Aria2 状态: 已安装 | 已启动
@@ -98,7 +98,7 @@ wget -N https://git.io/Jfjb5 && chmod +x aria2.sh
 
 ## 其他
 
-配置文件路径：`$HOME/.aria2/aria2.conf` （配置文件有中文注释，若语言设置有问题会导致中文乱码）
+配置文件路径：`$HOME/.aria2/aria2.conf`
 
 默认下载目录：`/sdcard/Download`
 
@@ -106,10 +106,11 @@ RPC 密钥：随机生成，可使用选项`7. 修改 配置文件`自定义
 
 ## 更新日志
 
-### 2020-06-27 v1.6.26.2
+### 2020-06-27 v1.6.26.3
 
 - 修复因[原项目](https://github.com/P3TERX/aria2.sh)的某个不明所以的提交造成的下载失败
 - 解决了某些报错
+- 细节优化，使之符合 Termux Tools 操作逻辑
 
 ### 2020-06-27 v1.6.26.1
 

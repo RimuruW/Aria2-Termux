@@ -3,12 +3,12 @@
 # https://github.com/huanruomengyun/Aria2-Termux
 # Description: Aria2 One-click installation management script for Termux
 # System Required: Android
-# Version: 1.6.26.2
+# Version: 1.6.26
 # Author: huanruomengyun
 # Blog: https://qingxu.ga
 #=============================================================
 
-sh_ver="1.6.26.2"
+sh_ver="1.6.26.3"
 PATH=/data/data/com.termux/files/usr/bin
 export PATH
 aria2_conf_dir="$HOME/.aria2"
@@ -435,7 +435,6 @@ Update_bt_tracker_cron() {
     if [[ -z $bt_update_status ]]; then
         echo
         echo -e " 是否开启 ${Green_font_prefix}自动更新 BT-Tracker${Font_color_suffix} 功能？(可能会增强 BT 下载速率)[Y/n] \c"
-        echo -en "\t\tEnter: "
         read bt_auto_update_status
         [[ -z "${bt_update_status}" ]] && bt_auto_update_status="y"
         if [[ ${bt_auto_update_status} == [Yy] ]]; then
@@ -446,7 +445,6 @@ Update_bt_tracker_cron() {
     else
         echo
         echo -e " 是否关闭 ${Red_font_prefix}自动更新 BT-Tracker${Font_color_suffix} 功能？[y/N] \c"
-        echo -en "\t\tEnter: "
         read bt_auto_update_status
         [[ -z "${bt_update_status}" ]] && bt_update_status="n"
         if [[ ${bt_auto_update_status} == [Yy] ]]; then
@@ -460,7 +458,8 @@ Update_bt_tracker_cron() {
 }
 bt_auto_update_start() {
     touch $PREFIX/etc/tconfig/aria2btauto
-    if [[ -z $(bt_update_status) ]]; then
+    bt_auto_status
+    if [[ -z $bt_update_status ]]; then
         echo && echo -e "${Error} 自动更新 BT-Tracker 开启失败 !" && return 0
     else
         Update_bt_tracker
@@ -469,7 +468,8 @@ bt_auto_update_start() {
 }
 bt_update_stop() {
      rm -f $PREFIX/etc/tconfig/aria2btauto
-    if [[ -n $(bt_update_status) ]]; then
+     bt_auto_status
+    if [[ -n $bt_update_status ]]; then
         echo && echo -e "${Error} 自动更新 BT-Tracker 关闭失败 !" && return 0
     else
         echo && echo -e "${Info} 自动更新 BT-Tracker 关闭成功 !"
@@ -530,7 +530,7 @@ do
 	mkdir -p $PREFIX/etc/tconfig
 echo && echo -e " Aria2 一键安装管理脚本 (Termux 移植版) ${Red_font_prefix}[v${sh_ver}]${Font_color_suffix} 
                     by \033[1;35mQingxu(huanruomengyun)\033[0m
- ${Green_font_prefix} 0.${Font_color_suffix} 升级脚本
+ ${Green_font_prefix} 0.${Font_color_suffix} 退出
  ———————————————————————
  ${Green_font_prefix} 1.${Font_color_suffix} 安装 Aria2
  ${Green_font_prefix} 2.${Font_color_suffix} 更新 Aria2
@@ -547,7 +547,7 @@ echo && echo -e " Aria2 一键安装管理脚本 (Termux 移植版) ${Red_font_p
  ———————————————————————
  ${Green_font_prefix}11.${Font_color_suffix} 手动更新 BT-Tracker
  ${Green_font_prefix}12.${Font_color_suffix} 自动更新 BT-Tracker
- ${Green_font_prefix}13.${Font_color_suffix} 退出
+ ${Green_font_prefix}13.${Font_color_suffix} 更新脚本
  ———————————————————————" && echo
 if [[ -e ${aria2c} ]]; then
     check_pid
@@ -571,7 +571,7 @@ echo -en " 请输入数字 [0-13]:"
 read num
 case "$num" in
 0)
-    Update_Shell
+    exit 0
     ;;
 1)
     Install_aria2
@@ -610,7 +610,7 @@ case "$num" in
     Update_bt_tracker_cron
     ;;
 13)
-    exit 0
+    Update_Shell
     ;;
 *)
     echo
