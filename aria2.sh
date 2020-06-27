@@ -3,12 +3,12 @@
 # https://github.com/huanruomengyun/Aria2-Termux
 # Description: Aria2 One-click installation management script for Termux
 # System Required: Android
-# Version: 1.6.26
+# Version: 1.6.26.1
 # Author: huanruomengyun
 # Blog: https://qingxu.ga
 #=============================================================
 
-sh_ver="1.6.26"
+sh_ver="1.6.26.1"
 PATH=/data/data/com.termux/files/usr/bin
 export PATH
 aria2_conf_dir="$HOME/.aria2"
@@ -68,12 +68,13 @@ Download_aria2_conf() {
     PROFILE_URL3="https://gh.p3terx.workers.dev/aria2.conf/master"
     PROFILE_LIST="
 aria2.conf
-autoupload.sh
-delete.aria2.sh
+clean.sh
+upload.sh
 delete.sh
 dht.dat
 dht6.dat
 move.sh
+LICENSE
 "
     mkdir -p "${aria2_conf_dir}" && cd "${aria2_conf_dir}"
     for PROFILE in ${PROFILE_LIST}; do
@@ -84,7 +85,7 @@ move.sh
         [[ ! -s ${PROFILE} ]] && {
             echo -e "${Error} '${PROFILE}' 下载失败！清理残留文件..."
             rm -vrf "${aria2_conf_dir}"
-            return 0
+            exit 1
         }
     done
     sed -i "s@^\(DOWNLOAD_PATH='\).*@\1${download_path}'@" ${aria2_conf_dir}/*.sh
