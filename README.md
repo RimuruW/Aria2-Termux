@@ -57,7 +57,7 @@ pkg in wget
 
 * 下载脚本
 ```
-wget -N https://git.io/Jfjb5 && chmod +x aria2.sh
+wget -N https://raw.githubusercontent.com/huanruomengyun/Aria2-Termux/master/aria2.sh && chmod +x aria2.sh
 ```
 
 * 运行脚本
@@ -106,11 +106,12 @@ RPC 密钥：随机生成，可使用选项`7. 修改 配置文件`自定义
 
 ## 更新日志
 
-### 2020-06-27 v1.6.26.3
+### 2020-06-27 v1.6.26.4
 
 - 修复因[原项目](https://github.com/P3TERX/aria2.sh)的某个不明所以的提交造成的下载失败
 - 解决了某些报错
 - 细节优化，使之符合 Termux Tools 操作逻辑
+- 更正 README 某个奇怪的问题
 
 ### 2020-06-27 v1.6.26.1
 
