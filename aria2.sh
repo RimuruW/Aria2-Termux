@@ -515,13 +515,13 @@ Uninstall_aria2() {
 Update_Shell() {
     sh_new_ver=$(wget -qO- -t1 -T3 "https://raw.githubusercontent.com/huanruomengyun/Aria2-Termux/master/aria2.sh" | grep 'sh_ver="' | awk -F "=" '{print $NF}' | sed 's/\"//g' | head -1) && sh_new_type="github"
     [[ -z ${sh_new_ver} ]] && echo -e "${Error} 无法链接到 Github !" && exit 0
-    if [ -f "$PREFIX/etc/tconfig/aria2.sh.bak2" ];then
+    if [ -f "$PREFIX/etc/tconfig/aria2.sh.bak2" ]; then
 	    rm -f $PREFIX/etc/tconfig/aria2.sh.bak2
     fi
-    if [ -f "$PREFIX/etc/tconfig/aria2.sh.bak" ];then
+    if [ -f "$PREFIX/etc/tconfig/aria2.sh.bak" ]; then
 	    mv $PREFIX/etc/tconfig/aria2.sh.bak $PREFIX/etc/tconfig/aria2.sh.bak2
     fi
-    if [ -d "$PREFIX/etc/tconfig" ];then
+    if [[ -d $PREFIX/etc/tconfig ]]; then
 	    echo "检测到 Termux Tools! 启用 Termux Tools 更新方案!"
 	    mv $PREFIX/etc/tconfig/aria2.sh $PREFIX/etc/tconfig/aria2.sh.bak
 	    wget -P $PREFIX/etc/tconfig https://raw.githubusercontent.com/huanruomengyun/Aria2-Termux/master/aria2.sh && chmod +x $PREFIX/etc/tconfig/aria2.sh
