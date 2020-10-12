@@ -1,14 +1,14 @@
 #!/bin/bash
 #=============================================================
-# https://github.com/huanruomengyun/Aria2-Termux
+# https://github.com/QingxuMo/Aria2-Termux
 # Description: Aria2 One-click installation management script for Termux
 # System Required: Android
-# Version: 1.6.27
-# Author: huanruomengyun
-# Blog: https://qingxu.ga
+# Version: 1.10.1
+# Author: QingxuMo
+# Blog: https://qingxu.live
 #=============================================================
 
-sh_ver="1.6.27"
+sh_ver="1.10.1"
 PATH=/data/data/com.termux/files/usr/bin
 export PATH
 aria2_conf_dir="$HOME/.aria2"
