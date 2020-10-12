@@ -2,11 +2,9 @@
 
 Aria2 是目前最强大的全能型下载工具，它支持 BT、磁力、HTTP、FTP 等下载协议，常用做离线下载的服务端。
 
-> Aria2 一键安装管理脚本是 Toyo (逗比) 大佬最为知名的脚本作品之一，2018年11月14日逗比大佬因未知原因突然失联。由于[P3TERX(即该项目原作者)](https://github.com/P3TERX)非常喜欢 Aria2, 所以自2018年12月7日起开始接手这个项目并进行了大量的功能与细节优化，一直持续维护至今[项目原作者 README 自述].
+该增强版脚本整合了 [Aria2 完美配置](https://github.com/P3TERX/aria2.conf)，在安装 Aria2 的过程中会下载这套配置方案，这套方案包含了配置文件、附加功能脚本等文件，用于实现 Aria2 功能的增强和扩展，提升 Aria2 的使用体验。
 
-增强版脚本整合了 [Aria2 完美配置](https://github.com/P3TERX/aria2.conf)，在安装 Aria2 的过程中会下载这套配置方案，这套方案包含了配置文件、附加功能脚本等文件，用于实现 Aria2 功能的增强和扩展，提升 Aria2 的使用体验，解决 Aria2 在使用中遇到的 BT 下载无速度、文件残留占用磁盘空间、任务丢失、重复下载等问题。
-
-移植版基于原项目,结合了 Android 设备上的实际情况,借助 Termux 的优势,尽可能在 Android 实现更好的 Aria2 体验。
+移植版基于原项目,结合了 Android 设备上的实际情况, 去除原脚本某些在 Android 无法实现或意义不大的功能，并借助 Termux 的优势, 尽可能在 Android 实现更好的 Aria2 体验。
 
 ## 功能特性
 
@@ -25,9 +23,6 @@ Aria2 是目前最强大的全能型下载工具，它支持 BT、磁力、HTTP�
 - 支持与 [RCLONE](https://rclone.org/) 联动，更多扩展功能与玩法：
     - [OneDrive、Google Drive 等网盘离线下载](https://p3terx.com/archives/offline-download-of-onedrive-gdrive.html)
     - [百度网盘转存到 OneDrive 、Google Drive 等其他网盘](https://p3terx.com/archives/baidunetdisk-transfer-to-onedrive-and-google-drive.html)
-
-- 支持新一代互联网协议 IPv6
-- 自动更新 BT tracker 列表（需要 [Termux Tools](https://github.com/huanruomengyun/Termux-Tools) 支持）
 
 ## 项目地址
 原项目地址: https://github.com/P3TERX/aria2.sh
@@ -48,63 +43,77 @@ x86_64 / i386 / ARM64 / ARM32v7 / ARM32v6
 
 ## 使用说明
 
+请在 [Google Play Store](https://play.google.com/store/apps/details?id=com.termux) 下载并安装 Termux。
+
+*你当然可以选择其他渠道下载，但请尽可能保证你使用的 Termux 为最新版*
+
 * 为了确保能正常使用，请先安装必需软件包
 ```
-pkg in wget
+pkg in wget bash
 ```
 
 * 下载脚本
 ```
-wget -N https://raw.githubusercontent.com/huanruomengyun/Aria2-Termux/master/aria2.sh && chmod +x aria2.sh
+wget -N https://raw.githubusercontent.com/QingxuMo/Aria2-Termux/master/aria2.sh && chmod +x aria2.sh
+```
+
+> 对于国内用户，可以尝试输入下面命令下载脚本
+```
+wget -N https://cdn.jsdelivr.net/gh/QingxuMo/Aria2-Termux@master/aria2.sh && chmod +x aria2.sh
 ```
 
 * 运行脚本
 ```
-./aria2.sh
+bash aria2.sh
 ```
 
 * 选择你要执行的选项
 ```
- Aria2 一键安装管理脚本 (Termux 移植版) [v1.6.27] by Qingxu(huanruomengyun)
+ Aria2 一键安装管理脚本 (Termux 移植版) [v1.0.2] by Qingxu(QingxuMo)
  
   0. 退出
  ———————————————————————
   1. 安装 Aria2
-  2. 更新 Aria2
-  3. 卸载 Aria2
+  2. 卸载 Aria2
  ———————————————————————
-  4. 启动 Aria2
-  5. 停止 Aria2
-  6. 重启 Aria2
+  3. 启动 Aria2
+  4. 停止 Aria2
+  5. 重启 Aria2
  ———————————————————————
-  7. 修改 配置
-  8. 查看 配置
-  9. 查看 日志
- 10. 清空 日志
+  6. 修改 配置
+  7. 查看 配置
+  8. 查看 日志
+  9. 清空 日志
  ———————————————————————
- 11. 手动更新 BT-Tracker
- 12. 自动更新 BT-Tracker
- 13. 升级脚本
+  10. 更新 BT-Tracker
+  11. 升级脚本
  ———————————————————————
 
  Aria2 状态: 已安装 | 已启动
 
- 自动更新 BT-Tracker: 已开启
-
- 请输入数字 [0-13]:
+ 请输入数字 [0-11]:
 ```
 
 ## 其他
 
-配置文件路径：`$HOME/.aria2/aria2.conf`
+默认配置文件路径：`$HOME/.aria2/aria2.conf`
 
 默认下载目录：`/sdcard/Download`
 
-RPC 密钥：随机生成，可使用选项`7. 修改 配置文件`自定义
+RPC 密钥：随机生成，可使用选项`6. 修改 配置文件`自定义
 
 ## 更新日志
 
-### 2020-06-27 v1.6.27
+### 2020-10-13 v1.0.2
+
+- 优化代码结构，使之更符合 Android 实际体验
+- 去除某些无意义或作用不大的功能
+- 添加 AriaNg 地址自动获取（合并原仓库提交）
+- 解决 Aria2 日志无法获取问题
+- 修改了版本号格式，新自动版本更新功能 coming soon…
+- Update README
+
+### 2020-06-27 20200627
 
 - 修复因合并[原项目](https://github.com/P3TERX/aria2.sh)的某个不明所以的提交造成的下载失败
 - 解决了某些报错
@@ -113,11 +122,11 @@ RPC 密钥：随机生成，可使用选项`7. 修改 配置文件`自定义
 - 完善更新脚本时的备份机制
 - 完善对 Termux Tools 的支持
 
-### 2020-06-26 v1.6.26
+### 2020-06-26 2020626
 
 - Init
 - Fork 自 https://github.com/P3TERX/aria2.sh
 - 移植适配 Termux
 
 ## Lisence
-[MIT](https://github.com/huanruomengyun/Aria2-Termux/blob/master/LICENSE) © Toyo x P3TERX x Qingxu
+[MIT](https://github.com/QingxuMo/Aria2-Termux/blob/master/LICENSE) © Toyo x P3TERX x Qingxu
