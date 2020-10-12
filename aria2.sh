@@ -2,15 +2,16 @@
 #=============================================================
 # https://github.com/QingxuMo/Aria2-Termux
 # Description: Aria2 One-click installation management script for Termux
-# System Required: Android
-# Version: 1.10.1
+# Environment Required: Termux (Android is recommended)
+# Version: 1.0.2
 # Author: QingxuMo
 # Blog: https://qingxu.live
 #=============================================================
 
-sh_ver="1.10.1"
-PATH=/data/data/com.termux/files/usr/bin
-export PATH
+sh_ver="1.0.2"
+ver_code="20201013"
+#PATH=/data/data/com.termux/files/usr/bin
+#export PATH
 aria2_conf_dir="$HOME/.aria2"
 download_path="/sdcard/Download"
 aria2_conf="${aria2_conf_dir}/aria2.conf"
