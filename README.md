@@ -8,8 +8,6 @@ Aria2 是目前最强大的全能型下载工具，它支持 BT、磁力、HTTP�
 
 移植版基于原项目,结合了 Android 设备上的实际情况,借助 Termux 的优势,尽可能在 Android 实现更好的 Aria2 体验。
 
-**注意！该脚本部分功能可能需要搭配 [Termux Tools](https://github.com/huanruomengyun/Termux-Tools) 才能正常使用！**
-
 ## 功能特性
 
 - 使用 [Aria2 完美配置](https://github.com/P3TERX/aria2.conf)方案
