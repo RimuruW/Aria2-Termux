@@ -424,7 +424,8 @@ View_Aria2() {
     LocalIP=$(
     for LOCALIP in $(ip a | grep inet | grep -v 127.0.0.1 | grep -v inet6 | awk '{print $2}' | cut -d "/" -f1)
     do
-	    echo $LOCALIP > $TMPLOCALIP
+        unset $TMPLOCALIP
+	    TMPLOCALIP=$LOCALIP
     done
     echo $TMPLOCALIP
 )
