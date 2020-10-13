@@ -51,45 +51,6 @@ check_pid() {
 }
 
 
-Download_aria2_conf() {
-    mkdir -p "${aria2_conf_dir}" && cd "${aria2_conf_dir}"
-    wget -N -t2 -T3 "https://p3terx.github.io/aria2.conf/aria2.conf" ||
-        wget -N -t2 -T3 "https://aria2c.now.sh/aria2.conf" ||
-        wget -N -t2 -T3 "https://gh.p3terx.workers.dev/aria2.conf/master/aria2.conf"
-    [[ ! -s "aria2.conf" ]] && echo -e "${Error} Aria2 配置文件下载失败 !" && rm -rf "${aria2_conf_dir}" && exit 1
-    wget -N -t2 -T3 "https://p3terx.github.io/aria2.conf/upload.sh" ||
-        wget -N -t2 -T3 "https://aria2c.now.sh/upload.sh" ||
-        wget -N -t2 -T3 "https://gh.p3terx.workers.dev/aria2.conf/master/upload.sh"
-    [[ ! -s "upload.sh" ]] && echo -e "${Error} 附加功能脚本[upload.sh]下载失败 !" && rm -rf "${aria2_conf_dir}" && exit 1
-    wget -N -t2 -T3 "https://p3terx.github.io/aria2.conf/clean.sh" ||
-        wget -N -t2 -T3 "https://aria2c.now.sh/clean.sh" ||
-        wget -N -t2 -T3 "https://gh.p3terx.workers.dev/aria2.conf/master/clean.sh"
-    [[ ! -s "clean.sh" ]] && echo -e "${Error} 附加功能脚本[clean.sh]下载失败 !" && rm -rf "${aria2_conf_dir}" && exit 1
-    wget -N -t2 -T3 "https://p3terx.github.io/aria2.conf/delete.sh" ||
-        wget -N -t2 -T3 "https://aria2c.now.sh/delete.sh" ||
-        wget -N -t2 -T3 "https://gh.p3terx.workers.dev/aria2.conf/master/delete.sh"
-    [[ ! -s "delete.sh" ]] && echo -e "${Error} 附加功能脚本[delete.sh]下载失败 !" && rm -rf "${aria2_conf_dir}" && exit 1
-    wget -N -t2 -T3 "https://p3terx.github.io/aria2.conf/move.sh" ||
-        wget -N -t2 -T3 "https://aria2c.now.sh/move.sh" ||
-        wget -N -t2 -T3 "https://gh.p3terx.workers.dev/aria2.conf/master/move.sh"
-    [[ ! -s "move.sh" ]] && echo -e "${Error} 附加功能脚本[move.sh]下载失败 !" && rm -rf "${aria2_conf_dir}" && exit 1
-    wget -N -t2 -T3 "https://p3terx.github.io/aria2.conf/dht.dat" ||
-        wget -N -t2 -T3 "https://aria2c.now.sh/dht.dat" ||
-        wget -N -t2 -T3 "https://gh.p3terx.workers.dev/aria2.conf/master/dht.dat"
-    [[ ! -s "dht.dat" ]] && echo -e "${Error} Aria2 DHT（IPv4）文件下载失败 !" && rm -rf "${aria2_conf_dir}" && exit 1
-    wget -N -t2 -T3 "https://p3terx.github.io/aria2.conf/dht6.dat" ||
-        wget -N -t2 -T3 "https://aria2c.now.sh/dht6.dat" ||
-        wget -N -t2 -T3 "https://gh.p3terx.workers.dev/aria2.conf/master/dht6.dat"
-    [[ ! -s "dht6.dat" ]] && echo -e "${Error} Aria2 DHT（IPv6）文件下载失败 !" && rm -rf "${aria2_conf_dir}" && exit 1
-    touch aria2.session
-    chmod +x *.sh
-    sed -i "s@^\(DOWNLOAD_PATH='\).*@\1${download_path}'@" ${aria2_conf_dir}/*.sh
-    sed -i "s@^\(dir=\).*@\1${download_path}@" ${aria2_conf}
-    sed -i "s@/root/.aria2/@${aria2_conf_dir}/@" ${aria2_conf_dir}/{*.sh,aria2.conf}
-    sed -i "s@^\(rpc-secret=\).*@\1$(date +%s%N | md5sum | head -c 20)@" ${aria2_conf}
-    echo -e "${Info} Aria2 完美配置下载完成！"
-}
-
 
 Download_aria2_conf() {
     PROFILE_URL1="https://one.qingxu.ga/onedrive/aira2"
