@@ -56,7 +56,7 @@ check_storage() {
 }
     
 check_mirrors() {
-	mirrors_status=$(cat $PREFIX/etc/apt/sources.list | grep -v '#' | grep "mirror")
+	mirrors_status=$(cat $PREFIX/etc/apt/sources.list | grep "mirror" | grep -v '#')
 	if [ -z "$mirrors_status" ]; then
 		echo -e "${Info}  Termux 镜像源未配置！"
 		echo -e "对于国内用户，添加清华源作为镜像源可以有效增强 Termux 软件包下载速度"
@@ -112,7 +112,7 @@ move.sh
     sed -i "s@^\(dir=\).*@\1${download_path}@" ${aria2_conf}
     sed -i "s@/root/.aria2/@${aria2_conf_dir}/@" ${aria2_conf_dir}/{*.sh,aria2.conf}
     sed -i "s@^\(rpc-secret=\).*@\1$(date +%s%N | md5sum | head -c 20)@" ${aria2_conf}
-    sed -i "s/^#log=*/log=$aria2_log/" ${aria2_conf}
+    sed -i "s@#log=@log=${aria2_log}@" ${aria2_conf}
     touch aria2.session
     chmod +x *.sh
     echo -e "${Info} Aria2 配置文件下载完成！"
