@@ -1,6 +1,6 @@
 # Aria2 一键安装管理脚本 (Termux 移植版)
 
-本项目基于 [原项目](https://github.com/P3TERX/aria2.sh)，在原项目的基础上二次修改，结合了 Android 设备上的实际情况，去除原脚本某些在 Android 无法实现或意义不大的功能，并借助 Termux 的优势，尽可能在 Android 实现更好的 Aria2 体验。
+本项目基于 [aria2.sh](https://github.com/P3TERX/aria2.sh)，在原项目的基础上二次修改，结合了 Android 设备上的实际情况，去除原脚本某些在 Android 无法实现或意义不大的功能，并借助 Termux 的优势，尽可能在 Android 实现更好的 Aria2 体验。
 
 项目脚本整合了 [aria2.conf](https://github.com/P3TERX/aria2.conf)，包含了配置文件、附加功能脚本等文件，用于实现 Aria2 功能的增强和扩展，提升 Aria2 的使用体验。
 
@@ -12,9 +12,9 @@
     - 下载完成自动清除`.aria2`后缀名文件
     - 更好的 PT 下载支持
 
-- 功能齐全，手机也能变成一个强大的多功能下载器
-    - 全功能：`Async DNS`, `BitTorrent`, `Firefox3 Cookie`, `GZip`, `HTTPS`, `Message Digest`, `Metalink`, `XML-RPC`, `SFTP`
-    - 通过 CI 服务持续更新最新版本
+- 简洁易用，功能齐全，手机也能变成一个强大的多功能下载器
+    - 全功能：`Async DNS`, `BitTorrent`, `Firefox3 Cookie`, `GZip`, `Message Digest`, `Metalink`, `XML-RPC`, `SFTP`
+    - 一键更新脚本
     - 一键更新 BT tracker 列表
     
 - 支持与 [RCLONE](https://rclone.org/) 联动，更多扩展功能与玩法：
@@ -22,6 +22,7 @@
     - [百度网盘转存到 OneDrive 、Google Drive 等其他网盘](https://p3terx.com/archives/baidunetdisk-transfer-to-onedrive-and-google-drive.html)
 
 ## 项目地址
+
 原项目地址: https://github.com/P3TERX/aria2.sh
 
 本项目地址: https://github.com/QingxuMo/Aria2-Termux

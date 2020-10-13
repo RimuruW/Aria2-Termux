@@ -17,7 +17,7 @@ aria2_conf_dir="$HOME/.aria2"
 download_path="/sdcard/Download"
 aria2_conf="${aria2_conf_dir}/aria2.conf"
 aria2_log="${aria2_conf_dir}/aria2.log"
-aria2c="/data/data/com.termux/files/usr/bin/aria2c"
+aria2c="$PREFIX/usr/bin/aria2c"
 Green_font_prefix="\033[32m"
 Red_font_prefix="\033[31m"
 Green_background_prefix="\033[42;37m"
@@ -102,18 +102,17 @@ Install_aria2() {
 	check_root
 	[[ -e ${aria2c} ]] && echo -e "${Error} Aria2 已安装，请检查 !" && return 0
 	check_sys
-	echo -e "${Info} 开始安装/配置 依赖..."
+	echo -e "${Info} 开始安装并配置依赖..."
 	Installation_dependency
-	echo -e "${Info} 开始下载/安装 主程序..."
+	echo -e "${Info} 开始下载并安装主程序..."
 	pkg in aria2 -y
-	echo -e "${Info} 开始下载/安装 Aria2 完美配置..."
+	echo -e "${Info} 开始下载 Aria2 配置文件..."
 	Download_aria2_conf
-	echo -e "${Info} 开始下载/安装 服务脚本(init)..."
-	Read_config
 	aria2_RPC_port=${aria2_port}
-	echo -e "${Info} 开始创建 下载目录..."
+	echo -e "${Info} 开始创建下载目录..."
+	termux-setup-storage
 	mkdir -p ${download_path}
-	echo -e "${Info} 所有步骤 安装完毕，开始启动..."
+	echo -e "${Info} 所有步骤执行完毕，开始启动..."
 	Start_aria2
 }
 Start_aria2() {
@@ -144,7 +143,7 @@ Set_aria2() {
  ${Green_font_prefix}4.${Font_color_suffix} 修改 Aria2 密钥 + 端口 + 下载目录
  ${Green_font_prefix}5.${Font_color_suffix} 手动 打开配置文件修改
  ————————————
- ${Green_font_prefix}0.${Font_color_suffix} 重置/更新 Aria2 完美配置
+ ${Green_font_prefix}0.${Font_color_suffix} 重置/更新 Aria2 配置文件
 "
 	echo " 请输入数字 [0-5]:"
 	read aria2_modify
@@ -177,7 +176,7 @@ Set_aria2_RPC_passwd() {
         aria2_passwd_1=${aria2_passwd}
     fi
     echo -e "
- ${Tip} Aria2 RPC 密钥不要包含等号(=)和井号(#)，留空为随机生成。
+ ${Tip} Aria2 RPC 密钥不要包含等号(=)和井号(#)，留空则随机生成。
 
  当前 RPC 密钥为: ${Green_font_prefix}${aria2_passwd_1}${Font_color_suffix}
 "
