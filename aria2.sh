@@ -17,7 +17,7 @@ aria2_conf_dir="$HOME/.aria2"
 download_path="/sdcard/Download"
 aria2_conf="${aria2_conf_dir}/aria2.conf"
 aria2_log="${aria2_conf_dir}/aria2.log"
-aria2c="$PREFIX/usr/bin/aria2c"
+aria2c="$PREFIX/bin/aria2c"
 Green_font_prefix="\033[32m"
 Red_font_prefix="\033[31m"
 Green_background_prefix="\033[42;37m"
@@ -50,7 +50,11 @@ check_pid() {
 	PID=$(ps -ef | grep "aria2c" | grep -v grep | grep -v "aria2.sh" | grep -v "service" | awk '{print $2}')
 }
 
-
+check_storage() {
+    [[ ! -d "$HOME/storage/shared/Android/" ]] && termux-setup-storage
+    [[ ! -d "$HOME/storage/shared/Android/" ]] && echo -e "${Error} Termux 存权限获取失败，请检查！" && exit 1
+}
+    
 
 Download_aria2_conf() {
     PROFILE_URL1="https://one.qingxu.ga/onedrive/aira2"
@@ -87,7 +91,7 @@ move.sh
     echo "log=$aria2_log" >> ${aria2_conf}
     touch aria2.session
     chmod +x *.sh
-    echo -e "${Info} Aria2 完美配置下载完成！"
+    echo -e "${Info} Aria2 配置文件下载完成！"
 }
 
 Installation_dependency() {
@@ -110,7 +114,7 @@ Install_aria2() {
 	Download_aria2_conf
 	aria2_RPC_port=${aria2_port}
 	echo -e "${Info} 开始创建下载目录..."
-	termux-setup-storage
+	check_storage
 	mkdir -p ${download_path}
 	echo -e "${Info} 所有步骤执行完毕，开始启动..."
 	Start_aria2
@@ -119,7 +123,7 @@ Start_aria2() {
 	check_installed_status
 	check_pid
 	[[ ! -z ${PID} ]] && echo -e "${Error} Aria2 正在运行，请检查 !" && return 0
-	termux-setup-storage
+	check_storage
 	aria2c --conf-path=${aria2_conf} -D
 }
 Stop_aria2() {
@@ -347,7 +351,7 @@ Reset_aria2_conf() {
     Read_config
     aria2_port_old=${aria2_port}
     echo
-    echo -e "${Tip} 此操作将重新下载 Aria2 完美配置方案，所有已设定的配置将丢失。"
+    echo -e "${Tip} 此操作将重新下载 Aria2 配置文件，所有已设定的配置将丢失。"
     echo
     read -e -p "按任意键继续，按 Ctrl+C 组合键取消" var
     Download_aria2_conf
@@ -417,7 +421,7 @@ View_Aria2() {
  RPC 密钥\t: ${Green_font_prefix}${aria2_passwd}${Font_color_suffix}
  下载目录\t: ${Green_font_prefix}${aria2_dir}${Font_color_suffix}
  AriaNg 链接\t: ${Green_font_prefix}${AriaNg_URL}${Font_color_suffix}\n"
- echo -en "\n\n\t\t\t点击任意键以继续" && read -n 1 line
+ echo -en "\n\n点击任意键以继续" && read -n 1 line
 }
 
 View_Log() {
@@ -427,10 +431,10 @@ View_Log() {
 }
 
 Clean_Log() {
-    [[ ! -e ${aria2_log} ]] && echo -e "${Error} Aria2 日志文件不存在 !" && echo -en "\n\n\t\t\t点击任意键以继续" && read -n 1 line && return 0
+    [[ ! -e ${aria2_log} ]] && echo -e "${Error} Aria2 日志文件不存在 !" && echo -en "\n\n点击任意键以继续" && read -n 1 line && return 0
     echo >${aria2_log}
     echo -e "${Info} Aria2 日志已清空 !"
-    echo -en "\n\n\t\t\t点击任意键以继续"
+    echo -en "\n\n点击任意键以继续"
     read -n 1 line
 }
 
@@ -442,7 +446,7 @@ Update_bt_tracker() {
     } || {
         bash <(wget -qO- one.qingxu.ga/onedrive/aira2/tracker.sh) ${aria2_conf} RPC
     }
-    echo -en "\n\n\t\t\t点击任意键以继续"
+    echo -en "\n\n点击任意键以继续"
     read -n 1 line
 }
 
@@ -463,7 +467,7 @@ Uninstall_aria2() {
     else
         echo && echo "卸载已取消..." && echo
     fi
-    echo -en "\n\n\t\t\t点击任意键以继续"
+    echo -en "\n\n点击任意键以继续"
     read -n 1 line
 }
 
