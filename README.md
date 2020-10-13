@@ -1,25 +1,22 @@
 # Aria2 一键安装管理脚本 (Termux 移植版)
 
-Aria2 是目前最强大的全能型下载工具，它支持 BT、磁力、HTTP、FTP 等下载协议，常用做离线下载的服务端。
+本项目基于 [原项目](https://github.com/P3TERX/aria2.sh)，在原项目的基础上二次修改，结合了 Android 设备上的实际情况，去除原脚本某些在 Android 无法实现或意义不大的功能，并借助 Termux 的优势，尽可能在 Android 实现更好的 Aria2 体验。
 
-该增强版脚本整合了 [Aria2 完美配置](https://github.com/P3TERX/aria2.conf)，在安装 Aria2 的过程中会下载这套配置方案，这套方案包含了配置文件、附加功能脚本等文件，用于实现 Aria2 功能的增强和扩展，提升 Aria2 的使用体验。
-
-移植版基于原项目,结合了 Android 设备上的实际情况, 去除原脚本某些在 Android 无法实现或意义不大的功能，并借助 Termux 的优势, 尽可能在 Android 实现更好的 Aria2 体验。
+项目脚本整合了 [aria2.conf](https://github.com/P3TERX/aria2.conf)，包含了配置文件、附加功能脚本等文件，用于实现 Aria2 功能的增强和扩展，提升 Aria2 的使用体验。
 
 ## 功能特性
 
-- 使用 [Aria2 完美配置](https://github.com/P3TERX/aria2.conf)方案
-    - 提升 BT 下载率和下载速度
+- 使用 [aria2.conf](https://github.com/P3TERX/aria2.conf) 作为配置文件
     - 重启后不丢失任务进度、不重复下载
-    - 下载错误或取消下载自动删除未完成的文件防止磁盘空间占用
+    - 下载错误或取消下载自动删除未完成的文件减少存储空间占用
     - 下载完成自动清除`.aria2`后缀名文件
     - 更好的 PT 下载支持
-    - 防版权投诉、防迅雷吸血优化
 
-- 功能齐全,手机也能变成一个强大的多功能下载器
+- 功能齐全，手机也能变成一个强大的多功能下载器
     - 全功能：`Async DNS`, `BitTorrent`, `Firefox3 Cookie`, `GZip`, `HTTPS`, `Message Digest`, `Metalink`, `XML-RPC`, `SFTP`
     - 通过 CI 服务持续更新最新版本
-
+    - 一键更新 BT tracker 列表
+    
 - 支持与 [RCLONE](https://rclone.org/) 联动，更多扩展功能与玩法：
     - [OneDrive、Google Drive 等网盘离线下载](https://p3terx.com/archives/offline-download-of-onedrive-gdrive.html)
     - [百度网盘转存到 OneDrive 、Google Drive 等其他网盘](https://p3terx.com/archives/baidunetdisk-transfer-to-onedrive-and-google-drive.html)
@@ -27,7 +24,7 @@ Aria2 是目前最强大的全能型下载工具，它支持 BT、磁力、HTTP�
 ## 项目地址
 原项目地址: https://github.com/P3TERX/aria2.sh
 
-本项目地址: https://github.com/huanruomengyun/Aria2-Termux
+本项目地址: https://github.com/QingxuMo/Aria2-Termux
 
 支持项目请随手点个`star`，可以让更多的人发现、使用并受益。您的支持是我持续开发维护的动力。
 
@@ -39,7 +36,7 @@ Termux 版本越高越好
 
 ## 架构支持
 
-x86_64 / i386 / ARM64 / ARM32v7 / ARM32v6
+任何支持安装 Termux 的架构
 
 ## 使用说明
 
@@ -113,20 +110,13 @@ RPC 密钥：随机生成，可使用选项`6. 修改 配置文件`自定义
 - 修改了版本号格式，新自动版本更新功能 coming soon…
 - Update README
 
-### 2020-06-27 20200627
+### 2020-06-27 v1.0.1
 
-- 修复因合并[原项目](https://github.com/P3TERX/aria2.sh)的某个不明所以的提交造成的下载失败
+- 移植适配 Termux
 - 解决了某些报错
-- 细节优化，使之符合 Termux Tools 操作逻辑
-- 更正 README 某个奇怪的问题
 - 完善更新脚本时的备份机制
 - 完善对 Termux Tools 的支持
 
-### 2020-06-26 2020626
-
-- Init
-- Fork 自 https://github.com/P3TERX/aria2.sh
-- 移植适配 Termux
 
 ## Lisence
 [MIT](https://github.com/QingxuMo/Aria2-Termux/blob/master/LICENSE) © Toyo x P3TERX x Qingxu
