@@ -41,6 +41,10 @@ Termux 版本越高越好
 
 ## 使用说明
 
+### 详细使用文档
+请参阅 [Android 一键安装配置 Aria2](https://qingxu.live/index.php/archives/aria2-for-termux/)
+
+### 快速开始
 请在 [Google Play Store](https://play.google.com/store/apps/details?id=com.termux) 下载并安装 Termux。
 
 *你当然可以选择其他渠道下载，但请尽可能保证你使用的 Termux 为最新版*
