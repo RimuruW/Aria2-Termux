@@ -41,10 +41,6 @@ check_sys() {
 	[ $(command -v dpkg) ] && dpkgARCH=$(dpkg --print-architecture | awk -F- '{ print $NF }')
 }
 
-check_script_download() {
-	[[ ! -d $PREFIX/etc/tconfig ]] || [[ ! -f "./aria2.sh" ]] && pkg in wget -y && wget -N https://cdn.jsdelivr.net/gh/QingxuMo/Aria2-Termux@master/aria2.sh && chmod +x aria2.sh
-}
-
 check_installed_status() {
 	[[ ! -e ${aria2c} ]] && echo -e "${Error} Aria2 没有安装，请检查 !" && return 0
 	[[ ! -e ${aria2_conf} ]] && echo -e "${Error} Aria2 配置文件不存在，请检查 !" && [[ $1 != "un" ]] && return 0
@@ -526,7 +522,7 @@ Update_Shell() {
 
 while [ 1 ]
 do
-	check_script_download
+	mkdir -p $PREFIX/etc/tconfig
 echo && echo -e " Aria2 一键安装管理脚本 (Termux 移植版) ${Red_font_prefix}[v${sh_ver}]${Font_color_suffix} 
                     by \033[1;35mQingxu(QingxuMo)\033[0m
  ${Green_font_prefix} 0.${Font_color_suffix} 退出
