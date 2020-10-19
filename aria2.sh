@@ -42,7 +42,7 @@ check_sys() {
 }
 
 check_script_download() {
-	[[ ! -d $PREFIX/etc/tconfig ]] || [[ ! -f "./aria2.sh" ]] && pkg in wget -y && wget -N https://cdn.jsdelivr.net/gh/QingxuMo/Aria2-Termux@master/aria2.sh && chmod +x aria2.sh
+	[[ ! -d $PREFIX/etc/tiviw ]] || [[ ! -f "./aria2.sh" ]] && pkg in wget -y && wget -N https://cdn.jsdelivr.net/gh/QingxuMo/Aria2-Termux@master/aria2.sh && chmod +x aria2.sh
 }
 
 check_installed_status() {
@@ -56,7 +56,7 @@ check_pid() {
 
 check_storage() {
     [[ ! -d "$HOME/storage/shared/Android/" ]] && termux-setup-storage
-    [[ ! -d "$HOME/storage/shared/Android/" ]] && echo -e "${Error} Termux 存权限获取失败，请检查！" && exit 1
+    [[ ! -d "$HOME/storage/shared/Android/" ]] && echo -e "${Error} Termux 存储权限获取失败，请检查！" && exit 1
 }
     
 check_mirrors() {
@@ -71,6 +71,9 @@ check_mirrors() {
 				sed -i 's@^\(deb.*stable main\)$@#\1\ndeb https://mirrors.tuna.tsinghua.edu.cn/termux/termux-packages-24 stable main@' $PREFIX/etc/apt/sources.list
 				sed -i 's@^\(deb.*games stable\)$@#\1\ndeb https://mirrors.tuna.tsinghua.edu.cn/termux/game-packages-24 games stable@' $PREFIX/etc/apt/sources.list.d/game.list
 				sed -i 's@^\(deb.*science stable\)$@#\1\ndeb https://mirrors.tuna.tsinghua.edu.cn/termux/science-packages-24 science stable@' $PREFIX/etc/apt/sources.list.d/science.list
+				echo -e "${Info} 镜像源配置成功，即将进行软件包升级"
+				echo -e "${Info} 如果你从未进行 apt upgrade 或 pkg up，下面可能需要你手动确认一些东西"
+				echo -e "${Info} 如果看不懂选项请直接回车！"
 				apt update && apt upgrade -y
 				;;
 			n)
@@ -506,16 +509,16 @@ Uninstall_aria2() {
 Update_Shell() {
     sh_new_ver=$(wget -qO- -t1 -T3 "https://raw.githubusercontent.com/QingxuMo/Aria2-Termux/master/aria2.sh" | grep 'ver_code="' | awk -F "=" '{print $NF}' | sed 's/\"//g' | head -1) && sh_new_type="github"
     [[ -z ${sh_new_ver} ]] && echo -e "${Error} 无法链接到 Github !" && exit 0
-    if [ -f "$PREFIX/etc/tconfig/aria2.sh.bak2" ]; then
-	    rm -f $PREFIX/etc/tconfig/aria2.sh.bak2
+    if [ -f "$PREFIX/etc/tiviw/aria2.sh.bak2" ]; then
+	    rm -f $PREFIX/etc/tiviw/aria2.sh.bak2
     fi
-    if [ -f "$PREFIX/etc/tconfig/aria2.sh.bak" ]; then
-	    mv $PREFIX/etc/tconfig/aria2.sh.bak $PREFIX/etc/tconfig/aria2.sh.bak2
+    if [ -f "$PREFIX/etc/tiviw/aria2.sh.bak" ]; then
+	    mv $PREFIX/etc/tiviw/aria2.sh.bak $PREFIX/etc/tiviw/aria2.sh.bak2
     fi
-    if [[ -d $PREFIX/etc/tconfig ]]; then
-	    echo "检测到 Termux Tools! 启用 Termux Tools 更新方案!"
-	    mv $PREFIX/etc/tconfig/aria2.sh $PREFIX/etc/tconfig/aria2.sh.bak
-	    wget -P $PREFIX/etc/tconfig https://raw.githubusercontent.com/QingxuMo/Aria2-Termux/master/aria2.sh && chmod +x $PREFIX/etc/tconfig/aria2.sh
+    if [[ -d $PREFIX/etc/tiviw ]]; then
+	    echo "检测到 Tiviw! 启用 Tiviw 更新方案!"
+	    mv $PREFIX/etc/tiviw/aria2.sh $PREFIX/etc/tiviw/aria2.sh.bak
+	    wget -P $PREFIX/etc/tiviw https://raw.githubusercontent.com/QingxuMo/Aria2-Termux/master/aria2.sh && chmod +x $PREFIX/etc/tiviw/aria2.sh
 	    return 0
     else
 	    wget -N "https://raw.githubusercontent.com/QingxuMo/Aria2-Termux/master/aria2.sh" && chmod +x aria2.sh
