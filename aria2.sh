@@ -156,7 +156,7 @@ check_start_debug() {
 	start_time=$(date +"%Y-%m-%d %H:%M:%S" -d '-1 minutes')
 	stop_time=$(date +"%Y-%m-%d %H:%M:%S")
 	tac $aria2_log | awk -v st="$start_time" -v et="$stop_time" '{t=substr($2,RSTART+14,21);if(t>=st && t<=et) {print $0}}' | awk '{print $1}' | sort | uniq -c | sort -nr > $aria2_conf_dir/debug.log
-	port_error=$(grep "Failed to bind a socket, cause: Address already in use"
+	port_error=$(grep "Failed to bind a socket, cause: Address already in use")
 	[[ ! -z "$port_error" ]] && echo -e "${Error} 错误自动检测结果：Aria2 端口被占用！\n请修改当前 Aria2 端口或杀死占用端口的进程！"
 }
 
