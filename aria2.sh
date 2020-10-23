@@ -529,8 +529,9 @@ Update_Shell() {
     fi
     if [[ -d $PREFIX/etc/tiviw ]]; then
 	    echo "检测到 Tiviw! 启用 Tiviw 更新方案!"
-	    mv $PREFIX/etc/tiviw/aria2.sh $PREFIX/etc/tiviw/aria2.sh.bak
-	    wget -P $PREFIX/etc/tiviw https://raw.githubusercontent.com/QingxuMo/Aria2-Termux/master/aria2.sh && chmod +x $PREFIX/etc/tiviw/aria2.sh
+	    mkdir -p $PREFIX/etc/tiviw/aria2
+	    mv $PREFIX/etc/tiviw/aria2/aria2.sh $PREFIX/etc/tiviw/aria2/aria2.sh.bak
+	    wget -P $PREFIX/etc/tiviw/aria2 https://raw.githubusercontent.com/QingxuMo/Aria2-Termux/master/aria2.sh && chmod +x $PREFIX/etc/tiviw/aria2/aria2.sh
 	    return 0
     else
 	    wget -N "https://raw.githubusercontent.com/QingxuMo/Aria2-Termux/master/aria2.sh" && chmod +x aria2.sh
