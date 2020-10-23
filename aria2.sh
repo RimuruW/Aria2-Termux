@@ -56,7 +56,7 @@ check_pid() {
 
 check_storage() {
     [[ ! -d "$HOME/storage/shared/Android/" ]] && termux-setup-storage
-    [[ ! -d "$HOME/storage/shared/Android/" ]] && echo -e "${Error} Termux 存储权限获取失败，请检查！" && exit 1
+    [[ ! -d "$HOME/storage/shared/Android/" ]] && echo -e "${Error} Termux 存储权限未获取！请在确保 Termux 已获取存储权限的情况重新启动脚本！" && exit 1
 }
     
 check_mirrors() {
