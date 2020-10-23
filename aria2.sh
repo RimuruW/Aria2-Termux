@@ -4,13 +4,13 @@
 # Doc: https://github.com/QingxuMo/Aria2-Termux/blob/master/README.md
 # Description: Aria2 One-click installation management script for Termux
 # Environment Required: Android with the latest Termux. (The latest Android version is recommended)
-# Version: 1.0.2
+# Version: 1.0.3
 # Author: QingxuMo
 # Blog: https://qingxu.live
 #=============================================================
 
-sh_ver="1.0.2"
-ver_code="20201013"
+sh_ver="1.0.3"
+ver_code="20201023"
 #PATH=/data/data/com.termux/files/usr/bin
 #export PATH
 aria2_conf_dir="$HOME/.aria2"
@@ -150,11 +150,23 @@ Install_aria2() {
 	echo -e "${Info} 所有步骤执行完毕，开始启动..."
 	Start_aria2
 }
+
+
+check_start_debug() {
+	start_time=$(date +"%Y-%m-%d %H:%M:%S" -d '-1 minutes')
+	stop_time=$(date +"%Y-%m-%d %H:%M:%S")
+	tac $aria2_log | awk -v st="$start_time" -v et="$stop_time" '{t=substr($2,RSTART+14,21);if(t>=st && t<=et) {print $0}}' | awk '{print $1}' | sort | uniq -c | sort -nr > $aria2_conf_dir/debug.log
+	port_error=$(grep "Failed to bind a socket, cause: Address already in use"
+	[[ ! -z "$port_error" ]] && echo -e "${Error} 错误自动检测结果：Aria2 端口被占用！\n请修改当前 Aria2 端口或杀死占用端口的进程！"
+}
+
 Start_aria2() {
 	check_installed_status
 	check_pid
-	[[ ! -z ${PID} ]] && echo -e "${Error} Aria2 正在运行，请检查 !" && return 0
+	[[ ! -z ${PID} ]] && echo -e "${Error} Aria2 正在运行，请检查 !" && return 1
 	aria2c --conf-path=${aria2_conf} -D
+	check_pid
+	[[ -z ${PID} ]] && echo -e "${Error} Aria2 启动失败，请检查！" && check_start_debug && return 1
 	check_storage
 	echo -e "${Info} 尝试开启唤醒锁…"
 	termux-wake-lock
@@ -546,8 +558,8 @@ echo && echo -e " Aria2 一键安装管理脚本 (Termux 移植版) ${Red_font_p
  ${Green_font_prefix} 8.${Font_color_suffix} 查看 日志
  ${Green_font_prefix} 9.${Font_color_suffix} 清空 日志
  ———————————————————————
- ${Green_font_prefix} 10.${Font_color_suffix} 更新 BT-Tracker
- ${Green_font_prefix} 11.${Font_color_suffix} 更新脚本
+ ${Green_font_prefix} 10.${Font_color_suffix} 一键更新 BT-Tracker
+ ${Green_font_prefix} 11.${Font_color_suffix} 一键更新脚本
  ———————————————————————" && echo
 if [[ -e ${aria2c} ]]; then
     check_pid
