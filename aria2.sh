@@ -2,6 +2,7 @@
 #=============================================================
 # https://github.com/QingxuMo/Aria2-Termux
 # Doc: https://github.com/QingxuMo/Aria2-Termux/blob/master/README.md
+# More detail: https://qingxu.live/index.php/archives/aria2-for-termux/
 # Description: Aria2 One-click installation management script for Termux
 # Environment Required: Android with the latest Termux. (The latest Android version is recommended)
 # Version: 1.0.3
