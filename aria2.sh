@@ -55,8 +55,9 @@ check_pid() {
 }
 
 check_storage() {
-    [[ ! -d "$HOME/storage/shared/Android/" ]] && termux-setup-storage
+    [[ ! -d "$HOME/storage/shared/Android/" ]] && echo -e "${Info} Termux 未获取存储权限，请回车确认后按指示授权存储权限！" && echo -en "\n请回车以确认" && read -n 1 line && termux-setup-storage
     [[ ! -d "$HOME/storage/shared/Android/" ]] && echo -e "${Error} Termux 存储权限未获取！请在确保 Termux 已获取存储权限的情况重新启动脚本！" && exit 1
+    echo -e "${Info} 检查下载目录中…" && mkdir $download_path
 }
     
 check_mirrors() {
@@ -468,7 +469,7 @@ View_Aria2() {
  RPC 密钥\t: ${Green_font_prefix}${aria2_passwd}${Font_color_suffix}
  下载目录\t: ${Green_font_prefix}${aria2_dir}${Font_color_suffix}
  AriaNg 链接\t: ${Green_font_prefix}${AriaNg_URL}${Font_color_suffix}\n"
- echo -en "\n\n点击任意键以继续" && read -n 1 line
+ echo -en "\n\n请回车以继续" && read -n 1 line
 }
 
 View_Log() {
@@ -478,10 +479,10 @@ View_Log() {
 }
 
 Clean_Log() {
-    [[ ! -e ${aria2_log} ]] && echo -e "${Error} Aria2 日志文件不存在 !" && echo -en "\n\n点击任意键以继续" && read -n 1 line && return 0
+    [[ ! -e ${aria2_log} ]] && echo -e "${Error} Aria2 日志文件不存在 !" && echo -en "\n\n请回车以继续" && read -n 1 line && return 0
     echo >${aria2_log}
     echo -e "${Info} Aria2 日志已清空 !"
-    echo -en "\n\n点击任意键以继续"
+    echo -en "\n\n请回车以继续"
     read -n 1 line
 }
 
@@ -493,7 +494,7 @@ Update_bt_tracker() {
     } || {
         bash <(wget -qO- one.qingxu.ga/onedrive/aira2/tracker.sh) ${aria2_conf} RPC
     }
-    echo -en "\n\n点击任意键以继续"
+    echo -en "\n\n请回车以继续"
     read -n 1 line
 }
 
@@ -514,7 +515,7 @@ Uninstall_aria2() {
     else
         echo && echo "卸载已取消..." && echo
     fi
-    echo -en "\n\n点击任意键以继续"
+    echo -en "\n\n请回车以继续"
     read -n 1 line
 }
 
