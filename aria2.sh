@@ -90,8 +90,8 @@ check_mirrors() {
 
 Download_aria2_conf() {
     PROFILE_URL1="https://one.qingxu.ga/onedrive/aira2"
-    PROFILE_URL2="https://cdn.jsdelivr.net/gh/QingxuMo/aria2.conf@master"
-    PROFILE_URL3="https://cdn.jsdelivr.net/gh/P3TERX/aria2.conf@master"
+    PROFILE_URL2="https://share.qingxu.ga/onedrive/aria2"
+    PROFILE_URL3="https://cdn.jsdelivr.net/gh/QingxuMo/aria2.conf@master"
     PROFILE_LIST="
 aria2.conf
 clean.sh
