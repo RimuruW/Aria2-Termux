@@ -507,7 +507,7 @@ Uninstall_aria2() {
     read unyn
     [[ -z ${unyn} ]] && unyn="n"
     if [[ ${unyn} == [Yy] ]]; then
-       yes | apt remove aria2
+        apt purge -y aria2
         check_pid
         [[ ! -z $PID ]] && kill -9 ${PID}
         Read_config "un"
