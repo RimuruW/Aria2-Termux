@@ -158,17 +158,18 @@ check_start_debug() {
 	start_time=$(date +"%Y-%m-%d %H:%M:%S" -d '-1 minutes')
 	stop_time=$(date +"%Y-%m-%d %H:%M:%S")
 	tac $aria2_log | awk -v st="$start_time" -v et="$stop_time" '{t=substr($2,RSTART+14,21);if(t>=st && t<=et) {print $0}}' | awk '{print $1}' | sort | uniq -c | sort -nr > $aria2_conf_dir/debug.log
-	port_error=$(grep "cause: Address already in use")
+	port_error=$(cat $aria2_conf_dir/debug.log | grep "cause: Address already in use")
 	[[ ! -z "$port_error" ]] && echo -e "${Error} 错误自动检测结果：Aria2 端口被占用！\n请修改当前 Aria2 端口或杀死占用端口的进程！"
 }
 
 Start_aria2() {
 	check_installed_status
 	check_pid
+	rm -f $aria2_conf_dir/debug.log
 	[[ ! -z ${PID} ]] && echo -e "${Error} Aria2 正在运行，请检查 !" && return 1
 	aria2c --conf-path=${aria2_conf} -D
 	check_pid
-	[[ -z ${PID} ]] && echo -e "${Error} Aria2 启动失败，请检查！" && check_start_debug && return 1
+	[[ -z ${PID} ]] && echo -e "${Error} Aria2 启动失败，请检查日志！" && return 1
 	check_storage
 	echo -e "${Info} 尝试开启唤醒锁…"
 	termux-wake-lock
