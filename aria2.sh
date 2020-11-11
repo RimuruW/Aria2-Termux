@@ -58,7 +58,7 @@ check_pid() {
 check_storage() {
     [[ ! -d "$HOME/storage/shared/Android/" ]] && echo -e "${Info} Termux 未获取存储权限，请回车确认后按指示授权存储权限！" && echo -en "\n请回车以确认" && read -n 1 line && termux-setup-storage
     [[ ! -d "$HOME/storage/shared/Android/" ]] && echo -e "${Error} Termux 存储权限未获取！请在确保 Termux 已获取存储权限的情况重新启动脚本！" && exit 1
-    echo -e "${Info} 检查下载目录中…" && mkdir $download_path
+    echo -e "${Info} 检查下载目录中…" && mkdir -p $download_path
 }
     
 check_mirrors() {
@@ -158,7 +158,7 @@ check_start_debug() {
 	start_time=$(date +"%Y-%m-%d %H:%M:%S" -d '-1 minutes')
 	stop_time=$(date +"%Y-%m-%d %H:%M:%S")
 	tac $aria2_log | awk -v st="$start_time" -v et="$stop_time" '{t=substr($2,RSTART+14,21);if(t>=st && t<=et) {print $0}}' | awk '{print $1}' | sort | uniq -c | sort -nr > $aria2_conf_dir/debug.log
-	port_error=$(grep "Failed to bind a socket, cause: Address already in use")
+	port_error=$(grep "cause: Address already in use")
 	[[ ! -z "$port_error" ]] && echo -e "${Error} 错误自动检测结果：Aria2 端口被占用！\n请修改当前 Aria2 端口或杀死占用端口的进程！"
 }
 
@@ -199,7 +199,7 @@ Set_aria2() {
  ————————————
  ${Green_font_prefix}0.${Font_color_suffix} 重置/更新 Aria2 配置文件
 "
-	echo " 请输入数字 [0-5]:"
+	echo -en " 请输入数字 [0-5]: "
 	read aria2_modify
 	if [[ ${aria2_modify} == "1" ]]; then
 		Set_aria2_RPC_passwd
@@ -234,7 +234,7 @@ Set_aria2_RPC_passwd() {
 
  当前 RPC 密钥为: ${Green_font_prefix}${aria2_passwd_1}${Font_color_suffix}
 "
-    echo " 请输入新的 RPC 密钥: "
+    echo -en " 请输入新的 RPC 密钥: "
     read aria2_RPC_passwd
     echo
     [[ -z "${aria2_RPC_passwd}" ]] && aria2_RPC_passwd=$(date +%s%N | md5sum | head -c 20)
@@ -278,7 +278,7 @@ Set_aria2_RPC_port() {
     echo -e "
  当前 RPC 端口为: ${Green_font_prefix}${aria2_port_1}${Font_color_suffix}
 "
-    read -e -p " 请输入新的 RPC 端口(默认: 6800): " aria2_RPC_port
+    read -en -p " 请输入新的 RPC 端口(默认: 6800): " aria2_RPC_port
     echo
     [[ -z "${aria2_RPC_port}" ]] && aria2_RPC_port="6800"
     if [[ "${aria2_port}" != "${aria2_RPC_port}" ]]; then
