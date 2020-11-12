@@ -43,7 +43,9 @@ check_sys() {
 }
 
 check_script_download() {
-	[[ ! -d $PREFIX/etc/tiviw ]] || [[ ! -f "./aria2.sh" ]] && pkg in wget -y && wget -N https://cdn.jsdelivr.net/gh/QingxuMo/Aria2-Termux@master/aria2.sh && chmod +x aria2.sh
+	if [ ! -d $PREFIX/etc/tiviw ]; then
+		[[ ! -f "./aria2.sh" ]] && pkg in wget -y && wget -N https://cdn.jsdelivr.net/gh/QingxuMo/Aria2-Termux@master/aria2.sh && chmod +x aria2.sh
+	fi
 }
 
 check_installed_status() {
@@ -76,7 +78,7 @@ check_mirrors() {
 				echo -e "${Info} 镜像源配置成功，即将进行软件包升级"
 				echo -e "${Info} 如果你从未进行 apt upgrade 或 pkg up，下面可能需要你手动确认一些东西"
 				echo -e "${Info} 如果看不懂选项请直接回车！"
-				apt update && apt upgrade -y
+				apt-get update && apt-get upgrade -y
 				;;
 			n)
 				echo -e "${Info} 使用默认源进行安装"
@@ -136,7 +138,7 @@ Installation_dependency() {
 
 Install_aria2() {
 	check_root
-	[[ -e ${aria2c} ]] && echo -e "${Error} Aria2 已安装，请检查 !" && return 0
+	[[ -e ${aria2c} ]] && echo -e "${Error} Aria2 已安装，如需重新安装请在脚本中卸载 Aria2！" && return 0
 	check_sys
 	check_mirrors
 	echo -e "${Info} 开始安装并配置依赖..."
@@ -177,7 +179,7 @@ Start_aria2() {
 Stop_aria2() {
 	check_installed_status
 	check_pid
-	[[ -z ${PID} ]] && echo -e "${Error} Aria2 没有运行，请检查 !" && return 0
+	[[ -z ${PID} ]] && echo -e "${Error} Aria2 没有运行，请检查日志 !" && return 0
 	kill -9 ${PID}
 }
 Restart_aria2() {
@@ -186,7 +188,7 @@ Restart_aria2() {
 	[[ ! -z ${PID} ]] && kill -9 ${PID}
 	check_storage
 	aria2c --conf-path=${aria2_conf} -D
-	echo -e "${Info} 尝试开启唤醒锁…"
+	echo -e "${Info} 尝试开启唤醒锁……"
 	termux-wake-lock
 }
 Set_aria2() {
