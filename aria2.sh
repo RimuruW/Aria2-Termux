@@ -164,6 +164,7 @@ delete.sh
 dht.dat
 dht6.dat
 move.sh
+auto-start-aria2
 "
     mkdir -p "${aria2_conf_dir}"
 	cd "${aria2_conf_dir}"  || { red "[!] 目录跳转失败！" >&2;  exit 1; }
@@ -632,7 +633,35 @@ ${GREEN}[!]${RESET} 注意：因为更新方式为直接覆盖当前运行的脚
 	exit 0
 }
 
+Auto_start() {
+	echo -e "\n\n"
+	echo -e "
+${YELLOW}[!]${RESET} 受限于 Termux，Aria2 开机自启动需要 Termux 提供相应支持。
+${YELLOW}[!]${RESET} 你需要先安装 ${GREEN}Termux:Boot${RESET} 才可以实现 Termux
+Termux:Boot 下载链接: ${GREEN}https://play.google.com/store/apps/details?id=com.termux.boot${RESET}
 
+${RED}[!]${RESET} 注意，如果你未安装 ${GREEN}Termux:Boot${RESET}，脚本中任何关于 Aria2 自启动的配置${RED}没有任何意义${RESET}
+"
+	echo -e "\n\n"
+	if ask "是否开启 Aria2 开机自启动？" "N"; then
+		mkdir -p "$HOME/.termux/boot"
+		if [ -f "$aria2_conf_dir/auto-start-aria2" ]; then
+			if cp "$aria2_conf_dir/auto-start-aria2" "$HOME/.termux/boot/auto-start-aria2"; then
+				echo -e "${GREEN}[√]${RESET} Aria2 开机自启动已开启！"
+			else
+				echo -e "${RED}[!]${RESET} Aria2 启动开启失败！"
+			fi
+		else
+			echo -e "
+${RED}[!]${RESET} 未找到自启动配置文件！
+${RED}[!]${RESET} 这可能是因为你未通过本脚本完成 Aria2 安装或手动修改了相关目录。
+${RED}[!]${RESET} 请通过脚本重新安装 Aria2 以避免绝大多数可避免的问题！"
+		fi
+
+	else
+		echo -e "${BLUE}[*]${RESET} 不开启 Aria2 开机自启动…"
+	fi
+}
 while true
 do
 	check_script_download
@@ -654,6 +683,7 @@ echo && echo -e " Aria2 一键安装管理脚本 (Termux 移植版) ${GREEN}[v${
  ———————————————————————
  ${GREEN} 10.${RESET} 一键更新 BT-Tracker
  ${GREEN} 11.${RESET} 一键更新脚本
+ ${GREEN} 12.${RESET} Aria2 开机自启动
  ———————————————————————" && echo
 if [[ -e ${aria2c} ]]; then
     check_pid
@@ -664,6 +694,11 @@ if [[ -e ${aria2c} ]]; then
     fi
 else
     echo -e " Aria2 状态: ${RED}未安装${RESET}"
+fi
+if [[ ! -f "$HOME/.termux/boot/auto-start-aria2" ]]; then
+	echo -e " Aria2 开机自启动: ${GREEN}已开启${RED}"
+else
+	echo -e " Aria2 开机自启动: ${GREEN}未开启${RED}"
 fi
 echo -en " 请输入数字 [0-11]:"
 read -r num
@@ -704,6 +739,9 @@ case "$num" in
 11)
     Update_Shell
     ;;
+12)
+	Auto_start
+	;;
 *)
     echo
     echo -e "${RED}[!]${RESET} 请输入正确的数字"
