@@ -456,11 +456,11 @@ Set_aria2_vim_conf() {
  ${GREEN}[*]${RESET} 手动修改配置文件须知：
  
  ${GREEN}1.${RESET} 默认使用 nano 文本编辑器打开
- ${GREEN}2.${RESET} 退出并保存文件：按 ${GREEN}Ctrl+X${GREEN} 组合键，输入 ${GREEN}y${RESET} ，然后按 ${GREEN}Enter${RESET} 键
+ ${GREEN}2.${RESET} 退出并保存文件：按 ${GREEN}Ctrl+X${RESET} 组合键，输入 ${GREEN}y${RESET} ，然后按 ${GREEN}Enter${RESET} 键
  ${GREEN}3.${RESET} 退出不保存文件：按 ${GREEN}Ctrl+X${RESET} 组合键，输入 ${GREEN}n${RESET}
- ${GREEN}4.${RESET} nano 详细使用教程：${GREEN}https://wiki.archlinux.org/index.php/Nano_(简体中文)${RESET}
+ ${GREEN}4.${RESET} nano 详细使用教程: \033[4;34mhttps://wiki.archlinux.org/index.php/Nano_(简体中文)${RESET}
  "
-    echo "按任意键继续，按 Ctrl+C 组合键取消"
+    echo -en "按任意键继续，按 Ctrl+C 组合键取消"
     read -r -n 1 line
     nano "${aria2_conf}"
     Read_config
@@ -573,9 +573,9 @@ Update_bt_tracker() {
     check_installed_status
     check_pid
     if [ -z "$PID" ]; then
-        bash <(wget -qO- one.qingxu.ga/onedrive/aira2/tracker.sh) "${aria2_conf}" || {
-			bash <(wget -qO- one.qingxu.ga/onedrive/aira2/tracker.sh) "${aria2_conf}" RPC
-		}
+        bash <(wget -qO- one.qingxu.ga/onedrive/aira2/tracker.sh) "${aria2_conf}"
+	else
+		bash <(wget -qO- one.qingxu.ga/onedrive/aira2/tracker.sh) "${aria2_conf}" RPC
 	fi
     echo -en "\n\n请回车以继续"
     read -r -n 1 line
@@ -590,6 +590,7 @@ Uninstall_aria2() {
         Read_config "un"
         rm -rf "${aria2c}"
         rm -rf "${aria2_conf_dir}"
+		rm -f "$HOME/.termux/boot/auto-start-aria2"
         echo -e "\n${GREEN}[√]${RESET} Aria2 卸载完成！\n"
     else
         echo && echo "${YELLOW}[*]${RESET} 卸载已取消..." && echo
@@ -632,7 +633,6 @@ Termux:Boot 下载链接: ${GREEN}https://play.google.com/store/apps/details?id=
 
 ${RED}[!]${RESET} 注意，如果你未安装 ${GREEN}Termux:Boot${RESET}，脚本中任何关于 Aria2 自启动的配置${RED}没有任何意义${RESET}
 "
-	echo -e "\n\n"
 	if [ -f "$HOME/.termux/boot/auto-start-aria2" ]; then
 		if ask "你已开启 Aria2 自启动，是否关闭？" "N"; then
 			if rm -f "$HOME/.termux/boot/auto-start-aria2"; then
