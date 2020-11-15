@@ -700,7 +700,7 @@ if [[ ! -f "$HOME/.termux/boot/auto-start-aria2" ]]; then
 else
 	echo -e " Aria2 开机自启动: ${GREEN}未开启${RED}"
 fi
-echo -en " 请输入数字 [0-11]:"
+echo -en " 请输入数字 [0-12]:"
 read -r num
 case "$num" in
 0)
