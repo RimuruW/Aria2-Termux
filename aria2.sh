@@ -699,7 +699,7 @@ fi
 if [[ -f "$HOME/.termux/boot/auto-start-aria2" ]]; then
 	echo -e " Aria2 开机自启动: ${GREEN}已开启${RESET}"
 else
-	echo -e " Aria2 开机自启动: ${GREEN}未开启${RESET}"
+	echo -e " Aria2 开机自启动: ${RED}未开启${RESET}"
 fi
 num=null
 printf "\n 请输入数字 [0-12]: "
