@@ -171,9 +171,10 @@ auto-start-aria
             exit 1
         }
     done
-    sed -i "s@^\(DOWNLOAD_PATH='\).*@\1${download_path}'@" "${aria2_conf_dir}/*.sh"
     sed -i "s@^\(dir=\).*@\1${download_path}@" "${aria2_conf}"
-    sed -i "s@/root/.aria2/@${aria2_conf_dir}/@" "${aria2_conf_dir}/{*.sh,aria2.conf}"
+	sed -i "s@^\(input-file=\).*@\1${aria2_conf_dir}/aria2.session@" "${aria2_conf}"
+	sed -i "s@^\(save-session=\).*@\1${aria2_conf_dir}/aria2.session@" "${aria2_conf}"
+    sed -i "s@/root/.aria2/@${aria2_conf_dir}/@" "${aria2_conf}"
     sed -i "s@^\(rpc-secret=\).*@\1$(date +%s%N | md5sum | head -c 20)@" "${aria2_conf}"
     sed -i "s@#log=@log=${aria2_log}@" "${aria2_conf}"
     touch aria2.session
