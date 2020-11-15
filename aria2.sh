@@ -207,9 +207,6 @@ Installation_dependency() {
 			fi
 		done
 		apt-get upgrade -y
-		if [[ ! -s /data/data/com.termux/files/etc/ssl/certs/ca-certificates.crt ]]; then
-			wget -qO- git.io/Jfj2u | bash
-		fi
 }
 
 Install_aria2() {
