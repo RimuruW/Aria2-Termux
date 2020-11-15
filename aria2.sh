@@ -600,7 +600,7 @@ Uninstall_aria2() {
 
 Update_Shell() {
     sh_new_ver=$(wget -qO- -t1 -T3 "https://raw.githubusercontent.com/QingxuMo/Aria2-Termux/master/aria2.sh" | grep 'ver_code="' | awk -F "=" '{print $NF}' | sed 's/\"//g' | head -1)
-    [[ -z ${sh_new_ver} ]] && echo -e "${RED}[!]${RESET} 无法链接到 Github !" && exit 1
+    [[ -z ${sh_new_ver} ]] && echo -e "${RED}[!]${RESET} 无法链接到 GitHub !" && exit 1
     if [ -f "$PREFIX/etc/tiviw/aria2.sh.bak2" ]; then
 	    rm -f $PREFIX/etc/tiviw/aria2.sh.bak2
     fi
