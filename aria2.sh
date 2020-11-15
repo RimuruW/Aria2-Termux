@@ -223,7 +223,7 @@ Start_aria2() {
 	check_installed_status
 	check_pid
 	[[ -n ${PID} ]] && red "[!] Aria2 正在运行!" && return 1
-	aria2c --conf-path="${aria2_conf}" -D
+	aria2c --conf-path="$aria2_conf" -D
 	check_pid
 	[[ -z ${PID} ]] && red "[!] Aria2 启动失败，请检查日志！" && return 1
 	check_storage
