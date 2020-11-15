@@ -22,21 +22,12 @@ download_path="/sdcard/Download"
 aria2_conf="${aria2_conf_dir}/aria2.conf"
 aria2_log="${aria2_conf_dir}/aria2.log"
 aria2c="$PREFIX/bin/aria2c"
-if [ -t 1 ]; then
-	RED=$(printf	'\033[31m')
-	GREEN=$(printf	'\033[32m')
-	YELLOW=$(printf '\033[33m')
-	BLUE=$(printf	'\033[34m')
-	LIGHT=$(printf	'\033[1;96m')
-	RESET=$(printf	'\033[0m')
-else
-	RED=""
-	GREEN=""
-	YELLOW=""
-	BLUE=""
-	LIGHT=""
-	RESET=""
-fi
+RED=$(printf	'\033[31m')
+GREEN=$(printf	'\033[32m')
+YELLOW=$(printf '\033[33m')
+BLUE=$(printf	'\033[34m')
+LIGHT=$(printf	'\033[1;96m')
+RESET=$(printf	'\033[0m')
 
 red() {
 	echo -e "${RED}$1${RESET}"
@@ -640,23 +631,34 @@ Termux:Boot 下载链接: ${GREEN}https://play.google.com/store/apps/details?id=
 ${RED}[!]${RESET} 注意，如果你未安装 ${GREEN}Termux:Boot${RESET}，脚本中任何关于 Aria2 自启动的配置${RED}没有任何意义${RESET}
 "
 	echo -e "\n\n"
-	if ask "是否开启 Aria2 开机自启动？" "N"; then
-		mkdir -p "$HOME/.termux/boot"
-		if [ -f "$aria2_conf_dir/auto-start-aria2" ]; then
-			if cp "$aria2_conf_dir/auto-start-aria2" "$HOME/.termux/boot/auto-start-aria2"; then
-				echo -e "${GREEN}[√]${RESET} Aria2 开机自启动已开启！"
+	if [ -f "$HOME/.termux/boot/auto-start-aria2" ]; then
+		if ask "你已开启 Aria2 自启动，是否关闭？" "N"; then
+			if rm -f "$HOME/.termux/boot/auto-start-aria2"; then
+				echo -e "${GREEN}[√]${RESET} 已关闭 Aria2 自启动"
 			else
-				echo -e "${RED}[!]${RESET} Aria2 启动开启失败！"
+				echo -e "${RED}[!] ${RESET} Aria2 自启动关闭失败！"
 			fi
 		else
-			echo -e "
+			echo "${BLUE}[*]${RESET} 已跳过…"
+		fi
+	else
+		if ask "是否开启 Aria2 开机自启动？" "N"; then
+			mkdir -p "$HOME/.termux/boot"
+			if [ -f "$aria2_conf_dir/auto-start-aria2" ]; then
+				if cp "$aria2_conf_dir/auto-start-aria2" "$HOME/.termux/boot/auto-start-aria2"; then
+					echo -e "${GREEN}[√]${RESET} Aria2 开机自启动已开启！"
+				else
+					echo -e "${RED}[!]${RESET} Aria2 启动开启失败！"
+				fi
+			else	
+				echo -e "
 ${RED}[!]${RESET} 未找到自启动配置文件！
 ${RED}[!]${RESET} 这可能是因为你未通过本脚本完成 Aria2 安装或手动修改了相关目录。
 ${RED}[!]${RESET} 请通过脚本重新安装 Aria2 以避免绝大多数可避免的问题！"
+			fi
+		else
+			echo -e "${BLUE}[*]${RESET} 不开启 Aria2 开机自启动…"
 		fi
-
-	else
-		echo -e "${BLUE}[*]${RESET} 不开启 Aria2 开机自启动…"
 	fi
 }
 while true
@@ -697,6 +699,8 @@ if [[ ! -f "$HOME/.termux/boot/auto-start-aria2" ]]; then
 else
 	echo -e " Aria2 开机自启动: ${GREEN}未开启${RED}"
 fi
+num=null
+echo -e "\n"
 echo -en " 请输入数字 [0-12]:"
 read -r num
 case "$num" in
