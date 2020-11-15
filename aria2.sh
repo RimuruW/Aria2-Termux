@@ -67,7 +67,9 @@ ask() {
         # Ask the question
 		printf '%s\n' "${LIGHT}"
         printf "[?] "
-        read -r -p "$1 [$prompt] " REPLY
+        echo -en "$1 [$prompt] "
+
+		read -r REPLY </dev/tty
 
         # Default?
         if [ -z "$REPLY" ]; then
