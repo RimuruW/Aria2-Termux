@@ -155,7 +155,7 @@ delete.sh
 dht.dat
 dht6.dat
 move.sh
-auto-start-aria2
+auto-start-aria
 "
     mkdir -p "${aria2_conf_dir}"
 	cd "${aria2_conf_dir}"  || { red "[!] 目录跳转失败！" >&2;  exit 1; }
@@ -701,7 +701,7 @@ else
 fi
 num=null
 echo -e "\n"
-echo -en " 请输入数字 [0-12]:"
+echo -en "${YELLOW} 请输入数字 [0-12]: ${RESET}"
 read -r num
 case "$num" in
 0)
