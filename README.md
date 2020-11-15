@@ -16,6 +16,7 @@
     - 全功能：`Async DNS`, `BitTorrent`, `Firefox3 Cookie`, `GZip`, `Message Digest`, `Metalink`, `XML-RPC`, `SFTP`
     - 一键更新脚本
     - 一键更新 BT tracker 列表
+	- Aria2 开机自启动
     
 - 支持与 [RCLONE](https://rclone.org/) 联动，更多扩展功能与玩法：
     - [OneDrive、Google Drive 等网盘离线下载](https://p3terx.com/archives/offline-download-of-onedrive-gdrive.html)
@@ -113,13 +114,12 @@ RPC 密钥：随机生成，可使用选项`6. 修改 配置文件`自定义
 ### 2020-11-15 v1.0.4
 - UI 风格微修改
 - 代码结构优化
-- 添加 Aria2 开机自启动 https://github.com/QingxuMo/Aria2-Termux/issues/2
+- 添加 Aria2 开机自启动 [#2](https://github.com/QingxuMo/Aria2-Termux/issues/2)
 
 ### 2020-10-23 v1.0.3
 
 - 细节优化
 - 支持 curl 直接执行脚本时自动下载脚本
-- 增添 Aria2 启动状态判断，支持自动检测是否端口被占用
 - 优化存储权限检测
 
 ### 2020-10-13 v1.0.2
@@ -129,8 +129,6 @@ RPC 密钥：随机生成，可使用选项`6. 修改 配置文件`自定义
 - 去除某些无意义或作用不大的功能
 - 添加 AriaNg 地址自动获取（合并原仓库提交）
 - 解决 Aria2 日志无法获取问题
-- 修改了版本号格式，新自动版本更新功能 coming soon…
-- Update README
 
 ### 2020-06-27 v1.0.1
 

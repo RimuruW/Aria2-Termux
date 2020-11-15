@@ -210,7 +210,7 @@ Install_aria2() {
 	blue "[*] 开始安装并配置依赖..."
 	Installation_dependency
 	blue "[*] 开始下载并安装主程序..."
-	pkg in aria2 -y
+	pkg in aria2 -y 2>/dev/null
 	blue "[*] 开始下载 Aria2 配置文件..."
 	Download_aria2_conf
 	aria2_RPC_port=${aria2_port}
