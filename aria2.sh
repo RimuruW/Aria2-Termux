@@ -176,6 +176,7 @@ auto-start-aria2
 	sed -i "s@^\(save-session=\).*@\1${aria2_conf_dir}/aria2.session@" "${aria2_conf}"
     sed -i "s@/root/.aria2/@${aria2_conf_dir}/@" "${aria2_conf}"
     sed -i "s@^\(rpc-secret=\).*@\1$(date +%s%N | md5sum | head -c 20)@" "${aria2_conf}"
+    sed -i "s@^\(DOWNLOAD_PATH='\).*@\1${download_path}'@" "${aria2_conf_dir}/*.sh"
     sed -i "s@#log=@log=${aria2_log}@" "${aria2_conf}"
     touch aria2.session
     chmod +x ./*.sh
@@ -536,7 +537,7 @@ View_Aria2() {
         AriaNg_URL="null"
     else
         AriaNg_API="/#!/settings/rpc/set/ws/${LocalIP}/${aria2_port}/jsonrpc/$(echo -n ${aria2_passwd} | base64)"
-        AriaNg_URL="http://mirror-aria2.qingxu.live/${AriaNg_API}"
+        AriaNg_URL="http://mirror-aria2.qingxu.live${AriaNg_API}"
     fi
     clear
     echo -e "\nAria2 简单配置信息：\n
