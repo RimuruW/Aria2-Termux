@@ -10,7 +10,6 @@ if [ "$(uname -o)" != "Android" ]; then
 fi
 
 aria2_conf_dir="$HOME/.aria2"
-download_path="/sdcard/Download"
 aria2_conf="${aria2_conf_dir}/aria2.conf"
 aria2_log="${aria2_conf_dir}/aria2.log"
 aria2c="$PREFIX/bin/aria2c"
@@ -55,7 +54,8 @@ check_installed_status() {
 	[[ ! -e ${aria2_conf} ]] && red "
 [!] Aria2 配置文件不存在！
 [*] 如果你不是通过本脚本安装 Aria2，请先在本脚本卸载 Aria2！
-	" && [[ $1 != "un" ]] && return 0
+	"
+	exit 1
 }
 
 check_pid() {
@@ -71,7 +71,7 @@ Start_aria2() {
 	check_installed_status
 	check_pid
 	[[ -n ${PID} ]] && red "[!] Aria2 正在运行!" && return 1
-	aria2c --conf-path="${aria2_conf}" -D
+	nohup $PREFIX/bin/aria2c --conf-path="${aria2_conf}" >>"${aria2_log}" 2>&1 &			
 	check_pid
 	[[ -z ${PID} ]] && red "[!] Aria2 启动失败，请检查日志！" && return 1
 	check_storage

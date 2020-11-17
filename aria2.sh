@@ -177,7 +177,7 @@ auto-start-aria2
     sed -i "s@/root/.aria2/@${aria2_conf_dir}/@" "${aria2_conf}"
     sed -i "s@^\(rpc-secret=\).*@\1$(date +%s%N | md5sum | head -c 20)@" "${aria2_conf}"
     sed -i "s@^\(DOWNLOAD_PATH='\).*@\1${download_path}'@" "${aria2_conf_dir}/*.sh"
-    sed -i "s@#log=@log=${aria2_log}@" "${aria2_conf}"
+    #sed -i "s@#log=@log=${aria2_log}@" "${aria2_conf}"
     touch aria2.session
     chmod +x ./*.sh
     green "[√] Aria2 配置文件下载完成！"
@@ -226,7 +226,7 @@ Start_aria2() {
 	check_installed_status
 	check_pid
 	[[ -n ${PID} ]] && red "[!] Aria2 正在运行!" && return 1
-	aria2c --conf-path="$aria2_conf" -D
+	nohup $PREFIX/bin/aria2c --conf-path="${aria2_conf}" >>"${aria2_log}" 2>&1 &
 	check_pid
 	[[ -z ${PID} ]] && red "[!] Aria2 启动失败，请检查日志！" && return 1
 	check_storage
