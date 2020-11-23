@@ -246,7 +246,7 @@ Restart_aria2() {
 	check_pid
 	[[ -n ${PID} ]] && kill -9 "${PID}"
 	check_storage
-	aria2c --conf-path="${aria2_conf}" -D
+	nohup $PREFIX/bin/aria2c --conf-path="${aria2_conf}" >>"${aria2_log}" 2>&1 &
 	blue "[*] 尝试开启唤醒锁……"
 	termux-wake-lock
 }
