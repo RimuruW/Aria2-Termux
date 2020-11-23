@@ -1,46 +1,28 @@
-# Aria2 一键安装管理脚本 (Termux 移植版)
+ # Aria2-Termux
+```bash
+bash -c "$(curl -L https://raw.githubusercontent.com/QingxuMo/Aria2-Termux/master/aria2.sh)"
+```
+> 化繁为简，让 Aria2 的乐趣触手可及。
 
+## 简介
 本项目基于 [aria2.sh](https://github.com/P3TERX/aria2.sh)，在原项目的基础上二次修改，结合了 Android 设备上的实际情况，去除原脚本某些在 Android 无法实现或意义不大的功能，并借助 Termux 的优势，尽可能在 Android 实现更好的 Aria2 体验。
 
-项目脚本整合了 [aria2.conf](https://github.com/P3TERX/aria2.conf)，包含了配置文件、附加功能脚本等文件，用于实现 Aria2 功能的增强和扩展，提升 Aria2 的使用体验。
+项目整合了 Aria2 配置文件、附加功能脚本等文件。
+关于配置文件的详细信息请点击[这里](https://github.com/QingxuMo/Aria2-Termux/conf/)。
 
 ## 功能特性
 
-- 使用 [aria2.conf](https://github.com/P3TERX/aria2.conf) 作为配置文件
-    - 重启后不丢失任务进度、不重复下载
-    - 下载错误或取消下载自动删除未完成的文件减少存储空间占用
-    - 下载完成自动清除`.aria2`后缀名文件
-    - 更好的 PT 下载支持
+- 简明易用的管理界面，所有管理操作可以在脚本一步完成
+- 完善的多功能支持，支持一键更新 BT Trackers、Aria2 开机自启动
+- 丰富的附加扩展功能，详见[配置文件说明](https://github.com/QingxuMo/Aria2-Termux/conf/)
 
-- 简洁易用，功能齐全，手机也能变成一个强大的多功能下载器
-    - 全功能：`Async DNS`, `BitTorrent`, `Firefox3 Cookie`, `GZip`, `Message Digest`, `Metalink`, `XML-RPC`, `SFTP`
-    - 一键更新脚本
-    - 一键更新 BT tracker 列表
-	- Aria2 开机自启动
-    
-- 支持与 [RCLONE](https://rclone.org/) 联动，更多扩展功能与玩法：
-    - [OneDrive、Google Drive 等网盘离线下载](https://p3terx.com/archives/offline-download-of-onedrive-gdrive.html)
-    - [百度网盘转存到 OneDrive 、Google Drive 等其他网盘](https://p3terx.com/archives/baidunetdisk-transfer-to-onedrive-and-google-drive.html)
-
-## 项目地址
-
-原项目地址: https://github.com/P3TERX/aria2.sh
-
-本项目地址: https://github.com/QingxuMo/Aria2-Termux
-
-支持项目请随手点个`star`，可以让更多的人发现、使用并受益。您的支持是我持续开发维护的动力。
-
-## 系统要求
-
-Android 7.0+
-
-最新版本 Termux
-
-*如果脚本运行出现的 bug 经确认是由于 Termux 版本号过低，则该 bug 可能不会被修复。*
-
-## 架构支持
-
-任何支持安装 Termux 的架构
+## ToDo
+- [x] 适配 Termux
+- [x] 美观易用的 UI
+- [x] 完善的自检测系统
+- [ ] 多语言支持
+- [ ] 完善的 README 和 Wiki
+- [ ] 脚本内全配置项编辑
 
 ## 使用说明
 
@@ -109,7 +91,17 @@ bash aria2.sh
 
 RPC 密钥：随机生成，可使用选项`6. 修改 配置文件`自定义
 
+
+支持项目请随手点个`star`，可以让更多的人发现、使用并受益。您的支持是我持续开发维护的动力。
+
 ## 更新日志
+
+> 因学业原因，本项目开发进度将放缓，见谅。
+
+### 2020-11-23 v1.0.5
+- 修复了使用脚本安装 Aria2 后命令行无法下载的问题 [#4](https://github.com/QingxuMo/Aria2-Termux/issues/4)
+- 整合配置文件至仓库
+- 更完善的自检测系统
 
 ### 2020-11-15 v1.0.4
 - UI 风格微修改
@@ -137,5 +129,5 @@ RPC 密钥：随机生成，可使用选项`6. 修改 配置文件`自定义
 - 完善更新脚本时的备份机制
 
 
-## Lisence
+## License
 [MIT](https://github.com/QingxuMo/Aria2-Termux/blob/master/LICENSE) © Toyo x P3TERX x Qingxu

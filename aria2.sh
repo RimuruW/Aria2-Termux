@@ -12,8 +12,8 @@ if [ "$(uname -o)" != "Android" ]; then
 	PREFIX=/data/data/com.termux/files/usr
 fi
 
-sh_ver="1.0.4"
-ver_code="20201115"
+sh_ver="1.0.5"
+ver_code="20201123"
 export ver_code
 #PATH=/data/data/com.termux/files/usr/bin
 #export PATH
@@ -144,7 +144,7 @@ check_mirrors() {
 Download_aria2_conf() {
     PROFILE_URL1="https://one.qingxu.ga/onedrive/aira2"
     PROFILE_URL2="https://share.qingxu.ga/onedrive/aria2"
-    PROFILE_URL3="https://cdn.jsdelivr.net/gh/QingxuMo/aria2.conf@master"
+    PROFILE_URL3="https://cdn.jsdelivr.net/gh/QingxuMo/Aria2-Termux@master/conf"
     PROFILE_LIST="
 aria2.conf
 clean.sh
@@ -186,8 +186,10 @@ auto-start-aria2
 Installation_dependency() {
         blue "[*] 检查依赖中…"
 		apt-get update -y &> /dev/null
-		for i in nano ca-certificates findutils jq tar gzip dpkg; do
+		for i in nano ca-certificates findutils jq tar gzip dpkg curl; do
 			if apt list --installed 2>/dev/null | grep "$i"; then
+				echo "  $i 已安装！"
+			elif [ -e $PREFIX/bin/$i ]; then
 				echo "  $i 已安装！"
 			else
 				echo  "Installing $i..."
