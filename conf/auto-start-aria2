@@ -1,0 +1,82 @@
+#!/data/data/com.termux/files/usr/bin/bash
+#=============================================================
+# https://github.com/QingxuMo/Aria2-Termux
+# Doc: https://github.com/QingxuMo/Aria2-Termux/blob/master/README.md
+# Author: QingxuMo
+# Blog: https://qingxu.live
+#=============================================================
+if [ "$(uname -o)" != "Android" ]; then
+	PREFIX=/data/data/com.termux/files/usr
+fi
+
+aria2_conf_dir="$HOME/.aria2"
+download_path="/sdcard/Download"
+aria2_conf="${aria2_conf_dir}/aria2.conf"
+aria2_log="${aria2_conf_dir}/aria2.log"
+aria2c="$PREFIX/bin/aria2c"
+if [ -t 1 ]; then
+	RED=$(printf	'\033[31m')
+	GREEN=$(printf	'\033[32m')
+	YELLOW=$(printf '\033[33m')
+	BLUE=$(printf	'\033[34m')
+	LIGHT=$(printf	'\033[1;96m')
+	RESET=$(printf	'\033[0m')
+else
+	RED=""
+	GREEN=""
+	YELLOW=""
+	BLUE=""
+	LIGHT=""
+	RESET=""
+fi
+
+red() {
+	echo -e "${RED}$1${RESET}"
+}
+
+green() {
+	echo -e "${GREEN}$1${RESET}"
+}
+
+yellow() {
+	echo -e "${YELLOW}$1${RESET}"
+}
+
+blue() {
+	echo -e "${BLUE}$1${RESET}"
+}
+
+light() {
+	echo -e "${LIGHT}$1${RESET}"
+}
+
+check_installed_status() {
+	[[ ! -e ${aria2c} ]] && red "[!] Aria2 未安装!" && return 0
+	[[ ! -e ${aria2_conf} ]] && red "
+[!] Aria2 配置文件不存在！
+[*] 如果你不是通过本脚本安装 Aria2，请先在本脚本卸载 Aria2！
+	" && [[ $1 != "un" ]] && return 0
+}
+
+check_pid() {
+	PID=$(pgrep "aria2c" | grep -v grep | grep -v "aria2.sh" | grep -v "service" | awk '{print $1}')
+}
+
+check_storage() {
+    [[ ! -d "$HOME/storage/shared/Android/" ]] && red "[!] Termux 未获取存储权限，请回车确认后按指示授权存储权限！" && echo -en "\n请回车以确认" && read -r -n 1 line && termux-setup-storage
+    [[ ! -d "$HOME/storage/shared/Android/" ]] && red "[!] Termux 存储权限未获取！请在确保 Termux 已获取存储权限的情况重新启动脚本！" && exit 1
+}
+
+Start_aria2() {
+	check_installed_status
+	check_pid
+	[[ -n ${PID} ]] && red "[!] Aria2 正在运行!" && return 1
+	aria2c --conf-path="${aria2_conf}" -D
+	check_pid
+	[[ -z ${PID} ]] && red "[!] Aria2 启动失败，请检查日志！" && return 1
+	check_storage
+	blue "[*] 尝试开启唤醒锁…"
+	termux-wake-lock
+}
+
+Start_aria2
