@@ -12,8 +12,8 @@ if [ "$(uname -o)" != "Android" ]; then
 	PREFIX=/data/data/com.termux/files/usr
 fi
 
-sh_ver="1.0.5"
-ver_code="20201123"
+sh_ver="1.0.6"
+ver_code="20201128"
 export ver_code
 #PATH=/data/data/com.termux/files/usr/bin
 #export PATH
@@ -177,7 +177,7 @@ auto-start-aria2
     sed -i "s@/root/.aria2/@${aria2_conf_dir}/@" "${aria2_conf}"
     sed -i "s@^\(rpc-secret=\).*@\1$(date +%s%N | md5sum | head -c 20)@" "${aria2_conf}"
     sed -i "s@^\(DOWNLOAD_PATH='\).*@\1${download_path}'@" "${aria2_conf_dir}/*.sh"
-    #sed -i "s@#log=@log=${aria2_log}@" "${aria2_conf}"
+    sed -i "s@#log=@log=${aria2_log}@" "${aria2_conf}"
     touch aria2.session
     chmod +x ./*.sh
     green "[√] Aria2 配置文件下载完成！"
@@ -192,7 +192,7 @@ Installation_dependency() {
 			elif [ -e $PREFIX/bin/$i ]; then
 				echo "  $i 已安装！"
 			else
-				echo  "Installing $i..."
+				echo  "${BLUE}[*]${RESET} Installing $i..."
 				apt-get install -y $i || {
 					red "
 [!] 依赖安装失败!
@@ -228,12 +228,13 @@ Start_aria2() {
 	check_installed_status
 	check_pid
 	[[ -n ${PID} ]] && red "[!] Aria2 正在运行!" && return 1
-	nohup $PREFIX/bin/aria2c --conf-path="${aria2_conf}" >>"${aria2_log}" 2>&1 &
-	check_pid
-	[[ -z ${PID} ]] && red "[!] Aria2 启动失败，请检查日志！" && return 1
 	check_storage
 	blue "[*] 尝试开启唤醒锁…"
 	termux-wake-lock
+	green "[√] 所有步骤执行完毕，开始启动..."
+	$PREFIX/bin/aria2c --conf-path="${aria2_conf}" -D
+	check_pid
+	[[ -z ${PID} ]] && red "[!] Aria2 启动失败，请检查日志！" && return 1
 }
 Stop_aria2() {
 	check_installed_status
@@ -246,9 +247,11 @@ Restart_aria2() {
 	check_pid
 	[[ -n ${PID} ]] && kill -9 "${PID}"
 	check_storage
-	nohup $PREFIX/bin/aria2c --conf-path="${aria2_conf}" >>"${aria2_log}" 2>&1 &
 	blue "[*] 尝试开启唤醒锁……"
 	termux-wake-lock
+	green "[√] 所有步骤执行完毕，开始启动..."
+	$PREFIX/bin/aria2c --conf-path="${aria2_conf}" -D
+	[[ -z ${PID} ]] && red "[!] Aria2 启动失败，请检查日志！" && return 1
 }
 Set_aria2() {
 	check_installed_status
@@ -259,8 +262,9 @@ Set_aria2() {
  ${GREEN}3.${RESET} 修改 Aria2 下载目录
  ${GREEN}4.${RESET} 修改 Aria2 密钥 + 端口 + 下载目录
  ${GREEN}5.${RESET} 手动 打开配置文件修改
- ————————————
- ${GREEN}0.${RESET} 重置/更新 Aria2 配置文件
+ ${GREEN}6.${RESET} 重置/更新 Aria2 配置文件
+ -------------------
+ 0 退出脚本
 "
 	echo -en " 请输入数字 [0-5]: "
 	read -r aria2_modify
@@ -274,12 +278,14 @@ Set_aria2() {
 		Set_aria2_RPC_passwd_port_dir
 	elif [[ ${aria2_modify} == "5" ]]; then
 		Set_aria2_vim_conf
-	elif [[ ${aria2_modify} == "0" ]]; then
+	elif [[ ${aria2_modify} == "6" ]]; then
 		Reset_aria2_conf
+	elif [[ ${aria2_modify} == "0" ]]; then
+		return 0
 	else
 		echo
-		red "[!] 请输入正确的数字"
-		return 0
+		echo "${RED}[!]${RESET} 请输入正确的数字"
+		return 1
 	fi
 }
 Set_aria2_RPC_passwd() {
