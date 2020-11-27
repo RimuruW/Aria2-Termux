@@ -676,7 +676,7 @@ while true
 do
 	check_script_download
 echo && echo -e "
-${LIGHT}[*]${RESET} Aria2 一键管理脚本 ${GREEN}[v${sh_ver}]${RESET}
+${LIGHT}[*]${RESET} Aria2 一键管理脚本 ${YELLOW}[v${sh_ver}]${RESET}
             by ${LIGHT}Qingxu(QingxuMo)${RESET}
 
  ${GREEN} 0.${RESET} 退出
