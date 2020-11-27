@@ -675,8 +675,10 @@ ${RED}[!]${RESET} 请通过脚本重新安装 Aria2 以避免绝大多数可避�
 while true
 do
 	check_script_download
-echo && echo -e " Aria2 一键安装管理脚本 (Termux 移植版) ${GREEN}[v${sh_ver}]${RESET} 
-                    by ${LIGHT}Qingxu(QingxuMo)${RESET}
+echo && echo -e "
+${LIGHT}[*]${RESET} Aria2 一键管理脚本 ${GREEN}[v${sh_ver}]${RESET}
+            by ${LIGHT}Qingxu(QingxuMo)${RESET}
+
  ${GREEN} 0.${RESET} 退出
  ———————————————————————
  ${GREEN} 1.${RESET} 安装 Aria2
