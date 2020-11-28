@@ -264,7 +264,7 @@ Set_aria2() {
  ${GREEN}5.${RESET} 手动 打开配置文件修改
  ${GREEN}6.${RESET} 重置/更新 Aria2 配置文件
  -------------------
- 0 退出脚本
+ ${GREEN}0.${RESET}  退出脚本
 "
 	echo -en " 请输入数字 [0-5]: "
 	read -r aria2_modify
