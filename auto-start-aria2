@@ -71,7 +71,7 @@ Start_aria2() {
 	check_installed_status
 	check_pid
 	[[ -n ${PID} ]] && red "[!] Aria2 正在运行!" && return 1
-	nohup $PREFIX/bin/aria2c --conf-path="${aria2_conf}" >>"${aria2_log}" 2>&1 &			
+	$PREFIX/bin/aria2c --conf-path="${aria2_conf}" -D
 	check_pid
 	[[ -z ${PID} ]] && red "[!] Aria2 启动失败，请检查日志！" && return 1
 	check_storage

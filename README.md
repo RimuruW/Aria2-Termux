@@ -20,6 +20,7 @@ bash -c "$(curl -L https://raw.githubusercontent.com/QingxuMo/Aria2-Termux/maste
 - [x] 适配 Termux
 - [x] 美观易用的 UI
 - [x] 完善的自检测系统
+- [ ] 远程控制配置
 - [ ] 多语言支持
 - [ ] 完善的 README 和 Wiki
 - [ ] 脚本内全配置项编辑
@@ -56,8 +57,9 @@ bash aria2.sh
 
 * 选择你要执行的选项
 ```
- Aria2 一键安装管理脚本 (Termux 移植版) [v1.0.3] by Qingxu(QingxuMo)
- 
+[*] Aria2 一键管理脚本 [v1.0.5]
+            by Qingxu(QingxuMo)
+
   0. 退出
  ———————————————————————
   1. 安装 Aria2
@@ -73,14 +75,14 @@ bash aria2.sh
   9. 清空 日志
  ———————————————————————
   10. 一键更新 BT-Tracker
-  11. 一键升级脚本
+  11. 一键更新脚本
   12. Aria2 开机自启动
  ———————————————————————
 
  Aria2 状态: 已安装 | 已启动
  Aria2 开机自启动: 已开启
 
- 请输入数字 [0-12]:
+ 请输入数字 [0-12]: 
 ```
 
 ## 其他
