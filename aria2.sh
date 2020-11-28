@@ -12,8 +12,8 @@ if [ "$(uname -o)" != "Android" ]; then
 	PREFIX=/data/data/com.termux/files/usr
 fi
 
-sh_ver="1.0.6"
-ver_code="20201128"
+sh_ver="1.0.5"
+ver_code="20201127"
 export ver_code
 #PATH=/data/data/com.termux/files/usr/bin
 #export PATH
