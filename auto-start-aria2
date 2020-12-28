@@ -1,8 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/bash
 #=============================================================
-# https://github.com/QingxuMo/Aria2-Termux
-# Doc: https://github.com/QingxuMo/Aria2-Termux/blob/master/README.md
-# Author: QingxuMo
+# https://github.com/RimuruW/Aria2-Termux
+# Doc: https://github.com/RimuruW/Aria2-Termux/blob/master/README.md
+# Author: RimuruW
 # Blog: https://qingxu.live
 #=============================================================
 if [ "$(uname -o)" != "Android" ]; then

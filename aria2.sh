@@ -1,11 +1,11 @@
 #!/data/data/com.termux/files/usr/bin/bash
 #=============================================================
-# https://github.com/QingxuMo/Aria2-Termux
-# Doc: https://github.com/QingxuMo/Aria2-Termux/blob/master/README.md
+# https://github.com/RimuruW/Aria2-Termux
+# Doc: https://github.com/RimuruW/Aria2-Termux/blob/master/README.md
 # More detail: https://qingxu.live/index.php/archives/aria2-for-termux/
 # Description: Aria2 One-click installation management script for Termux
 # Environment Required: Android with the latest Termux. (The latest Android version is recommended)
-# Author: QingxuMo
+# Author: RimuruW
 # Blog: https://qingxu.live
 #=============================================================
 if [ "$(uname -o)" != "Android" ]; then
@@ -104,7 +104,7 @@ check_sys() {
 
 check_script_download() {
 	if [ ! -d $PREFIX/etc/tiviw ]; then
-		[[ ! -f "./aria2.sh" ]] && pkg in wget -y && wget -N https://cdn.jsdelivr.net/gh/QingxuMo/Aria2-Termux@master/aria2.sh && chmod +x aria2.sh
+		[[ ! -f "./aria2.sh" ]] && pkg in wget -y && wget -N https://cdn.jsdelivr.net/gh/RimuruW/Aria2-Termux@master/aria2.sh && chmod +x aria2.sh
 	fi
 }
 
@@ -144,7 +144,7 @@ check_mirrors() {
 Download_aria2_conf() {
     PROFILE_URL1="https://one.qingxu.ga/onedrive/aira2"
     PROFILE_URL2="https://share.qingxu.ga/onedrive/aria2"
-    PROFILE_URL3="https://cdn.jsdelivr.net/gh/QingxuMo/Aria2-Termux@master/conf"
+    PROFILE_URL3="https://cdn.jsdelivr.net/gh/RimuruW/Aria2-Termux@master/conf"
     PROFILE_LIST="
 aria2.conf
 clean.sh
@@ -609,7 +609,7 @@ Uninstall_aria2() {
 }
 
 Update_Shell() {
-    sh_new_ver=$(wget -qO- -t1 -T3 "https://raw.githubusercontent.com/QingxuMo/Aria2-Termux/master/aria2.sh" | grep 'ver_code="' | awk -F "=" '{print $NF}' | sed 's/\"//g' | head -1)
+    sh_new_ver=$(wget -qO- -t1 -T3 "https://raw.githubusercontent.com/RimuruW/Aria2-Termux/master/aria2.sh" | grep 'ver_code="' | awk -F "=" '{print $NF}' | sed 's/\"//g' | head -1)
     [[ -z ${sh_new_ver} ]] && echo -e "${RED}[!]${RESET} 无法链接到 GitHub !" && exit 1
     if [ -f "$PREFIX/etc/tiviw/aria2.sh.bak2" ]; then
 	    rm -f $PREFIX/etc/tiviw/aria2.sh.bak2
@@ -621,10 +621,10 @@ Update_Shell() {
 	    echo "${BLUE}[!]${RESET} 检测到 Tiviw! 启用 Tiviw 更新方案!"
 	    mkdir -p $PREFIX/etc/tiviw/aria2
 	    mv $PREFIX/etc/tiviw/aria2/aria2.sh $PREFIX/etc/tiviw/aria2/aria2.sh.bak
-	    wget -P $PREFIX/etc/tiviw/aria2 https://raw.githubusercontent.com/QingxuMo/Aria2-Termux/master/aria2.sh && chmod +x $PREFIX/etc/tiviw/aria2/aria2.sh
+	    wget -P $PREFIX/etc/tiviw/aria2 https://raw.githubusercontent.com/RimuruW/Aria2-Termux/master/aria2.sh && chmod +x $PREFIX/etc/tiviw/aria2/aria2.sh
 	    return 0
     else
-	    wget -N "https://raw.githubusercontent.com/QingxuMo/Aria2-Termux/master/aria2.sh" && chmod +x aria2.sh
+	    wget -N "https://raw.githubusercontent.com/RimuruW/Aria2-Termux/master/aria2.sh" && chmod +x aria2.sh
     fi
     echo -e "
 ${GREEN}[√]${RESET} 脚本已更新为最新版本[${GREEN} ${sh_new_ver} ${RESET}]
@@ -677,7 +677,7 @@ do
 	check_script_download
 echo && echo -e "
 ${LIGHT}[*]${RESET} Aria2 一键管理脚本 ${YELLOW}[v${sh_ver}]${RESET}
-            by ${LIGHT}Qingxu(QingxuMo)${RESET}
+            by ${LIGHT}Qingxu(RimuruW)${RESET}
 
  ${GREEN} 0.${RESET} 退出
  ———————————————————————

@@ -13,4 +13,4 @@
 ## License
 部分配置文件整理自互联网，无法列出原作者，在此一并致谢。
 
-[MIT](https://github.com/QingxuMo/Aria2-Termux/blob/master/LICENSE) © Toyo x P3TERX x Qingxu
+[MIT](https://github.com/RimuruW/Aria2-Termux/blob/master/LICENSE) © Toyo x P3TERX x Qingxu
