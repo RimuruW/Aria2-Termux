@@ -1,6 +1,6 @@
  # Aria2-Termux
 ```bash
-bash -c "$(curl -L https://raw.githubusercontent.com/QingxuMo/Aria2-Termux/master/aria2.sh)"
+bash -c "$(curl -L https://raw.githubusercontent.com/RimuruW/Aria2-Termux/master/aria2.sh)"
 ```
 > 化繁为简，让 Aria2 的乐趣触手可及。
 
@@ -8,13 +8,13 @@ bash -c "$(curl -L https://raw.githubusercontent.com/QingxuMo/Aria2-Termux/maste
 本项目基于 [aria2.sh](https://github.com/P3TERX/aria2.sh)，在原项目的基础上二次修改，结合了 Android 设备上的实际情况，去除原脚本某些在 Android 无法实现或意义不大的功能，并借助 Termux 的优势，尽可能在 Android 实现更好的 Aria2 体验。
 
 项目整合了 Aria2 配置文件、附加功能脚本等文件。
-关于配置文件的详细信息请点击[这里](https://github.com/QingxuMo/Aria2-Termux/tree/master/conf)。
+关于配置文件的详细信息请点击[这里](https://github.com/RimuruW/Aria2-Termux/tree/master/conf)。
 
 ## 功能特性
 
 - 简明易用的管理界面，所有管理操作可以在脚本一步完成
 - 完善的多功能支持，支持一键更新 BT Trackers、Aria2 开机自启动
-- 丰富的附加扩展功能，详见[配置文件说明](https://github.com/QingxuMo/Aria2-Termux/tree/master/conf)
+- 丰富的附加扩展功能，详见[配置文件说明](https://github.com/RimuruW/Aria2-Termux/tree/master/conf)
 
 ## ToDo
 - [x] 适配 Termux
@@ -42,12 +42,12 @@ pkg in wget bash -y
 
 * 下载脚本
 ```
-wget -N https://raw.githubusercontent.com/QingxuMo/Aria2-Termux/master/aria2.sh && chmod +x aria2.sh
+wget -N https://raw.githubusercontent.com/RimuruW/Aria2-Termux/master/aria2.sh && chmod +x aria2.sh
 ```
 
 > 对于国内用户，可以尝试输入下面命令下载脚本
 ```
-wget -N https://cdn.jsdelivr.net/gh/QingxuMo/Aria2-Termux@master/aria2.sh && chmod +x aria2.sh
+wget -N https://cdn.jsdelivr.net/gh/RimuruW/Aria2-Termux@master/aria2.sh && chmod +x aria2.sh
 ```
 
 * 运行脚本
@@ -58,7 +58,7 @@ bash aria2.sh
 * 选择你要执行的选项
 ```
 [*] Aria2 一键管理脚本 [v1.0.6]
-            by Qingxu(QingxuMo)
+            by Qingxu(RimuruW)
 
   0. 退出
  ———————————————————————
@@ -101,14 +101,14 @@ RPC 密钥：随机生成，可使用选项`6. 修改 配置文件`自定义
 > 因学业原因，本项目开发进度将放缓，见谅。
 
 ### 2020-11-23 v1.0.5
-- 修复了使用脚本安装 Aria2 后命令行无法下载的问题 [#4](https://github.com/QingxuMo/Aria2-Termux/issues/4)
+- 修复了使用脚本安装 Aria2 后命令行无法下载的问题 [#4](https://github.com/RimuruW/Aria2-Termux/issues/4)
 - 整合配置文件至仓库
 - 更完善的自检测系统
 
 ### 2020-11-15 v1.0.4
 - UI 风格微修改
 - 代码结构优化
-- 添加 Aria2 开机自启动 [#2](https://github.com/QingxuMo/Aria2-Termux/issues/2)
+- 添加 Aria2 开机自启动 [#2](https://github.com/RimuruW/Aria2-Termux/issues/2)
 
 ### 2020-10-23 v1.0.3
 
@@ -132,4 +132,4 @@ RPC 密钥：随机生成，可使用选项`6. 修改 配置文件`自定义
 
 
 ## License
-[MIT](https://github.com/QingxuMo/Aria2-Termux/blob/master/LICENSE) © Toyo x P3TERX x Qingxu
+[MIT](https://github.com/RimuruW/Aria2-Termux/blob/master/LICENSE) © Toyo x P3TERX x Qingxu
