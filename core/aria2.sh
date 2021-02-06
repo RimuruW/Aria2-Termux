@@ -12,11 +12,12 @@ if [ "$(uname -o)" != "Android" ]; then
 	PREFIX=/data/data/com.termux/files/usr
 fi
 
-sh_ver="1.0.5"
-ver_code="20201127"
+sh_ver="1.1.0"
+ver_code="20210207"
 export ver_code
 #PATH=/data/data/com.termux/files/usr/bin
 #export PATH
+aria2_git="$PREFIX/etc/aria2"
 aria2_conf_dir="$HOME/.aria2"
 download_path="/sdcard/Download"
 aria2_conf="${aria2_conf_dir}/aria2.conf"
@@ -102,12 +103,6 @@ check_sys() {
 	fi
 }
 
-check_script_download() {
-	if [ ! -d $PREFIX/etc/tiviw ]; then
-		[[ ! -f "./aria2.sh" ]] && pkg in wget -y && wget -N https://cdn.jsdelivr.net/gh/RimuruW/Aria2-Termux@master/aria2.sh && chmod +x aria2.sh
-	fi
-}
-
 check_installed_status() {
 	[[ ! -e ${aria2c} ]] && red "[!] Aria2 未安装!" && return 0
 	[[ ! -e ${aria2_conf} ]] && red "
@@ -147,16 +142,8 @@ Download_aria2_conf() {
     PROFILE_URL3="https://cdn.jsdelivr.net/gh/RimuruW/Aria2-Termux@master/conf"
     PROFILE_LIST="
 aria2.conf
-clean.sh
-core
 script.conf
 rclone.env
-upload.sh
-delete.sh
-dht.dat
-dht6.dat
-move.sh
-auto-start-aria2
 "
     mkdir -p "${aria2_conf_dir}"
 	cd "${aria2_conf_dir}"  || { red "[!] 目录跳转失败！" >&2;  exit 1; }
@@ -207,15 +194,22 @@ Installation_dependency() {
 
 Install_aria2() {
 	check_root
-	[[ -e ${aria2c} ]] && red "[!] Aria2 已安装，如需重新安装请在脚本中卸载 Aria2！" && return 0
+	[[ -e ${aria2c} ]] && red "[!] Aria2 已安装，如需重新安装请在脚本中卸载 Aria2！" && return 1
 	check_sys
 	check_mirrors
 	blue "[*] 开始安装并配置依赖..."
 	Installation_dependency
 	blue "[*] 开始下载并安装主程序..."
 	pkg in aria2 -y 2>/dev/null
-	blue "[*] 开始下载 Aria2 配置文件..."
-	Download_aria2_conf
+	blue "[*] 开始检查配置文件…"
+	if [ -d "${aria2_git}/conf" ]; then
+		mkdir -p ~/.aria2
+		cp "${aria2_git}"/conf/* ~/.aria2/*
+	else
+		red "[!] 未发现 Aria2 本地配置文件"
+		blue "[*] 开始下载 Aria2 配置文件..."
+		Download_aria2_conf
+	fi
 	aria2_RPC_port=${aria2_port}
 	blue "[*] 开始创建下载目录..."
 	check_storage
@@ -232,7 +226,7 @@ Start_aria2() {
 	blue "[*] 尝试开启唤醒锁…"
 	termux-wake-lock
 	green "[√] 所有步骤执行完毕，开始启动..."
-	$PREFIX/bin/aria2c --conf-path="${aria2_conf}" -D
+	$PREFIX/bin/aria2c ${grep -v '#' aria2.conf | sed '/^$/d' | sed "s/^/--&/g" | sed ':label;N;s/\n/ /;b label'} -D
 	check_pid
 	[[ -z ${PID} ]] && red "[!] Aria2 启动失败，请检查日志！" && return 1
 }
@@ -250,7 +244,7 @@ Restart_aria2() {
 	blue "[*] 尝试开启唤醒锁……"
 	termux-wake-lock
 	green "[√] 所有步骤执行完毕，开始启动..."
-	$PREFIX/bin/aria2c --conf-path="${aria2_conf}" -D
+	$PREFIX/bin/aria2c ${grep -v '#' aria2.conf | sed '/^$/d' | sed "s/^/--&/g" | sed ':label;N;s/\n/ /;b label'} -D
 	[[ -z ${PID} ]] && red "[!] Aria2 启动失败，请检查日志！" && return 1
 }
 Set_aria2() {
