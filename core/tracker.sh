@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/data/data/com.termux/files/usr/bin/bash
 #
 # Copyright (c) 2018-2020 P3TERX <https://p3terx.com>
 #
@@ -19,7 +19,6 @@
 
 RED_FONT_PREFIX="\033[31m"
 GREEN_FONT_PREFIX="\033[32m"
-YELLOW_FONT_PREFIX="\033[1;33m"
 LIGHT_PURPLE_FONT_PREFIX="\033[1;35m"
 FONT_COLOR_SUFFIX="\033[0m"
 INFO="[${GREEN_FONT_PREFIX}INFO${FONT_COLOR_SUFFIX}]"
@@ -40,7 +39,7 @@ GET_TRACKERS() {
                 ${DOWNLOADER} https://trackers.p3terx.com/all_aria2.txt
         )
     else
-        TRACKER=$(${DOWNLOADER} ${CUSTOM_TRACKER_URL} | awk NF | sed ":a;N;s/\n/,/g;ta")
+        TRACKER=$(${DOWNLOADER} "${CUSTOM_TRACKER_URL}" | awk NF | sed ":a;N;s/\n/,/g;ta")
     fi
     [[ -z "${TRACKER}" ]] && {
         echo
@@ -58,12 +57,12 @@ ${TRACKER}
 
 ADD_TRACKERS() {
     echo -e "$(DATE_TIME) ${INFO} Adding BT trackers to Aria2 configuration file ${LIGHT_PURPLE_FONT_PREFIX}${ARIA2_CONF}${FONT_COLOR_SUFFIX} ..." && echo
-    if [ ! -f ${ARIA2_CONF} ]; then
+    if [ ! -f "${ARIA2_CONF}" ]; then
         echo -e "$(DATE_TIME) ${ERROR} '${ARIA2_CONF}' does not exist."
         exit 1
     else
-        [ -z $(grep "bt-tracker=" ${ARIA2_CONF}) ] && echo "bt-tracker=" >>${ARIA2_CONF}
-        sed -i "s@^\(bt-tracker=\).*@\1${TRACKER}@" ${ARIA2_CONF} && echo -e "$(DATE_TIME) ${INFO} BT trackers successfully added to Aria2 configuration file !"
+        ! grep -q "bt-tracker=" "${ARIA2_CONF})" && echo "bt-tracker=" >>"${ARIA2_CONF}"
+        sed -i "s@^\(bt-tracker=\).*@\1${TRACKER}@" "${ARIA2_CONF}" && echo -e "$(DATE_TIME) ${INFO} BT trackers successfully added to Aria2 configuration file !"
     fi
 }
 
@@ -78,7 +77,7 @@ ADD_TRACKERS_RPC() {
 
 ADD_TRACKERS_RPC_STATUS() {
     RPC_RESULT=$(ADD_TRACKERS_RPC)
-    [[ $(echo ${RPC_RESULT} | grep OK) ]] &&
+    grep -q OK "${RPC_RESULT}" &&
         echo -e "$(DATE_TIME) ${INFO} BT trackers successfully added to Aria2 !" ||
         echo -e "$(DATE_TIME) ${ERROR} Network failure or Aria2 RPC interface error!"
 }
@@ -89,12 +88,12 @@ ADD_TRACKERS_REMOTE_RPC() {
 }
 
 ADD_TRACKERS_LOCAL_RPC() {
-    if [ ! -f ${ARIA2_CONF} ]; then
+    if [ ! -f "${ARIA2_CONF}" ]; then
         echo -e "$(DATE_TIME) ${ERROR} '${ARIA2_CONF}' does not exist."
         exit 1
     else
-        RPC_PORT=$(grep ^rpc-listen-port ${ARIA2_CONF} | cut -d= -f2-)
-        RPC_SECRET=$(grep ^rpc-secret ${ARIA2_CONF} | cut -d= -f2-)
+        RPC_PORT=$(grep ^rpc-listen-port "${ARIA2_CONF}" | cut -d= -f2-)
+        RPC_SECRET=$(grep ^rpc-secret "${ARIA2_CONF}" | cut -d= -f2-)
         [[ ${RPC_PORT} ]] || {
             echo -e "$(DATE_TIME) ${ERROR} Aria2 configuration file incomplete."
             exit 1
@@ -105,7 +104,7 @@ ADD_TRACKERS_LOCAL_RPC() {
     fi
 }
 
-[ $(command -v curl) ] || {
+[ "$(command -v curl)" ] || {
     echo -e "$(DATE_TIME) ${ERROR} curl is not installed."
     exit 1
 }

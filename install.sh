@@ -106,7 +106,7 @@ check_mirrors() {
 
 check_mirrors
 
-blue "[*] 检查依赖中…"
+blue "[*] 检查依赖中..."
 apt-get update -y &> /dev/null
 for i in git wget; do
 if [ -e "$PREFIX/bin/$i" ]; then
@@ -116,7 +116,7 @@ else
 	apt-get install -y $i || {
 		red "
 [!] 依赖安装失败!
-[*] 退出中……
+[*] 退出中...
 			"
 			exit 1
 		}
@@ -125,16 +125,20 @@ done
 apt-get upgrade -y
 
 # Clone files
-blue "\n[*] 正在拉取远程仓库…"
+blue "\n[*] 正在拉取远程仓库..."
 git clone https://github.com/RimuruW/Aria2-Termux "$PREFIX/etc/aria2"
 cd "$PREFIX/etc/aria2" || { red "目录跳转失败！" >&2;  exit 1; }
 git checkout master
 
 cd "$HOME" || { red "[!] 目录跳转失败!" >&2;  exit 1; }
 
-echo 'bash "$PREFIX/etc/aria2/core/aria2.sh"' > "$PREFIX/bin/aria2"
-
+blue "\n[*] 正在创建启动器..."
+mv -f "$PREFIX/etc/aria2/aria2" "$PREFIX/bin/aria2"
 chmod +x "$PREFIX/bin/aria2"
+
+blue "\n[*] 正在创建配置文件软链接"
+mkdir -p "$HOME/.config/aria2"
+ln -s "$PREFIX/etc/aria2/conf" "$HOME/.config/aria2/conf"
 
 if [ -f "$PREFIX/bin/aria2" ]; then
 	green "\n[√]  安装成功！请输入 aria2 启动脚本！"

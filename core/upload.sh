@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/data/data/com.termux/files/usr/bin/bash
 #
 # Copyright (c) 2018-2020 P3TERX <https://p3terx.com>
 #
@@ -12,7 +12,7 @@
 #
 
 CHECK_CORE_FILE() {
-    CORE_FILE="$(dirname $0)/core"
+    CORE_FILE="$(dirname "$0")/core"
     if [[ -f "${CORE_FILE}" ]]; then
         . "${CORE_FILE}"
     else
@@ -24,8 +24,7 @@ CHECK_CORE_FILE() {
 CHECK_RCLONE() {
     [[ $# -eq 0 ]] && {
         echo && echo -e "Checking RCLONE connection ..."
-        rclone mkdir "${DRIVE_NAME}:${DRIVE_DIR}/P3TERX.COM"
-        if [[ $? -eq 0 ]]; then
+        if rclone mkdir "${DRIVE_NAME}:${DRIVE_DIR}/P3TERX.COM"; then
             rclone rmdir "${DRIVE_NAME}:${DRIVE_DIR}/P3TERX.COM"
             echo
             echo -e "${LIGHT_GREEN_FONT_PREFIX}success${FONT_COLOR_SUFFIX}"
@@ -58,6 +57,7 @@ ${LIGHT_PURPLE_FONT_PREFIX}.aria2 File Path:${FONT_COLOR_SUFFIX} ${DOT_ARIA2_FIL
 OUTPUT_UPLOAD_LOG() {
     LOG="${UPLOAD_LOG}"
     LOG_PATH="${UPLOAD_LOG_PATH}"
+    export LOG_PATH LOG
     OUTPUT_LOG
 }
 
@@ -72,7 +72,7 @@ DEFINITION_PATH() {
 
 LOAD_RCLONE_ENV() {
     RCLONE_ENV_FILE="${ARIA2_CONF_DIR}/rclone.env"
-    [[ -f ${RCLONE_ENV_FILE} ]] && . ${RCLONE_ENV_FILE}
+    [[ -f ${RCLONE_ENV_FILE} ]] && . "${RCLONE_ENV_FILE}"
 }
 
 UPLOAD_FILE() {
