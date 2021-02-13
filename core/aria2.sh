@@ -13,7 +13,7 @@ if [ "$(uname -o)" != "Android" ]; then
 fi
 
 sh_ver="1.1.0"
-ver_code="20210207"
+ver_code="20210213"
 export ver_code
 #PATH=/data/data/com.termux/files/usr/bin
 #export PATH
@@ -200,11 +200,11 @@ Install_aria2() {
 	blue "[*] 开始安装并配置依赖..."
 	Installation_dependency
 	blue "[*] 开始下载并安装主程序..."
-	pkg in aria2 -y 2>/dev/null
+	pkg i aria2 -y 2>/dev/null
 	blue "[*] 开始检查配置文件…"
-	if [ -d "${aria2_git}/conf" ]; then
+	if [ -d "${aria2_git}/conf" ] || [ -d "$HOME/.config/aria2/conf" ]; then
 		mkdir -p ~/.aria2
-		cp "${aria2_git}"/conf/* ~/.aria2/*
+		cp "$HOME"/.config/aria2/conf/* "$HOME"/.aria2/*
 	else
 		red "[!] 未发现 Aria2 本地配置文件"
 		blue "[*] 开始下载 Aria2 配置文件..."
@@ -226,7 +226,7 @@ Start_aria2() {
 	blue "[*] 尝试开启唤醒锁…"
 	termux-wake-lock
 	green "[√] 所有步骤执行完毕，开始启动..."
-	$PREFIX/bin/aria2c ${grep -v '#' aria2.conf | sed '/^$/d' | sed "s/^/--&/g" | sed ':label;N;s/\n/ /;b label'} -D
+	$PREFIX/bin/aria2c "$(grep -v '#' "$HOME/.aria2/aria2.conf" | sed '/^$/d' | sed "s/^/--&/g" | sed ':label;N;s/\n/ /;b label')" -D
 	check_pid
 	[[ -z ${PID} ]] && red "[!] Aria2 启动失败，请检查日志！" && return 1
 }
@@ -244,7 +244,7 @@ Restart_aria2() {
 	blue "[*] 尝试开启唤醒锁……"
 	termux-wake-lock
 	green "[√] 所有步骤执行完毕，开始启动..."
-	$PREFIX/bin/aria2c ${grep -v '#' aria2.conf | sed '/^$/d' | sed "s/^/--&/g" | sed ':label;N;s/\n/ /;b label'} -D
+	$PREFIX/bin/aria2c "$(grep -v '#' "$HOME/.aria2/aria2.conf" | sed '/^$/d' | sed "s/^/--&/g" | sed ':label;N;s/\n/ /;b label')" -D
 	[[ -z ${PID} ]] && red "[!] Aria2 启动失败，请检查日志！" && return 1
 }
 Set_aria2() {
@@ -576,9 +576,9 @@ Update_bt_tracker() {
     check_installed_status
     check_pid
     if [ -z "$PID" ]; then
-        bash <(wget -qO- one.qingxu.ga/onedrive/aira2/tracker.sh) "${aria2_conf}"
+        bash "$HOME/.config/aria2/core/tracker.sh" "${aria2_conf}"
 	else
-		bash <(wget -qO- one.qingxu.ga/onedrive/aira2/tracker.sh) "${aria2_conf}" RPC
+		bash "$HOME/.config/aria2/core/tracker.sh" "${aria2_conf}" RPC
 	fi
     echo -en "\n\n请回车以继续"
     read -r -n 1 line

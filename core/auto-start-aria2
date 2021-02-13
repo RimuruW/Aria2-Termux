@@ -11,7 +11,6 @@ fi
 
 aria2_conf_dir="$HOME/.aria2"
 aria2_conf="${aria2_conf_dir}/aria2.conf"
-aria2_log="${aria2_conf_dir}/aria2.log"
 aria2c="$PREFIX/bin/aria2c"
 if [ -t 1 ]; then
 	RED=$(printf	'\033[31m')
@@ -71,7 +70,7 @@ Start_aria2() {
 	check_installed_status
 	check_pid
 	[[ -n ${PID} ]] && red "[!] Aria2 正在运行!" && return 1
-	$PREFIX/bin/aria2c --conf-path="${aria2_conf}" -D
+	$PREFIX/bin/aria2c "$(grep -v '#' "$HOME/.aria2/aria2.conf" | sed '/^$/d' | sed "s/^/--&/g" | sed ':label;N;s/\n/ /;b label')" -D
 	check_pid
 	[[ -z ${PID} ]] && red "[!] Aria2 启动失败，请检查日志！" && return 1
 	check_storage

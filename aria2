@@ -1,0 +1,2 @@
+#!/data/data/com.termux/files/usr/bin/bash
+bash "$PREFIX/etc/aria2/aria2.sh"
