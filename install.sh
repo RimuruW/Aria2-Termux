@@ -83,7 +83,7 @@ fi
 if [ -d "$PREFIX/etc/aria2" ]; then
 	yellow "
 [!] 您已安装 Aria2-Termux ，无需重复安装
-如果您需要移除 Aria2-Termux，请输入 rm -rf $PREFIX/etc/tiviw
+如果您需要移除 Aria2-Termux，请输入 rm -rf $PREFIX/etc/aria2
 	"
 	exit 1
 fi
