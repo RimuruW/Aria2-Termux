@@ -204,7 +204,7 @@ Install_aria2() {
 	blue "[*] 开始检查配置文件…"
 	if [ -d "${aria2_git}/conf" ] || [ -d "$HOME/.config/aria2/conf" ]; then
 		mkdir -p ~/.aria2
-		cp "$HOME"/.config/aria2/conf/* "$HOME"/.aria2/*
+		ln -s "$HOME"/.config/aria2/conf "$HOME"/.aria2
 	else
 		red "[!] 未发现 Aria2 本地配置文件"
 		blue "[*] 开始下载 Aria2 配置文件..."

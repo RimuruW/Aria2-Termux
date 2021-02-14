@@ -136,9 +136,9 @@ blue "\n[*] 正在创建启动器..."
 mv -f "$PREFIX/etc/aria2/aria2" "$PREFIX/bin/aria2"
 chmod +x "$PREFIX/bin/aria2"
 
-blue "\n[*] 正在创建配置文件软链接"
+blue "\n[*] 正在处理配置文件"
 mkdir -p "$HOME/.config/aria2"
-ln -s "$PREFIX/etc/aria2/conf" "$HOME/.config/aria2/conf"
+cp "$PREFIX/etc/aria2/conf" "$HOME/.config/aria2/conf"
 
 if [ -f "$PREFIX/bin/aria2" ]; then
 	green "\n[√]  安装成功！请输入 aria2 启动脚本！"
