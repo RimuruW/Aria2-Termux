@@ -142,9 +142,8 @@ check_mirrors() {
 }
 
 Download_aria2_conf() {
-    PROFILE_URL1="https://one.qingxu.ga/onedrive/aira2"
-    PROFILE_URL2="https://share.qingxu.ga/onedrive/aria2"
-    PROFILE_URL3="https://cdn.jsdelivr.net/gh/RimuruW/Aria2-Termux@master/conf"
+    PROFILE_URL1="https://cdn.jsdelivr.net/gh/RimuruW/Aria2-Termux@master/conf"
+    PROFILE_URL2="https://raw.githubusercontent.com/RimuruW/Aria2-Termux/master/conf/"
     PROFILE_LIST="
 aria2.conf
 clean.sh
@@ -163,8 +162,7 @@ auto-start-aria2
     for PROFILE in ${PROFILE_LIST}; do
         [[ ! -f ${PROFILE} ]] && rm -rf "${PROFILE}"
         wget -N -t2 -T3 "${PROFILE_URL1}"/"${PROFILE}" ||
-            wget -N -t2 -T3 "${PROFILE_URL2}"/"${PROFILE}" ||
-            wget -N -t2 -T3 "${PROFILE_URL3}"/"${PROFILE}"
+            wget -N -t2 -T3 "${PROFILE_URL2}"/"${PROFILE}"
         [[ ! -s ${PROFILE} ]] && {
             red "[!] '${PROFILE}' 下载失败！清理残留文件..."
             rm -vrf "${aria2_conf_dir}"
