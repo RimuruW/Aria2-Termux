@@ -16,14 +16,23 @@ bash -c "$(curl -L https://raw.githubusercontent.com/RimuruW/Aria2-Termux/master
 - 完善的多功能支持，支持一键更新 BT Trackers、Aria2 开机自启动
 - 丰富的附加扩展功能，详见[配置文件说明](https://github.com/RimuruW/Aria2-Termux/tree/master/conf)
 
+## 系统要求
+
+- Android 7.0 - 9.0 (Android 10 以上可能会有一些问题)
+- CPU 架构: AArch64, ARM, i686, x86_64.
+- 至少 200MB 的空闲存储空间
+
+
+ **注意：Termux 不支持没有 NEON SIMD 的 ARM 设备，例如 Nvidia Tegra 2 CPUs.**
+
+*Aria2-Termux 本身无任何特殊系统要求，仅需要一个可正常工作的 Termux 环境，以上要求均为 Termux 正常工作要求。*
+
 ## ToDo
 - [x] 适配 Termux
 - [x] 美观易用的 UI
 - [x] 完善的自检测系统
 - [ ] 远程控制配置
-- [ ] 多语言支持
 - [ ] 完善的 README 和 Wiki
-- [ ] 脚本内全配置项编辑
 
 ## 使用说明
 
@@ -31,31 +40,37 @@ bash -c "$(curl -L https://raw.githubusercontent.com/RimuruW/Aria2-Termux/master
 请参阅 [Android 一键安装配置 Aria2](https://qingxu.live/index.php/archives/aria2-for-termux/)
 
 ### 快速开始
-请在 [Google Play Store](https://play.google.com/store/apps/details?id=com.termux) 下载并安装 Termux。
+~~请在 [Google Play Store](https://play.google.com/store/apps/details?id=com.termux) 下载并安装 Termux。~~
 
-*你当然可以选择其他渠道下载，但请尽可能保证你使用的 Termux 为最新版*
+由于[这些原因](https://github.com/termux/termux-app/issues/1072)，Google Play Store 不再是推荐的下载地址，请在 [F-Droid](https://f-droid.org/packages/com.termux/) 下载 Termux。
 
-* 为了确保能正常使用，请先安装必需软件包
-```
-pkg in wget bash -y
+对于因为网络原因无法正常下载 F-Droid 的用户，可以在[我的云盘](https://cloud.linioi.com/s/RYhb)下载。
+
+1. 为了确保能正常使用，请先安装必需软件包
+
+```bash
+pkg i wget bash -y
 ```
 
-* 下载脚本
-```
+2. 下载脚本
+
+```bash
 wget -N https://raw.githubusercontent.com/RimuruW/Aria2-Termux/master/aria2.sh && chmod +x aria2.sh
 ```
 
 > 对于国内用户，可以尝试输入下面命令下载脚本
-```
+```bash
 wget -N https://cdn.jsdelivr.net/gh/RimuruW/Aria2-Termux@master/aria2.sh && chmod +x aria2.sh
 ```
 
-* 运行脚本
-```
+3. 运行脚本
+
+```bash
 bash aria2.sh
 ```
 
-* 选择你要执行的选项
+4. 选择你要执行的选项
+
 ```
 [*] Aria2 一键管理脚本 [v1.0.6]
             by Qingxu(RimuruW)
@@ -101,7 +116,6 @@ RPC 密钥：随机生成，可使用选项`6. 修改 配置文件`自定义
 > 因学业原因，本项目开发进度将放缓，见谅。
 
 ### 2020-11-23 v1.0.5
-- 修复了使用脚本安装 Aria2 后命令行无法下载的问题 [#4](https://github.com/RimuruW/Aria2-Termux/issues/4)
 - 整合配置文件至仓库
 - 更完善的自检测系统
 
@@ -132,4 +146,4 @@ RPC 密钥：随机生成，可使用选项`6. 修改 配置文件`自定义
 
 
 ## License
-[MIT](https://github.com/RimuruW/Aria2-Termux/blob/master/LICENSE) © Toyo x P3TERX x Qingxu
+项目使用 [MIT](https://github.com/RimuruW/Aria2-Termux/blob/master/LICENSE) 开源协议，用户使用本项目即代表用户已阅读并同意该开源协议。
