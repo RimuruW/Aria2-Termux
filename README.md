@@ -27,6 +27,10 @@ bash -c "$(curl -L https://raw.githubusercontent.com/RimuruW/Aria2-Termux/master
 
 *Aria2-Termux 本身无任何特殊系统要求，仅需要一个可正常工作的 Termux 环境，以上要求均为 Termux 正常工作要求。*
 
+## 已知问题
+
+目前[已知](https://github.com/RimuruW/Aria2-Termux/issues/4)，某些情况下使用 Aria2 配置文件启动 Aria2 RPC 后，Aria2 命令行下载不能正常工作。详情请看 [Aria2 命令行下载问题](https://github.com/RimuruW/Aria2-Termux/wiki/Aira2-%E5%91%BD%E4%BB%A4%E8%A1%8C%E4%B8%8B%E8%BD%BD%E9%97%AE%E9%A2%98)。
+
 ## ToDo
 - [x] 适配 Termux
 - [x] 美观易用的 UI
