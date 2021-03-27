@@ -9,38 +9,6 @@
 # Blog: https://qingxu.live
 #=============================================================
 
-check_installed_status() {
-	[[ ! -e ${aria2c} ]] && red "[!] Aria2 未安装!" && return 0
-	[[ ! -e ${aria2_conf} ]] && red "
-[!] Aria2 配置文件不存在！
-[*] 如果你不是通过本脚本安装 Aria2，请先在本脚本卸载 Aria2！
-	" && [[ $1 != "un" ]] && return 0
-}
-
-check_pid() {
-	PID=$(pgrep "aria2c" | grep -v grep | grep -v "aria2.sh" | grep -v "service" | awk '{print $1}')
-}
-
-check_storage() {
-    [[ ! -d "$HOME/storage/shared/Android/" ]] && red "[!] Termux 未获取存储权限，请回车确认后按指示授权存储权限！" && echo -en "\n请回车以确认" && read -r -n 1 line && termux-setup-storage
-    [[ ! -d "$HOME/storage/shared/Android/" ]] && red "[!] Termux 存储权限未获取！请在确保 Termux 已获取存储权限的情况重新启动脚本！" && exit 1
-}
-    
-check_mirrors() {
-	mirrors_status=$(grep "mirror" "$PREFIX/etc/apt/sources.list" | grep -v '#')
-	if [ -z "$mirrors_status" ]; then 
-		red "[!] Termux 镜像源未配置!"
-		blue "对于国内用户，添加清华源作为镜像源可以有效增强 Termux 软件包下载速度" 
-		if ask "是否添加清华源?" "Y"; then
-				sed -i 's@^\(deb.*stable main\)$@#\1\ndeb https://mirrors.tuna.tsinghua.edu.cn/termux/termux-packages-24 stable main@' "$PREFIX/etc/apt/sources.list"
-				sed -i 's@^\(deb.*games stable\)$@#\1\ndeb https://mirrors.tuna.tsinghua.edu.cn/termux/game-packages-24 games stable@'"$PREFIX/etc/apt/sources.list.d/game.list"
-				sed -i 's@^\(deb.*science stable\)$@#\1\ndeb https://mirrors.tuna.tsinghua.edu.cn/termux/science-packages-24 science stable@' "$PREFIX/etc/apt/sources.list.d/science.list"
-				apt update && apt upgrade -y
-			else
-				blue "[√] 使用默认源进行安装"
-		fi
-	fi
-}
 
 Download_aria2_conf() {
     PROFILE_URL1="https://one.qingxu.ga/onedrive/aira2"
@@ -121,37 +89,13 @@ Install_aria2() {
 	check_storage
 	mkdir -p ${download_path}
 	green "[√] 所有步骤执行完毕，开始启动..."
-	Start_aria2
-}
-
-Start_aria2() {
-	check_installed_status
-	check_pid
-	[[ -n ${PID} ]] && red "[!] Aria2 正在运行!" && return 1
-	check_storage
-	blue "[*] 尝试开启唤醒锁…"
-	termux-wake-lock
-	green "[√] 所有步骤执行完毕，开始启动..."
-	$PREFIX/bin/aria2c "$(grep -v '#' "$HOME/.aria2/aria2.conf" | sed '/^$/d' | sed "s/^/--&/g" | sed ':label;N;s/\n/ /;b label')" -D
-	check_pid
-	[[ -z ${PID} ]] && red "[!] Aria2 启动失败，请检查日志！" && return 1
+	source "$ATMDIR/core/start-aria2.sh"
 }
 Stop_aria2() {
 	check_installed_status
 	check_pid
 	[[ -z ${PID} ]] && red "[!] Aria2 未启动，请检查日志 !" && return 0
 	kill -9 "${PID}"
-}
-Restart_aria2() {
-	check_installed_status
-	check_pid
-	[[ -n ${PID} ]] && kill -9 "${PID}"
-	check_storage
-	blue "[*] 尝试开启唤醒锁……"
-	termux-wake-lock
-	green "[√] 所有步骤执行完毕，开始启动..."
-	$PREFIX/bin/aria2c "$(grep -v '#' "$HOME/.aria2/aria2.conf" | sed '/^$/d' | sed "s/^/--&/g" | sed ':label;N;s/\n/ /;b label')" -D
-	[[ -z ${PID} ]] && red "[!] Aria2 启动失败，请检查日志！" && return 1
 }
 Set_aria2() {
 	check_installed_status
@@ -214,7 +158,7 @@ Set_aria2_RPC_passwd() {
 ${BLUE}[√]${RESET} RPC 密钥修改成功！
 新密钥为：${GREEN}${aria2_RPC_passwd}${RESET}(配置文件中缺少相关选项参数，已自动加入配置文件底部)"
                 if [[ ${read_123} != "1" ]]; then
-                    Restart_aria2
+                    source "$ATMDIR/core/restart-aria2.sh"
                 fi
             else
                 echo -e "
@@ -228,7 +172,7 @@ ${RED}[!]${RESET} RPC 密钥修改失败！
 ${GREEN}[√]${RESET} RPC 密钥修改成功！
 新密钥为：${GREEN}${aria2_RPC_passwd}${RESET}"
                 if [[ ${read_123} != "1" ]]; then
-                    Restart_aria2
+                    source "$ATMDIR/core/restart-aria2.sh"
                 fi
             else
 				echo -e  "
@@ -266,7 +210,7 @@ Set_aria2_RPC_port() {
 ${GREEN}[*]${RESET} RPC 端口修改成功！
 新端口为：${GREEN}${aria2_RPC_port}${RESET}(配置文件中缺少相关选项参数，已自动加入配置文件底部)"   
                 if [[ ${read_123} != "1" ]]; then
-                    Restart_aria2
+                    source "$ATMDIR/core/restart-aria2.sh"
                 fi
             else
 				echo -e "
@@ -280,7 +224,7 @@ ${GREEN}[√]${RESET} RPC 端口修改成功！
 新端口为：${GREEN}${aria2_RPC_port}${RESET}
 "                               
                 if [[ ${read_123} != "1" ]]; then
-                    Restart_aria2
+                    source "$ATMDIR/core/restart-aria2.sh"
                 fi
             else
                 echo -e "
@@ -319,7 +263,7 @@ ${GREEN}[√]${RESET} 下载目录修改成功！
 新位置为：${GREEN}${aria2_RPC_dir}${RESET}(配置文件中缺少相关选项参数，已自动加入配置文件底部)
 				"
                 if [[ ${read_123} != "1" ]]; then
-                    Restart_aria2
+                    source "$ATMDIR/core/restart-aria2.sh"
                 fi
             else
 				echo -e "
@@ -336,7 +280,7 @@ ${GREEN}[√]${RESET} 下载目录修改成功！
 新位置为：${GREEN}${aria2_RPC_dir}${RESET}
 "
                 if [[ ${read_123} != "1" ]]; then
-                    Restart_aria2
+                    source "$ATMDIR/core/restart-aria2.sh"
                 fi
             else
                 echo -e "
@@ -353,7 +297,7 @@ Set_aria2_RPC_passwd_port_dir() {
     Set_aria2_RPC_passwd "1"
     Set_aria2_RPC_port "1"
     Set_aria2_RPC_dir "1"
-    Restart_aria2
+    source "$ATMDIR/core/restart-aria2.sh"
 }
 Set_aria2_vim_conf() {
     Read_config
@@ -382,7 +326,7 @@ Set_aria2_vim_conf() {
         aria2_dir_2=$(echo "${aria2_dir}" | sed 's/\//\\\//g')
         sed -i "s@^\(DOWNLOAD_PATH='\).*@\1${aria2_dir_2}'@" "${aria2_conf_dir}/*.sh"
     fi
-    Restart_aria2
+    source "$ATMDIR/core/restart-aria2.sh"
 }
 Reset_aria2_conf() {
     Read_config
@@ -398,7 +342,7 @@ ${RED}[!]${RESET} 此操作将重新下载 Aria2 配置文件，所有已设定�
         aria2_RPC_port=${aria2_port}
         aria2_port=${aria2_port_old}
     fi
-    Restart_aria2
+    source "$ATMDIR/core/restart-aria2.sh"
 }
 
 Read_config() {
@@ -626,13 +570,13 @@ case "$num" in
     Uninstall_aria2
     ;;
 3)
-    Start_aria2
+    source "$ATMDIR/core/start-aria2.sh"
     ;;
 4)
     Stop_aria2
     ;;
 5)
-    Restart_aria2
+    source "$ATMDIR/core/restart-aria2.sh"
     ;;
 6)
     Set_aria2
