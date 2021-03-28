@@ -580,9 +580,9 @@ Update_bt_tracker() {
     check_installed_status
     check_pid
     if [ -z "$PID" ]; then
-        bash <(wget -qO- one.qingxu.ga/onedrive/aira2/tracker.sh) "${aria2_conf}"
+        bash <(wget -qO- cdn.jsdelivr.net/gh/RimuruW/Aria2-Termux@master/tracker.sh) "${aria2_conf}"
 	else
-		bash <(wget -qO- one.qingxu.ga/onedrive/aira2/tracker.sh) "${aria2_conf}" RPC
+		bash <(wget -qO- cdn.jsdelivr.net/gh/RimuruW/Aria2-Termux@master/tracker.sh) "${aria2_conf}" RPC
 	fi
     echo -en "\n\n请回车以继续"
     read -r -n 1 line
