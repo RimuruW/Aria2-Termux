@@ -12,7 +12,6 @@
 #
 
 CHECK_CORE_FILE() {
-    CORE_FILE="$(dirname "$0")/core"
     if [[ -f "${CORE_FILE}" ]]; then
         . "${CORE_FILE}"
     else

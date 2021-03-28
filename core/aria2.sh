@@ -1,37 +1,11 @@
 #!/data/data/com.termux/files/usr/bin/bash
 #=============================================================
-# https://github.com/RimuruW/Aria2-Termux
 # Doc: https://github.com/RimuruW/Aria2-Termux/blob/master/README.md
-# More detail: https://qingxu.live/index.php/archives/aria2-for-termux/
-# Description: Aria2 One-click installation management script for Termux
-# Environment Required: Android with the latest Termux. (The latest Android version is recommended)
 # Author: RimuruW
-# Blog: https://qingxu.live
 #=============================================================
 
-
-Download_aria2_conf() {
-    PROFILE_URL1="https://one.qingxu.ga/onedrive/aira2"
-    PROFILE_URL2="https://share.qingxu.ga/onedrive/aria2"
-    PROFILE_URL3="https://cdn.jsdelivr.net/gh/RimuruW/Aria2-Termux@master/conf"
-    PROFILE_LIST="
-aria2.conf
-script.conf
-rclone.env
-"
-    mkdir -p "${aria2_conf_dir}"
-	cd "${aria2_conf_dir}"  || { red "[!] 目录跳转失败！" >&2;  exit 1; }
-    for PROFILE in ${PROFILE_LIST}; do
-        [[ ! -f ${PROFILE} ]] && rm -rf "${PROFILE}"
-        wget -N -t2 -T3 "${PROFILE_URL1}"/"${PROFILE}" ||
-            wget -N -t2 -T3 "${PROFILE_URL2}"/"${PROFILE}" ||
-            wget -N -t2 -T3 "${PROFILE_URL3}"/"${PROFILE}"
-        [[ ! -s ${PROFILE} ]] && {
-            red "[!] '${PROFILE}' 下载失败！清理残留文件..."
-            rm -vrf "${aria2_conf_dir}"
-            exit 1
-        }
-    done
+Configure_aria2_conf() {
+    cp -r "${atm_git}" "${ATMDIR}"
     sed -i "s@^\(dir=\).*@\1${download_path}@" "${aria2_conf}"
 	sed -i "s@^\(input-file=\).*@\1${aria2_conf_dir}/aria2.session@" "${aria2_conf}"
 	sed -i "s@^\(save-session=\).*@\1${aria2_conf_dir}/aria2.session@" "${aria2_conf}"
@@ -41,8 +15,9 @@ rclone.env
     sed -i "s@#log=@log=${aria2_log}@" "${aria2_conf}"
     touch aria2.session
     chmod +x ./*.sh
-    green "[√] Aria2 配置文件下载完成！"
+    green "[√] Aria2 配置文件处理完成！"
 }
+
 
 Installation_dependency() {
         blue "[*] 检查依赖中…"
@@ -50,7 +25,7 @@ Installation_dependency() {
 		for i in nano ca-certificates findutils jq tar gzip dpkg curl; do
 			if apt list --installed 2>/dev/null | grep "$i"; then
 				echo "  $i 已安装！"
-			elif [ -e $PREFIX/bin/$i ]; then
+			elif [ -e "$PREFIX"/bin/$i ]; then
 				echo "  $i 已安装！"
 			else
 				echo  "${BLUE}[*]${RESET} Installing $i..."
@@ -87,7 +62,7 @@ Install_aria2() {
 	aria2_RPC_port=${aria2_port}
 	blue "[*] 开始创建下载目录..."
 	check_storage
-	mkdir -p ${download_path}
+	mkdir -p "${download_path}"
 	green "[√] 所有步骤执行完毕，开始启动..."
 	source "$ATMDIR/core/start-aria2.sh"
 }
@@ -180,7 +155,7 @@ ${RED}[!]${RESET} RPC 密钥修改失败！
 旧密钥为：${GREEN}${aria2_passwd}${RESET}
 				"
             fi
-        
+        fi
     else
         red "[!] 与旧配置一致，无需修改..."
     fi
@@ -253,7 +228,7 @@ Set_aria2_RPC_dir() {
     echo -en " 请输入新的下载目录(默认: ${download_path}): "
 	read -r aria2_RPC_dir
     [[ -z "${aria2_RPC_dir}" ]] && aria2_RPC_dir="${download_path}"
-    mkdir -p ${aria2_RPC_dir}
+    mkdir -p "${aria2_RPC_dir}"
     echo
     if [[ "${aria2_dir}" != "${aria2_RPC_dir}" ]]; then
         if [[ -z "${aria2_dir}" ]]; then
@@ -456,16 +431,16 @@ Update_Shell() {
     sh_new_ver=$(wget -qO- -t1 -T3 "https://raw.githubusercontent.com/RimuruW/Aria2-Termux/master/aria2.sh" | grep 'ver_code="' | awk -F "=" '{print $NF}' | sed 's/\"//g' | head -1)
     [[ -z ${sh_new_ver} ]] && echo -e "${RED}[!]${RESET} 无法链接到 GitHub !" && exit 1
     if [ -f "$PREFIX/etc/tiviw/aria2.sh.bak2" ]; then
-	    rm -f $PREFIX/etc/tiviw/aria2.sh.bak2
+	    rm -f "$PREFIX"/etc/tiviw/aria2.sh.bak2
     fi
     if [ -f "$PREFIX/etc/tiviw/aria2.sh.bak" ]; then
-	    mv $PREFIX/etc/tiviw/aria2.sh.bak $PREFIX/etc/tiviw/aria2.sh.bak2
+	    mv "$PREFIX"/etc/tiviw/aria2.sh.bak "$PREFIX"/etc/tiviw/aria2.sh.bak2
     fi
     if [[ -d $PREFIX/etc/tiviw ]]; then
 	    echo "${BLUE}[!]${RESET} 检测到 Tiviw! 启用 Tiviw 更新方案!"
-	    mkdir -p $PREFIX/etc/tiviw/aria2
-	    mv $PREFIX/etc/tiviw/aria2/aria2.sh $PREFIX/etc/tiviw/aria2/aria2.sh.bak
-	    wget -P $PREFIX/etc/tiviw/aria2 https://raw.githubusercontent.com/RimuruW/Aria2-Termux/master/aria2.sh && chmod +x $PREFIX/etc/tiviw/aria2/aria2.sh
+	    mkdir -p "$PREFIX"/etc/tiviw/aria2
+	    mv "$PREFIX"/etc/tiviw/aria2/aria2.sh "$PREFIX"/etc/tiviw/aria2/aria2.sh.bak
+	    wget -P "$PREFIX"/etc/tiviw/aria2 https://raw.githubusercontent.com/RimuruW/Aria2-Termux/master/aria2.sh && chmod +x "$PREFIX"/etc/tiviw/aria2/aria2.sh
 	    return 0
     else
 	    wget -N "https://raw.githubusercontent.com/RimuruW/Aria2-Termux/master/aria2.sh" && chmod +x aria2.sh
