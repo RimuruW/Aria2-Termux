@@ -94,8 +94,8 @@ UPLOAD_FILE() {
             DELETE_EMPTY_DIR
             break
         else
-            RETRY=$((${RETRY} + 1))
-            [ ${RETRY} -gt ${RETRY_NUM} ] && (
+            RETRY=$(${RETRY} + 1)
+            [ "${RETRY}" -gt ${RETRY_NUM} ] && (
                 echo
                 UPLOAD_LOG="$(DATE_TIME) ${ERROR} Upload failed: ${LOCAL_PATH}"
                 OUTPUT_UPLOAD_LOG
