@@ -1,6 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
-sh_ver="1.1.0"
+sh_ver="2.0.0"
 atm_git="${PREFIX}/etc/aria2"
 ATMDIR="${HOME}/.config/local/atm"
 aria2_conf_dir="${HOME}/.aria2"
