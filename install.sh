@@ -1,4 +1,4 @@
-#!/data/data/com.termux/files/usr/bin/bash
+#!env bash
 
 RED=$(printf '\033[31m')
 GREEN=$(printf '\033[32m')
@@ -88,16 +88,46 @@ if [ -d "$PREFIX/etc/aria2" ]; then
 	exit 1
 fi
 
+	if [ -n "$(find /data/data/com.termux/cache/apt/pkgcache.bin -mmin -360 2>/dev/null)" ]; then
+		if [ -n "${current_mirror}" ]; then
+			echo -n "Checking availability of current mirror: "
+			if timeout 6 curl \
+				--head \
+				--fail \
+				--connect-timeout 5 \
+				--location \
+				--user-agent 'Termux-PKG/1.0 mirror-checker (termux-tools 0.112) Termux (com.termux; install-prefix:/data/data/com.termux/files/usr)' \
+				"${current_mirror%/}/dists/stable/Release" >/dev/null 2>&1; then
+					echo "ok"
+					return
+			else
+				echo "bad"
+			fi
+		fi
+
 check_mirrors() {
-	mirrors_status=$(grep "mirror" "$PREFIX/etc/apt/sources.list" | grep -v '#')
-	if [ -z "$mirrors_status" ]; then
-		red "[!] Termux 镜像源未配置!"
+	local current_mirror
+	current_mirror=$(grep -P "^\s*deb\s+" /data/data/com.termux/files/usr/etc/apt/sources.list | grep -oP 'https?://[a-z0-9/._-]+')
+
+	if timeout 6 curl \
+		--head \
+		--fail \
+		--connect-timeout 5 \
+		--location \
+		--user-agent 'Termux-PKG/1.0 mirror-checker (termux-tools 0.112) Termux (com.termux; install-prefix:/data/data/com.termux/files/usr)' \
+		"${current_mirror%/}/dists/stable/Release" >/dev/null 2>&1; then
+		green "[√] 当前镜像源可用"
+		return 0
+	else
+		red "[!] Termux 镜像源不可用!"
 		blue "对于国内用户，添加清华源作为镜像源可以有效增强 Termux 软件包下载速度"
 		if ask "是否添加清华源?" "Y"; then
+			cp ${PREFIX}/etc/apt/sources.list ${PREFIX}/etc/apt/sources.list.bak
 			sed -i 's@^\(deb.*stable main\)$@#\1\ndeb https://mirrors.tuna.tsinghua.edu.cn/termux/termux-packages-24 stable main@' "$PREFIX/etc/apt/sources.list"
 			sed -i 's@^\(deb.*games stable\)$@#\1\ndeb https://mirrors.tuna.tsinghua.edu.cn/termux/game-packages-24 games stable@' "$PREFIX/etc/apt/sources.list.d/game.list"
 			sed -i 's@^\(deb.*science stable\)$@#\1\ndeb https://mirrors.tuna.tsinghua.edu.cn/termux/science-packages-24 science stable@' "$PREFIX/etc/apt/sources.list.d/science.list"
 			apt update && apt upgrade -y
+			USE_MIRROR=1
 		else
 			blue "使用默认源进行安装"
 		fi
@@ -142,9 +172,10 @@ blue "\n[*] 正在创建启动器..."
 mv -f "$PREFIX/etc/aria2/bin/atm" "$PREFIX/bin/atm"
 chmod +x "$PREFIX/bin/atm"
 
-blue "\n[*] 正在处理配置文件"
+blue "\n[*] 正在处理配置文件..."
 mkdir -p "${HOME}/.config/local/atm"
 ln -s "${PREFIX}/etc/aria2" "${HOME}/.config/local/atm"
+[ -n ${USE_MIRROR} ] && mv -f ${PREFIX}/etc/apt/sources.list ${PREFIX}/etc/apt/sources.list
 
 if [ -f "$PREFIX/bin/atm" ]; then
 	green "\n[√]  安装成功！请输入 aria2 启动脚本！"
