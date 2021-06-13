@@ -9,6 +9,6 @@ aria2_conf="${aria2_conf_dir}/aria2.conf"
 aria2_log="${aria2_conf_dir}/aria2.log"
 aria2c="${PREFIX}/bin/aria2c"
 CORE_FILE="${ATMDIR}/core/core"
-function_file="${ATMDIR}/core/function.sh" 
+function_dir="${ATMDIR}/core/function" 
 
 source "$HOME/.atmrc"
