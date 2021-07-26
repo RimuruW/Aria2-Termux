@@ -1,4 +1,5 @@
 #!/data/data/com.termux/files/usr/bin/bash
+set -eu
 
 RED=$(printf '\033[31m')
 GREEN=$(printf '\033[32m')
@@ -183,9 +184,8 @@ mv -f "$PREFIX/etc/atm/main/bin/atm" "$PREFIX/bin/atm"
 chmod +x "$PREFIX/bin/atm"
 
 blue "\n[*] 正在处理配置文件..."
-mkdir -p "${HOME}/.config/local/atm"
-ln -sf "${PREFIX}/etc/atm/main/conf" "${HOME}/.config/atm/conf"
-ln -sf "${PREFIX}/etc/atm/main/script" "${HOME}/.config/atm/script"
+mkdir -p "${HOME}/.config/atm"
+ln -sf "${PREFIX}/etc/atm/main/conf/*" "${HOME}/.config/atm/conf"
 [[ ${USE_MIRROR} ]] && mv -f "${PREFIX}"/etc/apt/sources.list.bak "${PREFIX}"/etc/apt/sources.list
 
 if [ -f "$PREFIX/bin/atm" ]; then
