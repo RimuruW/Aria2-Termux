@@ -94,14 +94,18 @@ case "$CMD" in
 	exit 1
     }
     ;;
-
+    -rm*|-re*)
+    if [ -d "$PREFIX/etc/atm" ]; then
+    rm -rf $PREFIX/etc/atm
+	green "Aria2-Termux 已移除"
+    else "[!] 您并未安装 Aria2-Termux"
+	fi
+    ;;
 	*) 
     [[ ! -f "$PREFIX/bin/aria2c" ]] && red "请先安装 Aria2" >&2
-    aria2c;;
+    aria2c "$@"
+    ;;
 esac
 
-hostname() {
-	echo "$1" | awk -F'[/:]' '{print $4}'
-}
 
 
