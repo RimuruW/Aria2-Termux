@@ -178,7 +178,7 @@ check_mirrors() {
 
 Download_aria2_conf() {
     PROFILE_URL1="https://cdn.jsdelivr.net/gh/RimuruW/Aria2-Termux@master/conf"
-    PROFILE_URL2="https://raw.githubusercontent.com/RimuruW/Aria2-Termux/master/conf/"
+    PROFILE_URL2="https://raw.githubusercontent.com/RimuruW/Aria2-Termux/master/conf"
     PROFILE_LIST="
 aria2.conf
 clean.sh
