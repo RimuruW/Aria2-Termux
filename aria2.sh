@@ -124,7 +124,20 @@ check_storage() {
     [[ ! -d "$HOME/storage/shared/Android/" ]] && red "[!] Termux 未获取存储权限，请回车确认后按指示授权存储权限！" && echo -en "\n请回车以确认" && read -r -n 1 line && termux-setup-storage
     [[ ! -d "$HOME/storage/shared/Android/" ]] && red "[!] Termux 存储权限未获取！请在确保 Termux 已获取存储权限的情况重新启动脚本！" && exit 1
 }
-    
+
+timeout_test() {
+	local URL="${1%/}"
+	local timeout="${2-5}"
+
+	timeout "$((timeout + 1))" curl \
+		--head \
+		--fail \
+		--connect-timeout "$timeout" \
+		--location \
+		--user-agent "Termux-PKG/1.0 mirror-checker (termux-tools 0.112) Termux (com.termux; install-prefix:/data/data/com.termux/files/usr)'" \
+		"$URL" >/dev/null 2>&1
+}
+
 replace_mirrors() {
 	red "[!] Termux 镜像源不可用!"
 	blue "对于国内用户，临时添加清华源作为镜像源可以有效增强 Termux 软件包下载速度"
