@@ -1,2 +1,107 @@
 #!/data/data/com.termux/files/usr/bin/bash
-bash "$PREFIX/etc/aria2/aria2.sh"
+set -eu
+
+RED=$(printf '\033[31m')
+GREEN=$(printf '\033[32m')
+YELLOW=$(printf '\033[33m')
+BLUE=$(printf '\033[34m')
+LIGHT=$(printf '\033[1;96m')
+RESET=$(printf '\033[0m')
+
+red() {
+	echo -e "${RED}$1${RESET}"
+}
+
+green() {
+	echo -e "${GREEN}$1${RESET}"
+}
+
+yellow() {
+	echo -e "${YELLOW}$1${RESET}"
+}
+
+blue() {
+	echo -e "${BLUE}$1${RESET}"
+}
+
+light() {
+	echo -e "${LIGHT}$1${RESET}"
+}
+
+ask() {
+	# http://djm.me/ask
+	while true; do
+
+		if [ "${2:-}" = "Y" ]; then
+			prompt="Y/n"
+			default=Y
+		elif [ "${2:-}" = "N" ]; then
+			prompt="y/N"
+			default=N
+		else
+			prompt="y/n"
+			default=
+		fi
+
+		# Ask the question
+		printf '%s\n' "${LIGHT}"
+		printf "[?] "
+		read -r -p "$1 [$prompt] " REPLY
+
+		# Default?
+		if [ -z "$REPLY" ]; then
+			REPLY=$default
+		fi
+
+		printf '%s\n' "${RESET}"
+
+		# Check if the reply is valid
+		case "$REPLY" in
+		Y* | y*) return 0 ;;
+		N* | n*) return 1 ;;
+		esac
+	done
+}
+
+# Check
+if [[ $EUID -eq 0 ]]; then
+	yellow "
+[!] 检测到您正在尝试使用 ROOT 权限运行安装脚本
+[!] 这是不建议且不被允许的
+[!] 安装全过程不需要 ROOT 权限,且以 ROOT 权限运行可能会带来一些无法预料的问题
+[!] 为了您的设备安全，请避免在任何情况下以 ROOT 用户运行安装脚本
+	"
+	exit 1
+fi
+
+if [ "$1" ]; then
+    CMD="$1"
+    shift 1
+else
+    bash "$PREFIX/etc/atm/main/script/index.sh"
+fi
+
+case "$CMD" in
+	-up*)
+    _PWD=$(pwd)
+    cd "$PREFIX/etc/atm/main" || {
+	red "目录跳转失败！" >&2
+	exit 1
+    }
+    git pull -p
+    cd "$_PWD" || {
+	red "目录跳转失败！" >&2
+	exit 1
+    }
+    ;;
+
+	*) 
+    [[ ! -f "$PREFIX/bin/aria2c" ]] && red "请先安装 Aria2" >&2
+    aria2c;;
+esac
+
+hostname() {
+	echo "$1" | awk -F'[/:]' '{print $4}'
+}
+
+
