@@ -48,12 +48,10 @@ bash -c "$(curl -L https://raw.githubusercontent.com/RimuruW/Aria2-Termux/master
 
 由于[这些原因](https://github.com/termux/termux-app/issues/1072)，Google Play Store 不再是推荐的下载地址，请在 [F-Droid](https://f-droid.org/packages/com.termux/) 下载 Termux。
 
-对于因为网络原因无法正常下载 F-Droid 的用户，可以在[我的云盘](https://cloud.linioi.com/s/RYhb)下载。
-
 1. 为了确保能正常使用，请先安装必需软件包
 
 ```bash
-pkg i wget bash -y
+pkg i wget -y
 ```
 
 2. 下载脚本
@@ -76,7 +74,7 @@ bash aria2.sh
 4. 选择你要执行的选项
 
 ```
-[*] Aria2 一键管理脚本 [v1.0.6]
+Aria2 一键管理脚本 [v1.0.6]
             by Qingxu(RimuruW)
 
   0. 退出
@@ -112,12 +110,18 @@ bash aria2.sh
 
 RPC 密钥：随机生成，可使用选项`6. 修改 配置文件`自定义
 
-
 支持项目请随手点个`star`，可以让更多的人发现、使用并受益。您的支持是我持续开发维护的动力。
 
 ## 更新日志
 
 > 因学业原因，本项目开发进度将放缓，见谅。
+>
+> 新版 Aria2-Termux 正在连夜制作中，我争取八月上旬完成...
+
+### 2021-07-26 v1.0.6
+- 完善镜像源检测
+- 完善 Aria2 的启动管理
+- 修复 Aria2 配置文件的某些错误
 
 ### 2020-11-23 v1.0.5
 - 整合配置文件至仓库

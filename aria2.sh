@@ -12,8 +12,8 @@ if [ "$(uname -o)" != "Android" ]; then
 	PREFIX=/data/data/com.termux/files/usr
 fi
 
-sh_ver="1.0.5"
-ver_code="20201127"
+sh_ver="1.0.6"
+ver_code="20210726"
 export ver_code
 #PATH=/data/data/com.termux/files/usr/bin
 #export PATH
@@ -125,19 +125,41 @@ check_storage() {
     [[ ! -d "$HOME/storage/shared/Android/" ]] && red "[!] Termux 存储权限未获取！请在确保 Termux 已获取存储权限的情况重新启动脚本！" && exit 1
 }
     
+replace_mirrors() {
+	red "[!] Termux 镜像源不可用!"
+	blue "对于国内用户，临时添加清华源作为镜像源可以有效增强 Termux 软件包下载速度"
+	if ask "是否临时添加清华源用以下载脚本依赖?" "Y"; then
+		cp "${PREFIX}"/etc/apt/sources.list "${PREFIX}"/etc/apt/sources.list.bak
+		sed -i 's@^\(deb.*stable main\)$@#\1\ndeb https://mirrors.tuna.tsinghua.edu.cn/termux/termux-packages-24 stable main@' "$PREFIX/etc/apt/sources.list"
+		sed -i 's@^\(deb.*games stable\)$@#\1\ndeb https://mirrors.tuna.tsinghua.edu.cn/termux/game-packages-24 games stable@' "$PREFIX/etc/apt/sources.list.d/game.list"
+		sed -i 's@^\(deb.*science stable\)$@#\1\ndeb https://mirrors.tuna.tsinghua.edu.cn/termux/science-packages-24 science stable@' "$PREFIX/etc/apt/sources.list.d/science.list"
+		apt update && apt upgrade -y
+		USE_MIRROR=1
+	else
+		blue "使用默认源进行安装"
+	fi
+}
+
 check_mirrors() {
-	mirrors_status=$(grep "mirror" "$PREFIX/etc/apt/sources.list" | grep -v '#')
-	if [ -z "$mirrors_status" ]; then 
-		red "[!] Termux 镜像源未配置!"
-		blue "对于国内用户，添加清华源作为镜像源可以有效增强 Termux 软件包下载速度" 
-		if ask "是否添加清华源?" "Y"; then
-				sed -i 's@^\(deb.*stable main\)$@#\1\ndeb https://mirrors.tuna.tsinghua.edu.cn/termux/termux-packages-24 stable main@' "$PREFIX/etc/apt/sources.list"
-				sed -i 's@^\(deb.*games stable\)$@#\1\ndeb https://mirrors.tuna.tsinghua.edu.cn/termux/game-packages-24 games stable@'"$PREFIX/etc/apt/sources.list.d/game.list"
-				sed -i 's@^\(deb.*science stable\)$@#\1\ndeb https://mirrors.tuna.tsinghua.edu.cn/termux/science-packages-24 science stable@' "$PREFIX/etc/apt/sources.list.d/science.list"
-				apt update && apt upgrade -y
-			else
-				blue "[√] 使用默认源进行安装"
+	blue "[*] 检查网络环境及镜像源..."
+	local current_mirror
+	current_mirror=$(grep -P "^\s*deb\s+" /data/data/com.termux/files/usr/etc/apt/sources.list | grep -oP 'https?://[a-z0-9/._-]+')
+
+	if timeout_test "google.com"; then
+		if timeout_test "${current_mirror%/}/dists/stable/Release"; then
+			green "[√] 当前镜像源可用"
+		else
+			replace_mirrors
 		fi
+	elif [[ "$(hostname "$current_mirror")" == *".cn" ]]; then
+		if timeout_test "${current_mirror%/}/dists/stable/Release"; then
+			green "[√] 当前镜像源可用"
+		else
+			replace_mirrors
+
+		fi
+	else
+		replace_mirrors
 	fi
 }
 
@@ -218,6 +240,7 @@ Install_aria2() {
 	blue "[*] 开始创建下载目录..."
 	check_storage
 	mkdir -p ${download_path}
+    [[ -n "$USE_MIRROR" ]] && blue "[*] 正在还原镜像配置..." && mv "${PREFIX}"/etc/apt/sources.list.bak "${PREFIX}"/etc/apt/sources.list
 	green "[√] 所有步骤执行完毕，开始启动..."
 	Start_aria2
 }
@@ -239,6 +262,8 @@ Stop_aria2() {
 	check_pid
 	[[ -z ${PID} ]] && red "[!] Aria2 未启动，请检查日志 !" && return 0
 	kill -9 "${PID}"
+    blue "[*] 正在关闭唤醒锁…"
+    termux-wake-unlock
 }
 Restart_aria2() {
 	check_installed_status
@@ -674,7 +699,7 @@ while true
 do
 	check_script_download
 echo && echo -e "
-${LIGHT}[*]${RESET} Aria2 一键管理脚本 ${YELLOW}[v${sh_ver}]${RESET}
+Aria2 一键管理脚本 ${YELLOW}[v${sh_ver}]${RESET}
             by ${LIGHT}Qingxu(RimuruW)${RESET}
 
  ${GREEN} 0.${RESET} 退出
