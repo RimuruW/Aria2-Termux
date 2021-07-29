@@ -183,9 +183,6 @@ blue "\n[*] 正在创建启动器..."
 mv -f "$PREFIX/etc/atm/main/bin/atm" "$PREFIX/bin/atm"
 chmod +x "$PREFIX/bin/atm"
 
-blue "\n[*] 正在处理配置文件..."
-mkdir -p "${HOME}/.config/atm"
-ln -sf "${PREFIX}/etc/atm/main/conf/*" "${HOME}/.config/atm/conf"
 [[ ${USE_MIRROR} ]] && mv -f "${PREFIX}"/etc/apt/sources.list.bak "${PREFIX}"/etc/apt/sources.list
 
 if [ -f "$PREFIX/bin/atm" ]; then
