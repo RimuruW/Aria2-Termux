@@ -1,5 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/bash
 set -eu
+
 trap cleanup EXIT 2
 
 _nowpath=$(pwd)
@@ -68,15 +69,7 @@ ask() {
 
 cleanup() {
 	[[ -n ${USE_MIRROR} ]] && blue "\n[*] 正在恢复镜像源..." && mv -f "${PREFIX}"/etc/apt/sources.list.bak "${PREFIX}"/etc/apt/sources.list
-	rm -rf "$PREFIX/bin/atm"
-	if [ -d "$HOME/atm/tmp" ]; then
-		blue "\n[*] 正在处理文件..."
-		mkdir -p "$PREFIX/etc/atm"
-		mv -f "$HOME/atm/tmp" "$PREFIX/etc/atm/main"
-		blue "\n[*] 正在创建启动器..."
-		cp "$PREFIX/etc/atm/main/bin/atm" "$PREFIX/bin/atm"
-		chmod +x "$PREFIX/bin/atm"
-	fi
+	rm -rf "$HOME/atm"
 	if [ -f "$PREFIX/bin/atm" ]; then
 		green "\n[√]  安装成功！请输入 atm 启动脚本！"
 	else
@@ -160,7 +153,6 @@ check_mirrors() {
 			green "[√] 当前镜像源可用"
 		else
 			replace_mirrors
-
 		fi
 	else
 		replace_mirrors
@@ -191,7 +183,7 @@ apt-get upgrade -y
 blue "\n[*] 正在拉取远程仓库..."
 rm -rf "$HOME/atm/tmp"
 git clone https://github.com/RimuruW/Aria2-Termux "$HOME/atm/tmp"
-cd ""$HOME/atm/tmp"" || {
+cd "$HOME/atm/tmp" || {
 	red "目录跳转失败！" >&2
 	exit 1
 }
@@ -201,3 +193,14 @@ cd "$_nowpath" || {
 	red "[!] 目录跳转失败!" >&2
 	exit 1
 }
+
+rm -rf "$PREFIX/bin/atm"
+
+if [ -d "$HOME/atm/tmp" ]; then
+	blue "\n[*] 正在处理文件..."
+	mkdir -p "$PREFIX/etc/atm"
+	mv -f "$HOME/atm/tmp" "$PREFIX/etc/atm/main"
+	blue "\n[*] 正在创建启动器..."
+	cp "$PREFIX/etc/atm/main/bin/atm" "$PREFIX/bin/atm"
+	chmod +x "$PREFIX/bin/atm"
+fi
