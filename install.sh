@@ -1,5 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/bash
 set -eu
+trap cleanup EXIT 2
+
+_nowpath=$(pwd)
 
 RED=$(printf '\033[31m')
 GREEN=$(printf '\033[32m')
@@ -61,6 +64,26 @@ ask() {
 		N* | n*) return 1 ;;
 		esac
 	done
+}
+
+cleanup() {
+	[[ ${USE_MIRROR} ]] && blue "\n[*] 正在恢复镜像源..." && mv -f "${PREFIX}"/etc/apt/sources.list.bak "${PREFIX}"/etc/apt/sources.list
+	rm -rf "$PREFIX/bin/atm"
+	if [ -d "$HOME/atm/tmp" ]; then
+		blue "\n[*] 正在处理文件..."
+		mkdir -p "$PREFIX/etc/atm"
+		mv -f "$HOME/atm/tmp" "$PREFIX/etc/atm/main"
+		blue "\n[*] 正在创建启动器..."
+		cp "$PREFIX/etc/atm/main/bin/atm" "$PREFIX/bin/atm"
+		chmod +x "$PREFIX/bin/atm"
+	fi
+	if [ -f "$PREFIX/bin/atm" ]; then
+		green "\n[√]  安装成功！请输入 atm 启动脚本！"
+	else
+		red "
+[!] 安装失败！
+	"
+	fi
 }
 
 # Check
@@ -166,32 +189,15 @@ apt-get upgrade -y
 
 # Clone files
 blue "\n[*] 正在拉取远程仓库..."
-mkdir -p "$PREFIX/etc/atm"
-git clone https://github.com/RimuruW/Aria2-Termux "$PREFIX/etc/atm/main"
-cd "$PREFIX/etc/atm/main" || {
+rm -rf "$HOME/atm/tmp"
+git clone https://github.com/RimuruW/Aria2-Termux "$HOME/atm/tmp"
+cd ""$HOME/atm/tmp"" || {
 	red "目录跳转失败！" >&2
 	exit 1
 }
 git checkout master
 
-cd "$HOME" || {
+cd "$_nowpath" || {
 	red "[!] 目录跳转失败!" >&2
 	exit 1
 }
-
-blue "\n[*] 正在创建启动器..."
-mv -f "$PREFIX/etc/atm/main/bin/atm" "$PREFIX/bin/atm"
-chmod +x "$PREFIX/bin/atm"
-
-[[ ${USE_MIRROR} ]] && mv -f "${PREFIX}"/etc/apt/sources.list.bak "${PREFIX}"/etc/apt/sources.list
-
-if [ -f "$PREFIX/bin/atm" ]; then
-	green "\n[√]  安装成功！请输入 atm 启动脚本！"
-	exit 0
-else
-	red "
-[!] 安装失败！请提交错误内容至开发者！
-[*] 错误：启动器安装失败
-	"
-	exit 1
-fi
