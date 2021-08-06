@@ -67,7 +67,7 @@ ask() {
 }
 
 cleanup() {
-	[[ ${USE_MIRROR} ]] && blue "\n[*] 正在恢复镜像源..." && mv -f "${PREFIX}"/etc/apt/sources.list.bak "${PREFIX}"/etc/apt/sources.list
+	[[ -n ${USE_MIRROR} ]] && blue "\n[*] 正在恢复镜像源..." && mv -f "${PREFIX}"/etc/apt/sources.list.bak "${PREFIX}"/etc/apt/sources.list
 	rm -rf "$PREFIX/bin/atm"
 	if [ -d "$HOME/atm/tmp" ]; then
 		blue "\n[*] 正在处理文件..."
