@@ -89,7 +89,7 @@ case "$CMD" in
 	exit 1
     }
     git pull -p
-	mv -f "$PREFIX/etc/atm/main/bin/atm" "$PREFIX/bin/atm"
+	cp "$PREFIX/etc/atm/main/bin/atm" "$PREFIX/bin/atm"
     cd "$_PWD" || {
 	red "目录跳转失败！" >&2
 	exit 1
