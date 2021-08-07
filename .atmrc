@@ -1,14 +1,25 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
-SH_VER="2.0.0"
-ATMDIR="${PREFIX}/etc/atm"
-ATM_GIT="${PREFIX}/etc/atm/main"
-WORK_DIR="${HOME}/.aria2"
-DOWNLOAD_PATH="/sdcard/Download"
-ARIA2_CONF="${WORK_DIR}/aria2.conf"
-ARIA2_LOG="${WORK_DIR}/aria2.log"
-SAMPLE_DIR="${HOME}/.config/atm/conf"
-ADDONS_DIR="${ATMDIR}/script/addons"
-GIT_REMOTE="https://github.com/RimuruW/Aria2-Termux"
+# Version
+VER='2.0.0'
+REL='20210806'
 
+# Available variables
+ATMDIR="${PREFIX}/etc/atm"
+ATMGIT="${ATMDIR}/main"
+WORKDIR="${HOME}/.aria2"
+DOWNLOADPATH="/sdcard/Download"
+ARIA2CONF="${WORKDIR}/aria2.conf"
+ARIA2LOG="${WORKDIR}/aria2.log"
+SAMPLEDIR="${HOME}/.config/atm/conf"
+ADDONSDIR="${ATMGIT}/script/addons"
+ATMLOG="$ATMDIR/logs"
+GITHOST="github.com"
+GITRES="RimuruW/Aria2-Termux"
+BRANCH="master"
+
+# Developer Mode
+DEVMODE=
+
+# Load custom variables
 source "$HOME/.atmrc"
