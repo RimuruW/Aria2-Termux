@@ -1,5 +1,4 @@
 #!/data/data/com.termux/files/usr/bin/bash
-set -eu
 
 trap cleanup EXIT 2
 
@@ -163,7 +162,7 @@ check_mirrors
 
 blue "[*] 检查依赖中..."
 apt-get update -y &>/dev/null
-for i in git wget; do
+for i in git wget netcat; do
 	if [ -e "$PREFIX/bin/$i" ]; then
 		echo "  $i 已安装！"
 	else
