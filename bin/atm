@@ -13,6 +13,8 @@ fi
 source "$PREFIX/etc/atm/main/.atmrc"
 source "$ATMGIT/script/function.sh"
 
+fancy_opening
+
 # Handle git
 GITREMOTE="https://$GITHOST/$GITRES"
 if [ "$GITHOST" = "github.com" ]; then
@@ -32,8 +34,8 @@ mkdir -p "$ATMLOG"
 mkdir -p "$EXTRALOG"
 
 # Start Logging verbosely
-mv -f "$VERLOG" "$oldVERLOG" 2>/dev/null
-mv -f "$_ATMLOG" "$_oldATMLOG"
+[[ -f $VERLOG ]] && mv -f "$VERLOG" "$oldVERLOG" 2>/dev/null
+[[ -f $_ATMLOG ]] && mv -f "$_ATMLOG" "$_oldATMLOG" 2>/dev/null
 # set -x 2>$VERLOG
 
 # Variables
