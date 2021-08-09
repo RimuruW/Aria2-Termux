@@ -406,6 +406,10 @@ exit_error() {
     exit 0
 }
 
+check_pid() {
+	PID=$(pgrep "aria2c" | grep -v grep | grep -v "service" | awk '{print $1}')
+}
+
 Configure_ARIA2CONF() {
     cp -r "${ATMGIT}/conf" "${WORKDIR}"
     set_file_prop dir "${DOWNLOADPATH}" "${ARIA2CONF}"
@@ -452,12 +456,9 @@ check_installed_status() {
 
 Install_aria2() {
     [[ -e ${aria2c} ]] && red "[!] Aria2 已安装，如需重新安装请在脚本中卸载 Aria2！" && return 1
-    check_sys
     check_mirrors
-    blue "[*] 开始安装并配置依赖..."
-    Installation_dependency
-    blue "[*] 开始下载并安装主程序..."
-    pkg i aria2 -y 2>/dev/null
+    Installation_dependency & e_spinner "[*] 开始安装并配置依赖..."
+    pkg i aria2 -y & e_spinner "[*] 开始下载并安装主程序..."
     blue "[*] 开始检查配置文件…"
     if [ -d "${atm_git}/conf" ] || [ -d "${ATMDIR}" ]; then
         mkdir -p ~/.aria2
@@ -465,7 +466,6 @@ Install_aria2() {
     else
         red "[!] 未发现 Aria2 本地配置文件"
         blue "[*] 开始下载 Aria2 配置文件..."
-        Download_ARIA2CONF
         Configure_ARIA2CONF
     fi
     aria2_RPC_port=${aria2_port}
@@ -473,7 +473,20 @@ Install_aria2() {
     check_storage
     mkdir -p "${download_path}"
     green "[√] 所有步骤执行完毕，开始启动..."
-    source "$ATMDIR/core/start-aria2.sh"
+    Start_aria2
+}
+
+Start_aria2() {
+	check_installed_status
+	check_pid
+	[[ -n ${PID} ]] && red "[!] Aria2 正在运行!" && return 1
+	check_storage
+	blue "[*] 尝试开启唤醒锁…"
+	termux-wake-lock
+	green "[√] 所有步骤执行完毕，开始启动..."
+	$PREFIX/bin/aria2c --conf-path="${aria2_conf}" -D
+	check_pid
+	[[ -z ${PID} ]] && red "[!] Aria2 启动失败，请检查日志！" && return 1
 }
 
 Stop_aria2() {
