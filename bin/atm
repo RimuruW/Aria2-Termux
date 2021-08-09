@@ -1,6 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
-set -e
+# set -e
 
 # Load vars
 source "$PREFIX/etc/atm/main/.atmrc"
@@ -27,7 +27,7 @@ mkdir -p "$EXTRALOG"
 # Start Logging verbosely
 mv -f "$VERLOG" "$oldVERLOG" 2>/dev/null
 mv -f "$_ATMLOG" "$_oldATMLOG"
-set -x 2>$VERLOG
+# set -x 2>$VERLOG
 
 # Variables
 AUTHOR="RimuruW"
@@ -48,7 +48,7 @@ if [ "$1" ]; then
     CMD="$1"
     shift 1
 else
-    bash "$PREFIX/etc/atm/main/script/index.sh"
+    . "$PREFIX/etc/atm/main/script/index.sh"
     exit 0
 fi
 
