@@ -5,6 +5,7 @@ VER='2.0.0'
 REL='20210806'
 
 # Available variables
+aria2c="$PREFIX/bin/aria2c"
 ATMDIR="${PREFIX}/etc/atm"
 ATMGIT="${ATMDIR}/main"
 WORKDIR="${HOME}/.aria2"
