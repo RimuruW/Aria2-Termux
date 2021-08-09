@@ -2,6 +2,13 @@
 
 # set -e
 
+if [ "$1" ]; then
+    CMD="$1"
+    shift 1
+else
+    INDEXSTART=true
+fi
+
 # Load vars
 source "$PREFIX/etc/atm/main/.atmrc"
 source "$ATMGIT/script/function.sh"
@@ -44,13 +51,7 @@ if [[ $EUID -eq 0 ]]; then
     exit 1
 fi
 
-if [ "$1" ]; then
-    CMD="$1"
-    shift 1
-else
-    . "$PREFIX/etc/atm/main/script/index.sh"
-    exit 0
-fi
+[[ -n "$INDEXSTART" ]] && . "$PREFIX/etc/atm/main/script/index.sh" && exit 0
 
 case "$CMD" in
 -up*)
