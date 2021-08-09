@@ -198,11 +198,18 @@ upload_logs() {
         [ -s $VERLOG ] && verUp=$(cat $VERLOG | nc termbin.com 9999) || verUp=none
         [ -s $oldVERLOG ] && oldverUp=$(cat $oldVERLOG | nc termbin.com 9999) || oldverUp=none
         [ -s $ARIA2LOG ] && logUp=$(cat $ARIA2LOG | nc termbin.com 9999) || logUp=none
+        [ -s $_ATMLOG ] && ATMlogUp=$(cat $_ATMLOG | nc termbin.com 9999) || logUp=none
+        
         echo -n "Link: "
         echo "Aria2-Termux 
     Version: $VER $REL
+    Termux Version: 
+    Android Version: 
+    Model: 
+
     atm_old_Verbose: $oldverUp
     atm_Verbose: $verUp
+    atm_log: $ATMlogUp
 
     allvar
 ==============

@@ -5,8 +5,10 @@ while true; do
     fancy_opening
     main_menu
     printf "\n 请输入数字 [0-12]: "
-    read -r num
-    case "$num" in
+	echo -en "${G}"
+	read -r INPUT
+	echo -en "${N}"
+    case "$INPUT" in
     0)
         exit 0
         ;;
