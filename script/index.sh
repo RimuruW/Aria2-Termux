@@ -2,6 +2,8 @@
 
 . "$ATMGIT/script/strings.sh"
 
+trap exit_sh EXIT 2
+
 while true; do
     clear
     echo ""
