@@ -429,6 +429,15 @@ Installation_dependency() {
     apt-get upgrade -y
 }
 
+check_installed_status() {
+	[[ ! -e ${aria2c} ]] && red "[!] Aria2 未安装!" && return 0
+	[[ ! -e ${ARIA2CONF} ]] && red "
+[!] Aria2 配置文件不存在！
+[*] 如果你不是通过本脚本安装 Aria2，请先在本脚本卸载 Aria2！
+	" && [[ $1 != "un" ]] && return 0
+}
+
+
 Install_aria2() {
     [[ -e ${aria2c} ]] && red "[!] Aria2 已安装，如需重新安装请在脚本中卸载 Aria2！" && return 1
     check_sys

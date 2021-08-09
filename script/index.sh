@@ -4,7 +4,9 @@
 
 while true; do
     clear
+    echo ""
     header "主菜单"
+    echo ""
     main_menu
     footer
     printf "\n 请输入数字 [0-12]: "
@@ -54,6 +56,7 @@ while true; do
     *)
         echo
         echo -e "${R}[!]${N} 请输入正确的数字"
+        sleep 3
         ;;
     esac
 done
