@@ -50,7 +50,7 @@ ask() {
         fi
 
         # Ask the question
-        printf '%s\n' "${L}"
+        printf '%s\n' "\033[1;96m"
         printf "[?] "
         read -r -p "$1 [$prompt] " REPLY
 
@@ -59,7 +59,7 @@ ask() {
             REPLY=$default
         fi
 
-        printf '%s\n' "${N}"
+        printf '%s\n' "\033[0m"
 
         # Check if the reply is valid
         case "$REPLY" in
@@ -274,6 +274,7 @@ header() {
     echo ""
     echo -e " Version: ${Y}${VER} (${REL})${N}"
     echo -e " by ${Y}Qingxu($AUTHOR)${N}"
+    echo ""
     printf "${C}=%.0s${N}" $(seq "$MDLVAL")
     echo -e "\n${SP// / }$1"
     printf "${C}=%.0s${N}" $(seq "$MDLVAL")
@@ -282,10 +283,10 @@ header() {
 
 # Display on Footer
 footer() {
-    echo ""
     var=$((MDLVAL / 2))
     var=$((MDLVAL / 2 + 1))
     printf "${C}- %.0s${N}" $(seq $var)
+    echo ""
     if [[ -e ${aria2c} ]]; then
         check_pid
         if [[ -n "${PID}" ]]; then
