@@ -164,7 +164,7 @@ check_mirrors
 
 blue "[*] 检查依赖中..."
 apt-get update -y &>/dev/null
-for i in git wget nmap-ncat; do
+for i in git wget zip nmap-ncat; do
 	if [ -e "$PREFIX/bin/$i" ]; then
 		echo "  $i 已安装！"
 	else
