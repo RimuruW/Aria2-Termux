@@ -4,8 +4,9 @@
 
 while true; do
     clear
-    fancy_opening
+    header "主菜单"
     main_menu
+    footer
     printf "\n 请输入数字 [0-12]: "
 	echo -en "${G}"
 	read -r INPUT
