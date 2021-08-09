@@ -1,7 +1,7 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
 main_menu() {
-    echo "
+    echo -e "
     ${G} 0.${N} 退出
     ———————————————————————
     ${G} 1.${N} 安装 Aria2
@@ -19,6 +19,5 @@ main_menu() {
     ${G} 10.${N} 一键更新 BT-Tracker
     ${G} 11.${N} 一键更新脚本
     ${G} 12.${N} Aria2 开机自启动
-
     "
 }
