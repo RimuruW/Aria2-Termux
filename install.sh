@@ -71,10 +71,12 @@ cleanup() {
 	rm -rf "$HOME/atm"
 	if [ -f "$PREFIX/bin/atm" ]; then
 		green "\n[√]  安装成功！请输入 atm 启动脚本！"
+		exit 0
 	else
 		red "
 [!] 安装失败！
 	"
+		exit 1
 	fi
 }
 

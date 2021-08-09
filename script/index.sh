@@ -1,5 +1,7 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
+. "$ATMGIT/script/strings.sh"
+
 while true; do
     clear
     fancy_opening
