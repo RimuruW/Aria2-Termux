@@ -3,7 +3,6 @@
 while true; do
     clear
     fancy_opening
-    sh_update
     main_menu
     printf "\n 请输入数字 [0-12]: "
     read -r num
@@ -42,14 +41,14 @@ while true; do
         Update_bt_tracker
         ;;
     11)
-        Update_Shell
+        sh_update
         ;;
     12)
         Auto_start
         ;;
     *)
         echo
-        echo -e "${RED}[!]${RESET} 请输入正确的数字"
+        echo -e "${R}[!]${N} 请输入正确的数字"
         ;;
     esac
 done

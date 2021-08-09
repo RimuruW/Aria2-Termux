@@ -409,7 +409,7 @@ Installation_dependency() {
         elif [ -e "$PREFIX"/bin/$i ]; then
             echo "  $i 已安装！"
         else
-            echo "${BLUE}[*]${RESET} Installing $i..."
+            echo "${G}[*]${N} Installing $i..."
             apt-get install -y $i || {
                 red "
 [!] 依赖安装失败!
@@ -459,14 +459,14 @@ Set_aria2() {
     check_installed_status
     aria2_modify=null
     echo -e "
- ${GREEN}1.${RESET} 修改 Aria2 RPC 密钥
- ${GREEN}2.${RESET} 修改 Aria2 RPC 端口
- ${GREEN}3.${RESET} 修改 Aria2 下载目录
- ${GREEN}4.${RESET} 修改 Aria2 密钥 + 端口 + 下载目录
- ${GREEN}5.${RESET} 手动 打开配置文件修改
- ${GREEN}6.${RESET} 重置/更新 Aria2 配置文件
+ ${G}1.${N} 修改 Aria2 RPC 密钥
+ ${G}2.${N} 修改 Aria2 RPC 端口
+ ${G}3.${N} 修改 Aria2 下载目录
+ ${G}4.${N} 修改 Aria2 密钥 + 端口 + 下载目录
+ ${G}5.${N} 手动 打开配置文件修改
+ ${G}6.${N} 重置/更新 Aria2 配置文件
  -------------------
- ${GREEN}0.${RESET}  退出脚本
+ ${G}0.${N}  退出脚本
 "
     echo -en " 请输入数字 [0-5]: "
     read -r aria2_modify
@@ -486,7 +486,7 @@ Set_aria2() {
         return 0
     else
         echo
-        echo "${RED}[!]${RESET} 请输入正确的数字"
+        echo "${R}[!]${N} 请输入正确的数字"
         return 1
     fi
 }
@@ -501,9 +501,9 @@ Set_aria2_RPC_passwd() {
         aria2_passwd_1=${aria2_passwd}
     fi
     echo -e "
- ${BLUE}[*]${RESET} Aria2 RPC 密钥不要包含等号(=)和井号(#)，留空则随机生成。
+ ${G}[*]${N} Aria2 RPC 密钥不要包含等号(=)和井号(#)，留空则随机生成。
 
- 当前 RPC 密钥为: ${GREEN}${aria2_passwd_1}${RESET}
+ 当前 RPC 密钥为: ${G}${aria2_passwd_1}${N}
 "
     echo -en " 请输入新的 RPC 密钥: "
     read -r aria2_RPC_passwd
@@ -513,29 +513,29 @@ Set_aria2_RPC_passwd() {
         if [[ -z "${aria2_passwd}" ]]; then
             if echo -e "\nrpc-secret=${aria2_RPC_passwd}" >>"${aria2_conf}"; then
                 echo -e "
-${BLUE}[√]${RESET} RPC 密钥修改成功！
-新密钥为：${GREEN}${aria2_RPC_passwd}${RESET}(配置文件中缺少相关选项参数，已自动加入配置文件底部)"
+${G}[√]${N} RPC 密钥修改成功！
+新密钥为：${G}${aria2_RPC_passwd}${N}(配置文件中缺少相关选项参数，已自动加入配置文件底部)"
                 if [[ ${read_123} != "1" ]]; then
                     source "$ATMDIR/core/restart-aria2.sh"
                 fi
             else
                 echo -e "
-${RED}[!]${RESET} RPC 密钥修改失败！
-旧密钥为：${RED}${aria2_passwd}${RESET}
+${R}[!]${N} RPC 密钥修改失败！
+旧密钥为：${R}${aria2_passwd}${N}
 				"
             fi
         else
             if sed -i 's/^rpc-secret='"${aria2_passwd}"'/rpc-secret='"${aria2_RPC_passwd}"'/g' "${aria2_conf}"; then
                 echo -e "
-${GREEN}[√]${RESET} RPC 密钥修改成功！
-新密钥为：${GREEN}${aria2_RPC_passwd}${RESET}"
+${G}[√]${N} RPC 密钥修改成功！
+新密钥为：${G}${aria2_RPC_passwd}${N}"
                 if [[ ${read_123} != "1" ]]; then
                     source "$ATMDIR/core/restart-aria2.sh"
                 fi
             else
                 echo -e "
-${RED}[!]${RESET} RPC 密钥修改失败！
-旧密钥为：${GREEN}${aria2_passwd}${RESET}
+${R}[!]${N} RPC 密钥修改失败！
+旧密钥为：${G}${aria2_passwd}${N}
 				"
             fi
         fi
@@ -555,7 +555,7 @@ Set_aria2_RPC_port() {
         aria2_port_1=${aria2_port}
     fi
     echo -e "
- 当前 RPC 端口为: ${GREEN}${aria2_port_1}${RESET}
+ 当前 RPC 端口为: ${G}${aria2_port_1}${N}
 "
     echo -en " 请输入新的 RPC 端口(默认: 6800): "
     read -r aria2_RPC_port
@@ -565,34 +565,34 @@ Set_aria2_RPC_port() {
         if [[ -z "${aria2_port}" ]]; then
             if echo -e "\nrpc-listen-port=${aria2_RPC_port}" >>"${aria2_conf}"; then
                 echo -e "
-${GREEN}[*]${RESET} RPC 端口修改成功！
-新端口为：${GREEN}${aria2_RPC_port}${RESET}(配置文件中缺少相关选项参数，已自动加入配置文件底部)"
+${G}[*]${N} RPC 端口修改成功！
+新端口为：${G}${aria2_RPC_port}${N}(配置文件中缺少相关选项参数，已自动加入配置文件底部)"
                 if [[ ${read_123} != "1" ]]; then
                     source "$ATMDIR/core/restart-aria2.sh"
                 fi
             else
                 echo -e "
-${RED}[!]${RESET} RPC 端口修改失败！
-旧端口为：${GREEN}${aria2_port}${RESET}"
+${R}[!]${N} RPC 端口修改失败！
+旧端口为：${G}${aria2_port}${N}"
             fi
         else
             if sed -i 's/^rpc-listen-port='"${aria2_port}"'/rpc-listen-port='"${aria2_RPC_port}"'/g' "${aria2_conf}"; then
                 echo -e "
-${GREEN}[√]${RESET} RPC 端口修改成功！
-新端口为：${GREEN}${aria2_RPC_port}${RESET}
+${G}[√]${N} RPC 端口修改成功！
+新端口为：${G}${aria2_RPC_port}${N}
 "
                 if [[ ${read_123} != "1" ]]; then
                     source "$ATMDIR/core/restart-aria2.sh"
                 fi
             else
                 echo -e "
-${RED}[!]${RESET} RPC 端口修改失败！
-旧端口为：${GREEN}${aria2_port}${RESET}
+${R}[!]${N} RPC 端口修改失败！
+旧端口为：${G}${aria2_port}${N}
 				"
             fi
         fi
     else
-        echo -e "${YELLOW}[!]${RESET} 与旧配置一致，无需修改..."
+        echo -e "${Y}[!]${N} 与旧配置一致，无需修改..."
     fi
 }
 
@@ -607,7 +607,7 @@ Set_aria2_RPC_dir() {
         aria2_dir_1=${aria2_dir}
     fi
     echo -e "
- 当前下载目录为: ${GREEN}${aria2_dir_1}${RESET}
+ 当前下载目录为: ${G}${aria2_dir_1}${N}
 "
     echo -en " 请输入新的下载目录(默认: ${download_path}): "
     read -r aria2_RPC_dir
@@ -618,16 +618,16 @@ Set_aria2_RPC_dir() {
         if [[ -z "${aria2_dir}" ]]; then
             if echo -e "\ndir=${aria2_RPC_dir}" >>"${aria2_conf}"; then
                 echo -e "
-${GREEN}[√]${RESET} 下载目录修改成功！
-新位置为：${GREEN}${aria2_RPC_dir}${RESET}(配置文件中缺少相关选项参数，已自动加入配置文件底部)
+${G}[√]${N} 下载目录修改成功！
+新位置为：${G}${aria2_RPC_dir}${N}(配置文件中缺少相关选项参数，已自动加入配置文件底部)
 				"
                 if [[ ${read_123} != "1" ]]; then
                     source "$ATMDIR/core/restart-aria2.sh"
                 fi
             else
                 echo -e "
-${RED}[!]${RESET} 下载目录修改失败！
-旧位置为：${GREEN}${aria2_dir}${RESET}
+${R}[!]${N} 下载目录修改失败！
+旧位置为：${G}${aria2_dir}${N}
 "
             fi
         else
@@ -635,20 +635,20 @@ ${RED}[!]${RESET} 下载目录修改失败！
             aria2_RPC_dir_2=$(echo "${aria2_RPC_dir}" | sed 's/\//\\\//g')
             if sed -i "s@^\(dir=\).*@\1${aria2_RPC_dir_2}@" "${aria2_conf}" && sed -i "s@^\(DOWNLOAD_PATH='\).*@\1${aria2_RPC_dir_2}'@" "${aria2_conf_dir}/*.sh"; then
                 echo -e "
-${GREEN}[√]${RESET} 下载目录修改成功！
-新位置为：${GREEN}${aria2_RPC_dir}${RESET}
+${G}[√]${N} 下载目录修改成功！
+新位置为：${G}${aria2_RPC_dir}${N}
 "
                 if [[ ${read_123} != "1" ]]; then
                     source "$ATMDIR/core/restart-aria2.sh"
                 fi
             else
                 echo -e "
-${RED}[!]${RESET} 下载目录修改失败！
-旧位置为：${GREEN}${aria2_dir}${RESET}"
+${R}[!]${N} 下载目录修改失败！
+旧位置为：${G}${aria2_dir}${N}"
             fi
         fi
     else
-        echo "${YELLOW}[!]${RESET} 与旧配置一致，无需修改..."
+        echo "${Y}[!]${N} 与旧配置一致，无需修改..."
     fi
 }
 
@@ -665,14 +665,14 @@ Set_aria2_vim_conf() {
     aria2_port_old=${aria2_port}
     aria2_dir_old=${aria2_dir}
     echo -e "
- 配置文件位置：${GREEN}${aria2_conf}${RESET}
+ 配置文件位置：${G}${aria2_conf}${N}
 
- ${GREEN}[*]${RESET} 手动修改配置文件须知：
+ ${G}[*]${N} 手动修改配置文件须知：
  
- ${GREEN}1.${RESET} 默认使用 nano 文本编辑器打开
- ${GREEN}2.${RESET} 退出并保存文件：按 ${GREEN}Ctrl+X${RESET} 组合键，输入 ${GREEN}y${RESET} ，然后按 ${GREEN}Enter${RESET} 键
- ${GREEN}3.${RESET} 退出不保存文件：按 ${GREEN}Ctrl+X${RESET} 组合键，输入 ${GREEN}n${RESET}
- ${GREEN}4.${RESET} nano 详细使用教程: \033[4;34mhttps://wiki.archlinux.org/index.php/Nano_(简体中文)${RESET}
+ ${G}1.${N} 默认使用 nano 文本编辑器打开
+ ${G}2.${N} 退出并保存文件：按 ${G}Ctrl+X${N} 组合键，输入 ${G}y${N} ，然后按 ${G}Enter${N} 键
+ ${G}3.${N} 退出不保存文件：按 ${G}Ctrl+X${N} 组合键，输入 ${G}n${N}
+ ${G}4.${N} nano 详细使用教程: \033[4;34mhttps://wiki.archlinux.org/index.php/Nano_(简体中文)${N}
  "
     echo -en "按任意键继续，按 Ctrl+C 组合键取消"
     read -r -n 1 line
@@ -693,7 +693,7 @@ Reset_aria2_conf() {
     Read_config
     aria2_port_old=${aria2_port}
     echo -e "
-${RED}[!]${RESET} 此操作将重新下载 Aria2 配置文件，所有已设定的配置将丢失。
+${R}[!]${N} 此操作将重新下载 Aria2 配置文件，所有已设定的配置将丢失。
 
 按任意键继续，按 Ctrl+C 组合键取消"
     read -r -n 1 line
@@ -710,7 +710,7 @@ Read_config() {
     status_type=$1
     if [[ ! -e ${aria2_conf} ]]; then
         if [[ ${status_type} != "un" ]]; then
-            echo -e "${RED}[!]${RESET} Aria2 配置文件不存在 !" && return 0
+            echo -e "${R}[!]${N} Aria2 配置文件不存在 !" && return 0
         fi
     else
         aria2_dir=$(grep "^dir=" "${aria2_conf}" | grep -v '#' | awk -F "=" '{print $NF}')
@@ -753,31 +753,31 @@ View_Aria2() {
     fi
     clear
     echo -e "\nAria2 简单配置信息：\n
- IPv4 地址\t: ${GREEN}${IPV4}${RESET}
- IPv6 地址\t: ${GREEN}${IPV6}${RESET}
- 内网 IP 地址\t: ${GREEN}${LocalIP}${RESET} 
- RPC 端口\t: ${GREEN}${aria2_port}${RESET}
- RPC 密钥\t: ${GREEN}${aria2_passwd}${RESET}
- 下载目录\t: ${GREEN}${aria2_dir}${RESET}
- AriaNg 链接\t: ${GREEN}${AriaNg_URL}${RESET}\n"
+ IPv4 地址\t: ${G}${IPV4}${N}
+ IPv6 地址\t: ${G}${IPV6}${N}
+ 内网 IP 地址\t: ${G}${LocalIP}${N} 
+ RPC 端口\t: ${G}${aria2_port}${N}
+ RPC 密钥\t: ${G}${aria2_passwd}${N}
+ 下载目录\t: ${G}${aria2_dir}${N}
+ AriaNg 链接\t: ${G}${AriaNg_URL}${N}\n"
     echo -en "\n\n请回车以继续" && read -r -n 1 line
 }
 
 View_Log() {
-    [[ ! -e ${aria2_log} ]] && echo -e "${RED}[!]${RESET} Aria2 日志文件不存在 !" && return 0
+    [[ ! -e ${aria2_log} ]] && echo -e "${R}[!]${N} Aria2 日志文件不存在 !" && return 0
     echo && echo -e "
 
-${GREEN}[!]${RESET} 按 ${GREEN}Ctrl+C${RESET} 终止查看日志
-如果需要查看完整日志内容，请用 ${GREEN}cat ${aria2_log}${RESET} 命令。
+${G}[!]${N} 按 ${G}Ctrl+C${N} 终止查看日志
+如果需要查看完整日志内容，请用 ${G}cat ${aria2_log}${N} 命令。
 
 "
     tail -f "${aria2_log}"
 }
 
 Clean_Log() {
-    [[ ! -e ${aria2_log} ]] && echo -e "${RED}[!]${RESET} Aria2 日志文件不存在 !" && echo -en "\n\n请回车以继续" && read -r -n 1 line && return 0
+    [[ ! -e ${aria2_log} ]] && echo -e "${R}[!]${N} Aria2 日志文件不存在 !" && echo -en "\n\n请回车以继续" && read -r -n 1 line && return 0
     echo >"${aria2_log}"
-    echo -e "${GREEN}[√]${RESET} Aria2 日志已清空 !"
+    echo -e "${G}[√]${N} Aria2 日志已清空 !"
     echo -en "\n\n请回车以继续"
     read -r -n 1 line
 }
@@ -804,9 +804,9 @@ Uninstall_aria2() {
         rm -rf "${aria2c}"
         rm -rf "${aria2_conf_dir}"
         rm -f "$HOME/.termux/boot/auto-start-aria2"
-        echo -e "\n${GREEN}[√]${RESET} Aria2 卸载完成！\n"
+        echo -e "\n${G}[√]${N} Aria2 卸载完成！\n"
     else
-        echo && echo "${YELLOW}[*]${RESET} 卸载已取消..." && echo
+        echo && echo "${Y}[*]${N} 卸载已取消..." && echo
     fi
     echo -en "\n\n请回车以继续"
     read -r -n 1 line
@@ -815,39 +815,39 @@ Uninstall_aria2() {
 Auto_start() {
     echo -e "\n\n"
     echo -e "
-${YELLOW}[!]${RESET} 受限于 Termux，Aria2 开机自启动需要 Termux 提供相应支持。
-${YELLOW}[!]${RESET} 你需要先安装 ${GREEN}Termux:Boot${RESET} 才可以实现 Termux
-Termux:Boot 下载链接: ${GREEN}https://play.google.com/store/apps/details?id=com.termux.boot${RESET}
+${Y}[!]${N} 受限于 Termux，Aria2 开机自启动需要 Termux 提供相应支持。
+${Y}[!]${N} 你需要先安装 ${G}Termux:Boot${N} 才可以实现 Termux
+Termux:Boot 下载链接: ${G}https://play.google.com/store/apps/details?id=com.termux.boot${N}
 
-${RED}[!]${RESET} 注意，如果你未安装 ${GREEN}Termux:Boot${RESET}，脚本中任何关于 Aria2 自启动的配置${RED}没有任何意义${RESET}
+${R}[!]${N} 注意，如果你未安装 ${G}Termux:Boot${N}，脚本中任何关于 Aria2 自启动的配置${R}没有任何意义${N}
 "
     if [ -f "$HOME/.termux/boot/auto-start-aria2" ]; then
         if ask "你已开启 Aria2 自启动，是否关闭？" "N"; then
             if rm -f "$HOME/.termux/boot/auto-start-aria2"; then
-                echo -e "${GREEN}[√]${RESET} 已关闭 Aria2 自启动"
+                echo -e "${G}[√]${N} 已关闭 Aria2 自启动"
             else
-                echo -e "${RED}[!] ${RESET} Aria2 自启动关闭失败！"
+                echo -e "${R}[!] ${N} Aria2 自启动关闭失败！"
             fi
         else
-            echo "${BLUE}[*]${RESET} 已跳过…"
+            echo "${G}[*]${N} 已跳过…"
         fi
     else
         if ask "是否开启 Aria2 开机自启动？" "N"; then
             mkdir -p "$HOME/.termux/boot"
             if [ -f "$aria2_conf_dir/auto-start-aria2" ]; then
                 if cp "$aria2_conf_dir/auto-start-aria2" "$HOME/.termux/boot/auto-start-aria2"; then
-                    echo -e "${GREEN}[√]${RESET} Aria2 开机自启动已开启！"
+                    echo -e "${G}[√]${N} Aria2 开机自启动已开启！"
                 else
-                    echo -e "${RED}[!]${RESET} Aria2 启动开启失败！"
+                    echo -e "${R}[!]${N} Aria2 启动开启失败！"
                 fi
             else
                 echo -e "
-${RED}[!]${RESET} 未找到自启动配置文件！
-${RED}[!]${RESET} 这可能是因为你未通过本脚本完成 Aria2 安装或手动修改了相关目录。
-${RED}[!]${RESET} 请通过脚本重新安装 Aria2 以避免绝大多数可避免的问题！"
+${R}[!]${N} 未找到自启动配置文件！
+${R}[!]${N} 这可能是因为你未通过本脚本完成 Aria2 安装或手动修改了相关目录。
+${R}[!]${N} 请通过脚本重新安装 Aria2 以避免绝大多数可避免的问题！"
             fi
         else
-            echo -e "${BLUE}[*]${RESET} 不开启 Aria2 开机自启动…"
+            echo -e "${G}[*]${N} 不开启 Aria2 开机自启动…"
         fi
     fi
 }
