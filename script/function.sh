@@ -393,16 +393,16 @@ exit_error() {
     exit 0
 }
 
-Configure_aria2_conf() {
-    cp -r "${ATMDIR}" "${aria2_conf_dir}"
-    sed -i "s@^\(dir=\).*@\1${download_path}@" "${aria2_conf}"
-    sed -i "s@^\(input-file=\).*@\1${aria2_conf_dir}/aria2.session@" "${aria2_conf}"
-    sed -i "s@^\(save-session=\).*@\1${aria2_conf_dir}/aria2.session@" "${aria2_conf}"
-    sed -i "s@/root/.aria2/@${aria2_conf_dir}/@" "${aria2_conf}"
-    sed -i "s@^\(rpc-secret=\).*@\1$(date +%s%N | md5sum | head -c 20)@" "${aria2_conf}"
-    sed -i "s@^\(DOWNLOAD_PATH='\).*@\1${download_path}'@" "${aria2_conf_dir}/*.sh"
-    sed -i "s@#log=@log=${aria2_log}@" "${aria2_conf}"
-    touch aria2.session
+Configure_ARIA2CONF() {
+    cp -r "${ATMGIT}/conf" "${WORKDIR}"
+    set_file_prop dir "${DOWNLOADPATH}" "${ARIA2CONF}"
+    set_file_prop input-file ${WORKDIR} "${ARIA2CONF}"
+    set_file_prop save-session "${WORKDIR}/aria2.session" "${ARIA2CONF}"
+    sed -i "s@/data/data/com.termux/files/home/.aria2/@${WORKDIR}/@" "${ARIA2CONF}"
+    set_file_prop rpc-secret "$(date +%s%N | md5sum | head -c 20)" "${ARIA2CONF}"
+    set_file_prop DOWNLOAD_PATH "${DOWNLOADPATH}" "${WORKDIR}/*.sh"
+    set_file_prop log "${ARIA2LOG}" "${ARIA2CONF}"
+    mktouch aria2.session
     chmod +x ./*.sh
     green "[√] Aria2 配置文件处理完成！"
 }
@@ -440,12 +440,12 @@ Install_aria2() {
     blue "[*] 开始检查配置文件…"
     if [ -d "${atm_git}/conf" ] || [ -d "${ATMDIR}" ]; then
         mkdir -p ~/.aria2
-        Configure_aria2_conf
+        Configure_ARIA2CONF
     else
         red "[!] 未发现 Aria2 本地配置文件"
         blue "[*] 开始下载 Aria2 配置文件..."
-        Download_aria2_conf
-        Configure_aria2_conf
+        Download_ARIA2CONF
+        Configure_ARIA2CONF
     fi
     aria2_RPC_port=${aria2_port}
     blue "[*] 开始创建下载目录..."
@@ -488,7 +488,7 @@ Set_aria2() {
     elif [[ ${aria2_modify} == "5" ]]; then
         Set_aria2_vim_conf
     elif [[ ${aria2_modify} == "6" ]]; then
-        Reset_aria2_conf
+        Reset_ARIA2CONF
     elif [[ ${aria2_modify} == "0" ]]; then
         return 0
     else
@@ -518,7 +518,7 @@ Set_aria2_RPC_passwd() {
     [[ -z "${aria2_RPC_passwd}" ]] && aria2_RPC_passwd=$(date +%s%N | md5sum | head -c 20)
     if [[ "${aria2_passwd}" != "${aria2_RPC_passwd}" ]]; then
         if [[ -z "${aria2_passwd}" ]]; then
-            if echo -e "\nrpc-secret=${aria2_RPC_passwd}" >>"${aria2_conf}"; then
+            if echo -e "\nrpc-secret=${aria2_RPC_passwd}" >>"${ARIA2CONF}"; then
                 echo -e "
 ${G}[√]${N} RPC 密钥修改成功！
 新密钥为：${G}${aria2_RPC_passwd}${N}(配置文件中缺少相关选项参数，已自动加入配置文件底部)"
@@ -532,7 +532,7 @@ ${R}[!]${N} RPC 密钥修改失败！
 				"
             fi
         else
-            if sed -i 's/^rpc-secret='"${aria2_passwd}"'/rpc-secret='"${aria2_RPC_passwd}"'/g' "${aria2_conf}"; then
+            if sed -i 's/^rpc-secret='"${aria2_passwd}"'/rpc-secret='"${aria2_RPC_passwd}"'/g' "${ARIA2CONF}"; then
                 echo -e "
 ${G}[√]${N} RPC 密钥修改成功！
 新密钥为：${G}${aria2_RPC_passwd}${N}"
@@ -570,7 +570,7 @@ Set_aria2_RPC_port() {
     [[ -z "${aria2_RPC_port}" ]] && aria2_RPC_port="6800"
     if [[ "${aria2_port}" != "${aria2_RPC_port}" ]]; then
         if [[ -z "${aria2_port}" ]]; then
-            if echo -e "\nrpc-listen-port=${aria2_RPC_port}" >>"${aria2_conf}"; then
+            if echo -e "\nrpc-listen-port=${aria2_RPC_port}" >>"${ARIA2CONF}"; then
                 echo -e "
 ${G}[*]${N} RPC 端口修改成功！
 新端口为：${G}${aria2_RPC_port}${N}(配置文件中缺少相关选项参数，已自动加入配置文件底部)"
@@ -583,7 +583,7 @@ ${R}[!]${N} RPC 端口修改失败！
 旧端口为：${G}${aria2_port}${N}"
             fi
         else
-            if sed -i 's/^rpc-listen-port='"${aria2_port}"'/rpc-listen-port='"${aria2_RPC_port}"'/g' "${aria2_conf}"; then
+            if sed -i 's/^rpc-listen-port='"${aria2_port}"'/rpc-listen-port='"${aria2_RPC_port}"'/g' "${ARIA2CONF}"; then
                 echo -e "
 ${G}[√]${N} RPC 端口修改成功！
 新端口为：${G}${aria2_RPC_port}${N}
@@ -623,7 +623,7 @@ Set_aria2_RPC_dir() {
     echo
     if [[ "${aria2_dir}" != "${aria2_RPC_dir}" ]]; then
         if [[ -z "${aria2_dir}" ]]; then
-            if echo -e "\ndir=${aria2_RPC_dir}" >>"${aria2_conf}"; then
+            if echo -e "\ndir=${aria2_RPC_dir}" >>"${ARIA2CONF}"; then
                 echo -e "
 ${G}[√]${N} 下载目录修改成功！
 新位置为：${G}${aria2_RPC_dir}${N}(配置文件中缺少相关选项参数，已自动加入配置文件底部)
@@ -640,7 +640,7 @@ ${R}[!]${N} 下载目录修改失败！
         else
             aria2_dir_2=$(echo "${aria2_dir}" | sed 's/\//\\\//g')
             aria2_RPC_dir_2=$(echo "${aria2_RPC_dir}" | sed 's/\//\\\//g')
-            if sed -i "s@^\(dir=\).*@\1${aria2_RPC_dir_2}@" "${aria2_conf}" && sed -i "s@^\(DOWNLOAD_PATH='\).*@\1${aria2_RPC_dir_2}'@" "${aria2_conf_dir}/*.sh"; then
+            if sed -i "s@^\(dir=\).*@\1${aria2_RPC_dir_2}@" "${ARIA2CONF}" && sed -i "s@^\(DOWNLOAD_PATH='\).*@\1${aria2_RPC_dir_2}'@" "${WORKDIR}/*.sh"; then
                 echo -e "
 ${G}[√]${N} 下载目录修改成功！
 新位置为：${G}${aria2_RPC_dir}${N}
@@ -672,7 +672,7 @@ Set_aria2_vim_conf() {
     aria2_port_old=${aria2_port}
     aria2_dir_old=${aria2_dir}
     echo -e "
- 配置文件位置：${G}${aria2_conf}${N}
+ 配置文件位置：${G}${ARIA2CONF}${N}
 
  ${G}[*]${N} 手动修改配置文件须知：
  
@@ -683,7 +683,7 @@ Set_aria2_vim_conf() {
  "
     echo -en "按任意键继续，按 Ctrl+C 组合键取消"
     read -r -n 1 line
-    nano "${aria2_conf}"
+    nano "${ARIA2CONF}"
     Read_config
     if [[ ${aria2_port_old} != "${aria2_port}" ]]; then
         aria2_RPC_port=${aria2_port}
@@ -692,11 +692,11 @@ Set_aria2_vim_conf() {
     if [[ ${aria2_dir_old} != "${aria2_dir}" ]]; then
         mkdir -p "${aria2_dir}"
         aria2_dir_2=$(echo "${aria2_dir}" | sed 's/\//\\\//g')
-        sed -i "s@^\(DOWNLOAD_PATH='\).*@\1${aria2_dir_2}'@" "${aria2_conf_dir}/*.sh"
+        sed -i "s@^\(DOWNLOAD_PATH='\).*@\1${aria2_dir_2}'@" "${WORKDIR}/*.sh"
     fi
     source "$ATMDIR/core/restart-aria2.sh"
 }
-Reset_aria2_conf() {
+Reset_ARIA2CONF() {
     Read_config
     aria2_port_old=${aria2_port}
     echo -e "
@@ -704,7 +704,7 @@ ${R}[!]${N} 此操作将重新下载 Aria2 配置文件，所有已设定的配�
 
 按任意键继续，按 Ctrl+C 组合键取消"
     read -r -n 1 line
-    Download_aria2_conf
+    Download_ARIA2CONF
     Read_config
     if [[ ${aria2_port_old} != "${aria2_port}" ]]; then
         aria2_RPC_port=${aria2_port}
@@ -715,14 +715,14 @@ ${R}[!]${N} 此操作将重新下载 Aria2 配置文件，所有已设定的配�
 
 Read_config() {
     status_type=$1
-    if [[ ! -e ${aria2_conf} ]]; then
+    if [[ ! -e ${ARIA2CONF} ]]; then
         if [[ ${status_type} != "un" ]]; then
             echo -e "${R}[!]${N} Aria2 配置文件不存在 !" && return 0
         fi
     else
-        aria2_dir=$(grep "^dir=" "${aria2_conf}" | grep -v '#' | awk -F "=" '{print $NF}')
-        aria2_port=$(grep "^rpc-listen-port=" "${aria2_conf}" | grep -v '#' | awk -F "=" '{print $NF}')
-        aria2_passwd=$(grep "^rpc-secret=" "${aria2_conf}" | grep -v '#' | awk -F "=" '{print $NF}')
+        aria2_dir=$(grep "^dir=" "${ARIA2CONF}" | grep -v '#' | awk -F "=" '{print $NF}')
+        aria2_port=$(grep "^rpc-listen-port=" "${ARIA2CONF}" | grep -v '#' | awk -F "=" '{print $NF}')
+        aria2_passwd=$(grep "^rpc-secret=" "${ARIA2CONF}" | grep -v '#' | awk -F "=" '{print $NF}')
     fi
 }
 
@@ -793,9 +793,9 @@ Update_bt_tracker() {
     check_installed_status
     check_pid
     if [ -z "$PID" ]; then
-        bash "$HOME/.config/aria2/core/tracker.sh" "${aria2_conf}"
+        bash "$HOME/.config/aria2/core/tracker.sh" "${ARIA2CONF}"
     else
-        bash "$HOME/.config/aria2/core/tracker.sh" "${aria2_conf}" RPC
+        bash "$HOME/.config/aria2/core/tracker.sh" "${ARIA2CONF}" RPC
     fi
     echo -en "\n\n请回车以继续"
     read -r -n 1 line
@@ -809,7 +809,7 @@ Uninstall_aria2() {
         [[ -n $PID ]] && kill -9 "${PID}"
         Read_config "un"
         rm -rf "${aria2c}"
-        rm -rf "${aria2_conf_dir}"
+        rm -rf "${WORKDIR}"
         rm -f "$HOME/.termux/boot/auto-start-aria2"
         echo -e "\n${G}[√]${N} Aria2 卸载完成！\n"
     else
@@ -841,8 +841,8 @@ ${R}[!]${N} 注意，如果你未安装 ${G}Termux:Boot${N}，脚本中任何关
     else
         if ask "是否开启 Aria2 开机自启动？" "N"; then
             mkdir -p "$HOME/.termux/boot"
-            if [ -f "$aria2_conf_dir/auto-start-aria2" ]; then
-                if cp "$aria2_conf_dir/auto-start-aria2" "$HOME/.termux/boot/auto-start-aria2"; then
+            if [ -f "$WORKDIR/auto-start-aria2" ]; then
+                if cp "$WORKDIR/auto-start-aria2" "$HOME/.termux/boot/auto-start-aria2"; then
                     echo -e "${G}[√]${N} Aria2 开机自启动已开启！"
                 else
                     echo -e "${R}[!]${N} Aria2 启动开启失败！"
