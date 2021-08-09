@@ -199,7 +199,7 @@ upload_logs() {
         [ -s $oldVERLOG ] && oldverUp=$(cat $oldVERLOG | nc termbin.com 9999) || oldverUp=none
         [ -s $ARIA2LOG ] && logUp=$(cat $ARIA2LOG | nc termbin.com 9999) || logUp=none
         [ -s $_ATMLOG ] && ATMlogUp=$(cat $_ATMLOG | nc termbin.com 9999) || logUp=none
-        
+
         echo -n "Link: "
         echo "Aria2-Termux 
     Version: $VER $REL
@@ -286,9 +286,21 @@ footer() {
     var=$((MDLVAL / 2))
     var=$((MDLVAL / 2 + 1))
     printf "${C}- %.0s${N}" $(seq $var)
-    echo -e "\n Source: ${Y}https://github.com/${AUTHOR}/Aria2-Termux${N}"
-    echo -e "License: MIT"
-    echo -e "Contact: ${Y}@Qingxu${N} on Telegram"
+    if [[ -e ${aria2c} ]]; then
+        check_pid
+        if [[ -n "${PID}" ]]; then
+            echo -e " Aria2 状态: ${G}已安装${N} | ${G}已启动${N}"
+        else
+            echo -e " Aria2 状态: ${G}已安装${N} | ${R}未启动${N}"
+        fi
+    else
+        echo -e " Aria2 状态: ${R}未安装${N}"
+    fi
+    if [[ -f "$HOME/.termux/boot/auto-start-aria2" ]]; then
+        echo -e " Aria2 开机自启动: ${G}已开启${N}"
+    else
+        echo -e " Aria2 开机自启动: ${R}未开启${N}"
+    fi
     printf "${C}- %.0s${N}" $(seq $var)
     echo ""
 }
@@ -430,13 +442,12 @@ Installation_dependency() {
 }
 
 check_installed_status() {
-	[[ ! -e ${aria2c} ]] && red "[!] Aria2 未安装!" && return 0
-	[[ ! -e ${ARIA2CONF} ]] && red "
+    [[ ! -e ${aria2c} ]] && red "[!] Aria2 未安装!" && return 0
+    [[ ! -e ${ARIA2CONF} ]] && red "
 [!] Aria2 配置文件不存在！
 [*] 如果你不是通过本脚本安装 Aria2，请先在本脚本卸载 Aria2！
 	" && [[ $1 != "un" ]] && return 0
 }
-
 
 Install_aria2() {
     [[ -e ${aria2c} ]] && red "[!] Aria2 已安装，如需重新安装请在脚本中卸载 Aria2！" && return 1
