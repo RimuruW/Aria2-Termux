@@ -163,11 +163,17 @@ e_spinner() {
     _PID=$!
     h=0
     anim='-\|/'
-    while "$(ps aux | awk '{print $2}' | grep -wq $_PID)"; do
+    while [ -n ${grep_PID} ]; do
+        grep_PID=$(ps aux | awk '{print $2}' | grep -wq $_PID)
         h=$(((h + 1) % 4))
         sleep 0.02
         printf "\r${@} [${anim:$h:1}]"
     done
+}
+
+check_storage() {
+    [[ ! -d "$HOME/storage/shared/Android/" ]] && red "[!] Termux 未获取存储权限，请回车确认后按指示授权存储权限！" && echo -en "\n请回车以确认" && read -r -n 1 line && termux-setup-storage
+    [[ ! -d "$HOME/storage/shared/Android/" ]] && red "[!] Termux 存储权限未获取！请在确保 Termux 已获取存储权限的情况重新启动脚本！" && exit 1
 }
 
 test_connection() {
@@ -408,69 +414,69 @@ exit_error() {
 }
 
 check_pid() {
-	PID=$(pgrep "aria2c" | grep -v grep | grep -v "service" | awk '{print $1}')
+    PID=$(pgrep "aria2c" | grep -v grep | grep -v "service" | awk '{print $1}')
 }
 
 timeout_test() {
-	local URL="${1%/}"
-	local timeout="${2-5}"
+    local URL="${1%/}"
+    local timeout="${2-5}"
 
-	timeout "$((timeout + 1))" curl \
-		--head \
-		--fail \
-		--connect-timeout "$timeout" \
-		--location \
-		--user-agent "Termux-PKG/1.0 mirror-checker (termux-tools 0.112) Termux (com.termux; install-prefix:/data/data/com.termux/files/usr)'" \
-		"$URL" >/dev/null 2>&1
+    timeout "$((timeout + 1))" curl \
+        --head \
+        --fail \
+        --connect-timeout "$timeout" \
+        --location \
+        --user-agent "Termux-PKG/1.0 mirror-checker (termux-tools 0.112) Termux (com.termux; install-prefix:/data/data/com.termux/files/usr)'" \
+        "$URL" >/dev/null 2>&1
 }
 
 replace_mirrors() {
-	echo -e "${R}[!]${N} Termux 镜像源不可用!"
-	blue "对于国内用户，临时添加清华源作为镜像源可以有效增强 Termux 软件包下载速度"
-	if ask "是否临时添加清华源用以下载脚本依赖?" "Y"; then
-		cp "${PREFIX}"/etc/apt/sources.list "${PREFIX}"/etc/apt/sources.list.bak
-		sed -i 's@^\(deb.*stable main\)$@#\1\ndeb https://mirrors.tuna.tsinghua.edu.cn/termux/termux-packages-24 stable main@' "$PREFIX/etc/apt/sources.list"
-		sed -i 's@^\(deb.*games stable\)$@#\1\ndeb https://mirrors.tuna.tsinghua.edu.cn/termux/game-packages-24 games stable@' "$PREFIX/etc/apt/sources.list.d/game.list"
-		sed -i 's@^\(deb.*science stable\)$@#\1\ndeb https://mirrors.tuna.tsinghua.edu.cn/termux/science-packages-24 science stable@' "$PREFIX/etc/apt/sources.list.d/science.list"
-		apt update && apt upgrade -y
-		USE_MIRROR=1
-	else
-		blue "使用默认源进行安装"
-	fi
+    echo -e "${R}[!]${N} Termux 镜像源不可用!"
+    blue "对于国内用户，临时添加清华源作为镜像源可以有效增强 Termux 软件包下载速度"
+    if ask "是否临时添加清华源用以下载脚本依赖?" "Y"; then
+        cp "${PREFIX}"/etc/apt/sources.list "${PREFIX}"/etc/apt/sources.list.bak
+        sed -i 's@^\(deb.*stable main\)$@#\1\ndeb https://mirrors.tuna.tsinghua.edu.cn/termux/termux-packages-24 stable main@' "$PREFIX/etc/apt/sources.list"
+        sed -i 's@^\(deb.*games stable\)$@#\1\ndeb https://mirrors.tuna.tsinghua.edu.cn/termux/game-packages-24 games stable@' "$PREFIX/etc/apt/sources.list.d/game.list"
+        sed -i 's@^\(deb.*science stable\)$@#\1\ndeb https://mirrors.tuna.tsinghua.edu.cn/termux/science-packages-24 science stable@' "$PREFIX/etc/apt/sources.list.d/science.list"
+        apt update && apt upgrade -y
+        USE_MIRROR=1
+    else
+        blue "使用默认源进行安装"
+    fi
 }
 
 check_mirrors() {
-	echo -e "${B}[*]${N} 检查网络环境及镜像源..."
-	local current_mirror
-	current_mirror=$(grep -P "^\s*deb\s+" /data/data/com.termux/files/usr/etc/apt/sources.list | grep -oP 'https?://[a-z0-9/._-]+')
+    echo -e "${B}[*]${N} 检查网络环境及镜像源..."
+    local current_mirror
+    current_mirror=$(grep -P "^\s*deb\s+" /data/data/com.termux/files/usr/etc/apt/sources.list | grep -oP 'https?://[a-z0-9/._-]+')
 
-	if timeout_test "google.com"; then
-		if timeout_test "${current_mirror%/}/dists/stable/Release"; then
-			echo -e "${G}[√]${N} 当前镜像源可用"
-		else
-			replace_mirrors
-		fi
-	elif [[ "$(hostname "$current_mirror")" == *".cn" ]]; then
-		if timeout_test "${current_mirror%/}/dists/stable/Release"; then
-			echo -e "${G}[√]${N} 当前镜像源可用"
-		else
-			replace_mirrors
+    if timeout_test "google.com"; then
+        if timeout_test "${current_mirror%/}/dists/stable/Release"; then
+            echo -e "${G}[√]${N} 当前镜像源可用"
+        else
+            replace_mirrors
+        fi
+    elif [[ "$(hostname "$current_mirror")" == *".cn" ]]; then
+        if timeout_test "${current_mirror%/}/dists/stable/Release"; then
+            echo -e "${G}[√]${N} 当前镜像源可用"
+        else
+            replace_mirrors
 
-		fi
-	else
-		replace_mirrors
-	fi
+        fi
+    else
+        replace_mirrors
+    fi
 }
 
 Step() {
-echo -en "\n请回车以确认"
-read -r -n 1 INPUT
+    echo -en "\n请回车以确认"
+    read -r -n 1 INPUT
 }
 
 Configure_ARIA2CONF() {
     rm -rf ${WORKDIR}
     mkdir -p ${WORKDIR}
-    cp -r "${ATMGIT}/conf" "${WORKDIR}"
+    cp -r "${ATMGIT}/conf/*" "${WORKDIR}"
     set_file_prop dir "${DOWNLOADPATH}" "${ARIA2CONF}"
     set_file_prop input-file ${WORKDIR} "${ARIA2CONF}"
     set_file_prop save-session "${WORKDIR}/aria2.session" "${ARIA2CONF}"
@@ -514,10 +520,11 @@ check_installed_status() {
 
 Install_aria2() {
     [[ -e ${aria2c} ]] && echo -e "${R}[!]${N} Aria2 已安装，如需重新安装请在脚本中卸载 Aria2！" && return 1
-    check_mirrors #2>&1 & e_spinner "${B}[*]${N} 检查镜像源中..." 
+    check_mirrors           #2>&1 & e_spinner "${B}[*]${N} 检查镜像源中..."
     Installation_dependency #2>&1 & e_spinner "${B}[*]${N} 开始安装并配置依赖..."
-    pkg i aria2 -y #2>&1 & e_spinner "${B}[*]${N} 开始下载并安装主程序..."
-    Configure_ARIA2CONF & e_spinner "${B}[*]${N} 开始检查配置文件..."
+    pkg i aria2 -y          #2>&1 & e_spinner "${B}[*]${N} 开始下载并安装主程序..."
+    Configure_ARIA2CONF &
+    e_spinner "${B}[*]${N} 开始检查配置文件..."
     aria2_RPC_port=${aria2_port}
     blue "[*] 开始创建下载目录..."
     check_storage
@@ -527,16 +534,16 @@ Install_aria2() {
 }
 
 Start_aria2() {
-	check_installed_status
-	check_pid
-	[[ -n ${PID} ]] && red "[!] Aria2 正在运行!" && return 1
-	check_storage
-	blue "[*] 尝试开启唤醒锁…"
-	termux-wake-lock
-	green "[√] 所有步骤执行完毕，开始启动..."
-	$PREFIX/bin/aria2c --conf-path="${aria2_conf}" -D
-	check_pid
-	[[ -z ${PID} ]] && red "[!] Aria2 启动失败，请检查日志！" && return 1
+    check_installed_status
+    check_pid
+    [[ -n ${PID} ]] && red "[!] Aria2 正在运行!" && return 1
+    check_storage
+    blue "[*] 尝试开启唤醒锁…"
+    termux-wake-lock
+    green "[√] 所有步骤执行完毕，开始启动..."
+    $PREFIX/bin/aria2c --conf-path="${aria2_conf}" -D
+    check_pid
+    [[ -z ${PID} ]] && red "[!] Aria2 启动失败，请检查日志！" && return 1
 }
 
 Stop_aria2() {
@@ -545,7 +552,6 @@ Stop_aria2() {
     [[ -z ${PID} ]] && red "[!] Aria2 未启动，请检查日志 !" && return 0
     kill -9 "${PID}"
 }
-
 
 Set_aria2_RPC_passwd() {
     read_123=$1

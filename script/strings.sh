@@ -1,7 +1,7 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
 main_menu() {
-
+    header "主菜单"
     echo -e "
 ${G} 0.${N} 退出
 ——————————————————————
