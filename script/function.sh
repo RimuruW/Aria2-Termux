@@ -470,8 +470,7 @@ Step() {
 
 Configure_ARIA2CONF() {
     rm -rf ${WORKDIR}
-    mkdir -p ${WORKDIR}
-    cp -r "${ATMGIT}/conf/*" "${WORKDIR}"
+    cp -r "${ATMGIT}/conf" "${WORKDIR}"
     set_file_prop dir "${DOWNLOADPATH}" "${ARIA2CONF}"
     set_file_prop input-file ${WORKDIR} "${ARIA2CONF}"
     set_file_prop save-session "${WORKDIR}/aria2.session" "${ARIA2CONF}"
