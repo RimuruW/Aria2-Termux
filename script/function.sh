@@ -287,7 +287,7 @@ header() {
     [ "$DEVMODE" ] || clear
     light " Aria2 一键管理脚本"
     echo ""
-    echo -e " Version: ${Y}${VER} (${REL})${N}"
+    echo -e " Version: ${Y}${VER}${N}"
     echo -e " by ${Y}Qingxu($AUTHOR)${N}"
     echo ""
     printf "${C}=%.0s${N}" $(seq "$MDLVAL")
