@@ -1,4 +1,4 @@
-#!/data/data/com.termux/files/usr/bin/bash
+        #!/data/data/com.termux/files/usr/bin/bash
 
 check_installed_status
 check_pid

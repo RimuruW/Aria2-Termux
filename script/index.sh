@@ -2,7 +2,8 @@
 
 . "$ATMGIT/script/strings.sh"
 
-trap exit_sh EXIT 2
+trap exit_sh EXIT
+trap exit_error 2
 
 while true; do
     clear
@@ -21,18 +22,22 @@ while true; do
         ;;
     1)
         Install_aria2
+        Step
         ;;
     2)
         Uninstall_aria2
+        Step
         ;;
     3)
-        source "$ATMDIR/core/start-aria2.sh"
+        Start_aria2
+        Step
         ;;
     4)
         Stop_aria2
+        Step
         ;;
     5)
-        source "$ATMDIR/core/restart-aria2.sh"
+        source "${ATMGIT}/core/restart-aria2.sh"
         ;;
     6)
         Set_aria2
