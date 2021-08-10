@@ -9,6 +9,10 @@ else
     INDEXSTART=true
 fi
 
+if [ -n ${CMD} ]; then
+    ARIA2VAR="$@"
+fi
+
 # Load vars
 source "$PREFIX/etc/atm/main/.atmrc"
 source "$ATMGIT/script/function.sh"
@@ -77,6 +81,6 @@ case "$CMD" in
     ;;
 *)
     [[ ! -f "$PREFIX/bin/aria2c" ]] && red "请先安装 Aria2" >&2
-    aria2c --no-conf --allow-overwrite=true "$@"
+    aria2c --no-conf --allow-overwrite=true "$ARIA2VAR"
     ;;
 esac

@@ -196,8 +196,8 @@ test_connection() {
             false
         fi #&
         #e_spinner "${B}[*]${N} 检查网络连接"
-    ) && echo " - ${G}网络正常${N}" || {
-        echo " - ${R}网络异常${N}"
+    ) && echo -e " - ${G}网络正常${N}" || {
+        echo -e " - ${R}网络异常${N}"
         false
     }
     sleep 1
@@ -530,7 +530,7 @@ Install_aria2() {
     check_mirrors           #2>&1 & e_spinner "${B}[*]${N} 检查镜像源中..."
     Installation_dependency #2>&1 & e_spinner "${B}[*]${N} 开始安装并配置依赖..."
     pkg i aria2 -y          #2>&1 & e_spinner "${B}[*]${N} 开始下载并安装主程序..."
-    Configure_ARIA2CONF &
+    Configure_ARIA2CONF 2>${_ATMLOG} &
     e_spinner "${B}[*]${N} 开始检查配置文件..."
     aria2_RPC_port=${aria2_port}
     blue "[*] 开始创建下载目录..."
