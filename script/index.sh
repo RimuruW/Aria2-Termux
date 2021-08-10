@@ -6,13 +6,7 @@ trap exit_sh EXIT
 trap exit_error 2
 
 while true; do
-    clear
-    echo ""
-    header "主菜单"
-    echo ""
     main_menu
-    footer
-    printf "\n 请输入数字 [0-12]: "
 	echo -en "${G}"
 	read -r INPUT
 	echo -en "${N}"

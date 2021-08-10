@@ -264,6 +264,7 @@ fancy_opening() {
 
 # Display on Header
 header() {
+    clear
     midALG=${#1}
     midALG=$((MDLVAL - midALG))
     [ $((midALG % 2)) -eq 0 ] || midALG=$((midALG - 1))
@@ -410,7 +411,7 @@ check_pid() {
 	PID=$(pgrep "aria2c" | grep -v grep | grep -v "service" | awk '{print $1}')
 }
 
-imeout_test() {
+timeout_test() {
 	local URL="${1%/}"
 	local timeout="${2-5}"
 
@@ -424,7 +425,7 @@ imeout_test() {
 }
 
 replace_mirrors() {
-	red "[!] Termux 镜像源不可用!"
+	echo -e "${R}[!]${N} Termux 镜像源不可用!"
 	blue "对于国内用户，临时添加清华源作为镜像源可以有效增强 Termux 软件包下载速度"
 	if ask "是否临时添加清华源用以下载脚本依赖?" "Y"; then
 		cp "${PREFIX}"/etc/apt/sources.list "${PREFIX}"/etc/apt/sources.list.bak
@@ -439,19 +440,19 @@ replace_mirrors() {
 }
 
 check_mirrors() {
-	blue "[*] 检查网络环境及镜像源..."
+	echo -e "${B}[*]${N} 检查网络环境及镜像源..."
 	local current_mirror
 	current_mirror=$(grep -P "^\s*deb\s+" /data/data/com.termux/files/usr/etc/apt/sources.list | grep -oP 'https?://[a-z0-9/._-]+')
 
 	if timeout_test "google.com"; then
 		if timeout_test "${current_mirror%/}/dists/stable/Release"; then
-			green "[√] 当前镜像源可用"
+			echo -e "${G}[√]${N} 当前镜像源可用"
 		else
 			replace_mirrors
 		fi
 	elif [[ "$(hostname "$current_mirror")" == *".cn" ]]; then
 		if timeout_test "${current_mirror%/}/dists/stable/Release"; then
-			green "[√] 当前镜像源可用"
+			echo -e "${G}[√]${N} 当前镜像源可用"
 		else
 			replace_mirrors
 
@@ -462,11 +463,13 @@ check_mirrors() {
 }
 
 Step() {
-echo -en "\n\n\t\t\t请回车以确认"
-read -r -n 1 line
+echo -en "\n请回车以确认"
+read -r -n 1 INPUT
 }
 
 Configure_ARIA2CONF() {
+    rm -rf ${WORKDIR}
+    mkdir -p ${WORKDIR}
     cp -r "${ATMGIT}/conf" "${WORKDIR}"
     set_file_prop dir "${DOWNLOADPATH}" "${ARIA2CONF}"
     set_file_prop input-file ${WORKDIR} "${ARIA2CONF}"
@@ -475,14 +478,14 @@ Configure_ARIA2CONF() {
     set_file_prop rpc-secret "$(date +%s%N | md5sum | head -c 20)" "${ARIA2CONF}"
     set_file_prop DOWNLOAD_PATH "${DOWNLOADPATH}" "${WORKDIR}/*.sh"
     set_file_prop log "${ARIA2LOG}" "${ARIA2CONF}"
-    mktouch aria2.session
-    chmod +x ./*.sh
-    green "[√] Aria2 配置文件处理完成！"
+    mktouch ${WORKDIR}/aria2.session
+    echo -e "${G}[√]${N} Aria2 配置文件处理完成！"
 }
 
 Installation_dependency() {
+    echo -e "${B}[*]${N} 开始安装并配置依赖..."
     apt-get update -y &>/dev/null
-    for i in nano ca-certificates findutils jq tar gzip dpkg curl; do
+    for i in nano ca-certificates findutils jq tar gzip dpkg curl aria2; do
         if apt list --installed 2>/dev/null | grep "$i"; then
             echo "  $i 已安装！"
         elif [ -e "$PREFIX"/bin/$i ]; then
@@ -490,9 +493,9 @@ Installation_dependency() {
         else
             echo "${G}[*]${N} Installing $i..."
             apt-get install -y $i || {
-                red "
-[!] 依赖安装失败!
-[*] 退出中……
+                echo -e "
+${R}[!]${N} 依赖安装失败!
+${B}[*]${N} 退出中……
 									"
                 exit 1
             }
@@ -510,10 +513,10 @@ check_installed_status() {
 }
 
 Install_aria2() {
-    [[ -e ${aria2c} ]] && red "[!] Aria2 已安装，如需重新安装请在脚本中卸载 Aria2！" && return 1
-    check_mirrors 2>&1 & e_spinner "${B}[*]${N} 检查镜像源中..." 
-    Installation_dependency 2>&1 & e_spinner "${B}[*]${N} 开始安装并配置依赖..."
-    pkg i aria2 -y 2>&1 & e_spinner "${B}[*]${N} 开始下载并安装主程序..."
+    [[ -e ${aria2c} ]] && echo -e "${R}[!]${N} Aria2 已安装，如需重新安装请在脚本中卸载 Aria2！" && return 1
+    check_mirrors #2>&1 & e_spinner "${B}[*]${N} 检查镜像源中..." 
+    Installation_dependency #2>&1 & e_spinner "${B}[*]${N} 开始安装并配置依赖..."
+    pkg i aria2 -y #2>&1 & e_spinner "${B}[*]${N} 开始下载并安装主程序..."
     Configure_ARIA2CONF & e_spinner "${B}[*]${N} 开始检查配置文件..."
     aria2_RPC_port=${aria2_port}
     blue "[*] 开始创建下载目录..."
@@ -543,41 +546,7 @@ Stop_aria2() {
     kill -9 "${PID}"
 }
 
-Set_aria2() {
-    check_installed_status
-    aria2_modify=null
-    echo -e "
- ${G}1.${N} 修改 Aria2 RPC 密钥
- ${G}2.${N} 修改 Aria2 RPC 端口
- ${G}3.${N} 修改 Aria2 下载目录
- ${G}4.${N} 修改 Aria2 密钥 + 端口 + 下载目录
- ${G}5.${N} 手动 打开配置文件修改
- ${G}6.${N} 重置/更新 Aria2 配置文件
- -------------------
- ${G}0.${N}  退出脚本
-"
-    echo -en " 请输入数字 [0-5]: "
-    read -r aria2_modify
-    if [[ ${aria2_modify} == "1" ]]; then
-        Set_aria2_RPC_passwd
-    elif [[ ${aria2_modify} == "2" ]]; then
-        Set_aria2_RPC_port
-    elif [[ ${aria2_modify} == "3" ]]; then
-        Set_aria2_RPC_dir
-    elif [[ ${aria2_modify} == "4" ]]; then
-        Set_aria2_RPC_passwd_port_dir
-    elif [[ ${aria2_modify} == "5" ]]; then
-        Set_aria2_vim_conf
-    elif [[ ${aria2_modify} == "6" ]]; then
-        Reset_ARIA2CONF
-    elif [[ ${aria2_modify} == "0" ]]; then
-        return 0
-    else
-        echo
-        echo "${R}[!]${N} 请输入正确的数字"
-        return 1
-    fi
-}
+
 Set_aria2_RPC_passwd() {
     read_123=$1
     if [[ ${read_123} != "1" ]]; then
@@ -748,35 +717,6 @@ Set_aria2_RPC_passwd_port_dir() {
     source "$ATMDIR/core/restart-aria2.sh"
 }
 
-Set_aria2_vim_conf() {
-    Read_config
-    aria2_port_old=${aria2_port}
-    aria2_dir_old=${aria2_dir}
-    echo -e "
- 配置文件位置：${G}${ARIA2CONF}${N}
-
- ${G}[*]${N} 手动修改配置文件须知：
- 
- ${G}1.${N} 默认使用 nano 文本编辑器打开
- ${G}2.${N} 退出并保存文件：按 ${G}Ctrl+X${N} 组合键，输入 ${G}y${N} ，然后按 ${G}Enter${N} 键
- ${G}3.${N} 退出不保存文件：按 ${G}Ctrl+X${N} 组合键，输入 ${G}n${N}
- ${G}4.${N} nano 详细使用教程: \033[4;34mhttps://wiki.archlinux.org/index.php/Nano_(简体中文)${N}
- "
-    echo -en "按任意键继续，按 Ctrl+C 组合键取消"
-    read -r -n 1 line
-    nano "${ARIA2CONF}"
-    Read_config
-    if [[ ${aria2_port_old} != "${aria2_port}" ]]; then
-        aria2_RPC_port=${aria2_port}
-        aria2_port=${aria2_port_old}
-    fi
-    if [[ ${aria2_dir_old} != "${aria2_dir}" ]]; then
-        mkdir -p "${aria2_dir}"
-        aria2_dir_2=$(echo "${aria2_dir}" | sed 's/\//\\\//g')
-        sed -i "s@^\(DOWNLOAD_PATH='\).*@\1${aria2_dir_2}'@" "${WORKDIR}/*.sh"
-    fi
-    source "$ATMDIR/core/restart-aria2.sh"
-}
 Reset_ARIA2CONF() {
     Read_config
     aria2_port_old=${aria2_port}
@@ -805,50 +745,6 @@ Read_config() {
         aria2_port=$(grep "^rpc-listen-port=" "${ARIA2CONF}" | grep -v '#' | awk -F "=" '{print $NF}')
         aria2_passwd=$(grep "^rpc-secret=" "${ARIA2CONF}" | grep -v '#' | awk -F "=" '{print $NF}')
     fi
-}
-
-View_Aria2() {
-    check_installed_status
-    Read_config
-    IPV4=$(
-        wget -qO- -t1 -T2 -4 api.ip.sb/ip ||
-            wget -qO- -t1 -T2 -4 ifconfig.io/ip ||
-            wget -qO- -t1 -T2 -4 www.trackip.net/ip
-    )
-    IPV6=$(
-        wget -qO- -t1 -T2 -6 api.ip.sb/ip ||
-            wget -qO- -t1 -T2 -6 ifconfig.io/ip ||
-            wget -qO- -t1 -T2 -6 www.trackip.net/ip
-    )
-    LocalIP=$(
-        for LOCALIP in $(ip a | grep inet | grep -v 127.0.0.1 | grep -v inet6 | awk '{print $2}' | cut -d "/" -f1); do
-            unset "$TMPLOCALIP"
-            TMPLOCALIP=$LOCALIP
-        done
-        echo "$TMPLOCALIP"
-    )
-    [[ -z "${IPV4}" ]] && IPV4="IPv4 地址检测失败"
-    [[ -z "${IPV6}" ]] && IPV6="IPv6 地址检测失败"
-    [[ -z "${LocalIP}" ]] && LocalIP="本地 IP 获取失败"
-    [[ -z "${aria2_dir}" ]] && aria2_dir="找不到配置参数"
-    [[ -z "${aria2_port}" ]] && aria2_port="找不到配置参数"
-    [[ -z "${aria2_passwd}" ]] && aria2_passwd="找不到配置参数(或无密钥)"
-    if [[ -z "${IPV4}" || -z "${aria2_port}" ]]; then
-        AriaNg_URL="null"
-    else
-        AriaNg_API="/#!/settings/rpc/set/ws/${LocalIP}/${aria2_port}/jsonrpc/$(echo -n ${aria2_passwd} | base64)"
-        AriaNg_URL="http://mirror-aria2.qingxu.live${AriaNg_API}"
-    fi
-    clear
-    echo -e "\nAria2 简单配置信息：\n
- IPv4 地址\t: ${G}${IPV4}${N}
- IPv6 地址\t: ${G}${IPV6}${N}
- 内网 IP 地址\t: ${G}${LocalIP}${N} 
- RPC 端口\t: ${G}${aria2_port}${N}
- RPC 密钥\t: ${G}${aria2_passwd}${N}
- 下载目录\t: ${G}${aria2_dir}${N}
- AriaNg 链接\t: ${G}${AriaNg_URL}${N}\n"
-    echo -en "\n\n请回车以继续" && read -r -n 1 line
 }
 
 View_Log() {
@@ -898,44 +794,4 @@ Uninstall_aria2() {
     fi
     echo -en "\n\n请回车以继续"
     read -r -n 1 line
-}
-
-Auto_start() {
-    echo -e "\n\n"
-    echo -e "
-${Y}[!]${N} 受限于 Termux，Aria2 开机自启动需要 Termux 提供相应支持。
-${Y}[!]${N} 你需要先安装 ${G}Termux:Boot${N} 才可以实现 Termux
-Termux:Boot 下载链接: ${G}https://play.google.com/store/apps/details?id=com.termux.boot${N}
-
-${R}[!]${N} 注意，如果你未安装 ${G}Termux:Boot${N}，脚本中任何关于 Aria2 自启动的配置${R}没有任何意义${N}
-"
-    if [ -f "$HOME/.termux/boot/auto-start-aria2" ]; then
-        if ask "你已开启 Aria2 自启动，是否关闭？" "N"; then
-            if rm -f "$HOME/.termux/boot/auto-start-aria2"; then
-                echo -e "${G}[√]${N} 已关闭 Aria2 自启动"
-            else
-                echo -e "${R}[!] ${N} Aria2 自启动关闭失败！"
-            fi
-        else
-            echo "${G}[*]${N} 已跳过…"
-        fi
-    else
-        if ask "是否开启 Aria2 开机自启动？" "N"; then
-            mkdir -p "$HOME/.termux/boot"
-            if [ -f "$WORKDIR/auto-start-aria2" ]; then
-                if cp "$WORKDIR/auto-start-aria2" "$HOME/.termux/boot/auto-start-aria2"; then
-                    echo -e "${G}[√]${N} Aria2 开机自启动已开启！"
-                else
-                    echo -e "${R}[!]${N} Aria2 启动开启失败！"
-                fi
-            else
-                echo -e "
-${R}[!]${N} 未找到自启动配置文件！
-${R}[!]${N} 这可能是因为你未通过本脚本完成 Aria2 安装或手动修改了相关目录。
-${R}[!]${N} 请通过脚本重新安装 Aria2 以避免绝大多数可避免的问题！"
-            fi
-        else
-            echo -e "${G}[*]${N} 不开启 Aria2 开机自启动…"
-        fi
-    fi
 }
