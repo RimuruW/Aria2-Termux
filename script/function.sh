@@ -36,6 +36,8 @@ light() {
 
 ask() {
     # http://djm.me/ask
+    LIGHT=$(printf '\033[1;96m')
+    RESET=$(printf '\033[0m')
     while true; do
 
         if [ "${2:-}" = "Y" ]; then
@@ -50,7 +52,7 @@ ask() {
         fi
 
         # Ask the question
-        printf '%s\n' "\033[1;96m"
+        printf '%s\n' "${LIGHT}"
         printf "[?] "
         read -r -p "$1 [$prompt] " REPLY
 
@@ -59,7 +61,7 @@ ask() {
             REPLY=$default
         fi
 
-        printf '%s\n' "\033[0m"
+        printf '%s\n' "${RESET}"
 
         # Check if the reply is valid
         case "$REPLY" in
@@ -174,6 +176,7 @@ e_spinner() {
             return 0
         fi
     done
+    echo ""
 }
 
 check_storage() {
@@ -486,6 +489,7 @@ Configure_ARIA2CONF() {
     set_file_prop save-session "${WORKDIR}/aria2.session" "${ARIA2CONF}"
     sed -i "s@/data/data/com.termux/files/home/.aria2/@${WORKDIR}/@" "${ARIA2CONF}"
     set_file_prop rpc-secret "$(date +%s%N | md5sum | head -c 20)" "${ARIA2CONF}"
+    sed -i "s@^\(DOWNLOAD_PATH='\).*@\1${DOWNLOADPATH}'@" "${WORKDIR}/*.sh"
     set_file_prop log "${ARIA2LOG}" "${ARIA2CONF}"
     mktouch ${WORKDIR}/aria2.session
     echo -e "${G}[√]${N} Aria2 配置文件处理完成！"
@@ -531,7 +535,7 @@ Install_aria2() {
     aria2_RPC_port=${aria2_port}
     blue "[*] 开始创建下载目录..."
     check_storage
-    mkdir -p "${DOWNLOAD_PATH}"
+    mkdir -p "${DOWNLOADPATH}"
     green "[√] 所有步骤执行完毕，开始启动..."
     Start_aria2
 }
