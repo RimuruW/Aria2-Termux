@@ -13,8 +13,6 @@ fi
 source "$PREFIX/etc/atm/main/.atmrc"
 source "$ATMGIT/script/function.sh"
 
-fancy_opening
-
 # Handle git
 GITREMOTE="https://$GITHOST/$GITRES"
 if [ "$GITHOST" = "github.com" ]; then
