@@ -784,9 +784,9 @@ Update_bt_tracker() {
     check_installed_status
     check_pid
     if [ -z "$PID" ]; then
-        bash "$HOME/.config/aria2/script/tracker.sh" "${ARIA2CONF}"
+        bash "${ATMGIT}/script/tracker.sh" "${ARIA2CONF}"
     else
-        bash "$HOME/.config/aria2/script/tracker.sh" "${ARIA2CONF}" RPC
+        bash "${ATMGIT}/script/tracker.sh" "${ARIA2CONF}" RPC
     fi
     echo -en "\n\n请回车以继续"
     read -r -n 1 line
