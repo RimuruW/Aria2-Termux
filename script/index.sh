@@ -20,7 +20,6 @@ while true; do
         ;;
     2)
         Uninstall_aria2
-        Step
         ;;
     3)
         Start_aria2
