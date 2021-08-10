@@ -164,15 +164,15 @@ e_spinner() {
     h=0
     anim='-\|/'
     while true; do
-        grep_PID=$(ps aux | awk '{print $2}' | grep -q $_PID)
-        if [ ! -z "$grep_PID" ]; then
+        h=$(((h + 1) % 4))
+        sleep 0.02
+        printf "\r${@} [${anim:$h:1}]"
+        grep_PID=$(ps aux | awk '{print $2}' | grep -q ${_PID})
+        if [ -n "$grep_PID" ]; then
             :
         else
             return 0
         fi
-        h=$(((h + 1) % 4))
-        sleep 0.02
-        printf "\r${@} [${anim:$h:1}]"
     done
 }
 
