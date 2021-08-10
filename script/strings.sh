@@ -101,7 +101,7 @@ Set_aria2_vim_conf() {
 
 View_Aria2() {
     echo ""
-    header "Aria2 简单配置信息："
+    header "正在获取 Aria2 配置信息"
     echo ""
     check_installed_status
     Read_config
@@ -135,6 +135,9 @@ View_Aria2() {
         AriaNg_URL="http://mirror-aria2.qingxu.live${AriaNg_API}"
     fi
     clear
+    echo ""
+    header "Aria2 简单配置信息："
+    echo ""
     echo -e "
  IPv4 地址\t: ${G}${IPV4}${N}
  IPv6 地址\t: ${G}${IPV6}${N}

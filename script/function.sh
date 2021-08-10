@@ -120,25 +120,20 @@ set_file_prop() {
 
 # https://github.com/fearside/ProgressBar
 # ProgressBar <progress> <total>
-ProgressBar() {
-    # Determine Screen Size
-    if [[ "$COLUMNS" -le "57" ]]; then
-        local var1=2
-        local var2=20
-    else
-        local var1=4
-        local var2=40
-    fi
-    # Process data
-    local _progress=$(((${1} * 100 / ${2} * 100) / 100))
-    local _done=$(((${_progress} * ${var1}) / 10))
-    local _left=$((${var2} - $_done))
-    # Build progressbar string lengths
-    local _done=$(printf "%${_done}s")
-    local _left=$(printf "%${_left}s")
+ProgressBar {
+# Process data
+	let _progress=(${1}*100/${2}*100)/100
+	let _done=(${_progress}*4)/10
+	let _left=40-$_done
+# Build progressbar string lengths
+	_done=$(printf "%${_done}s")
+	_left=$(printf "%${_left}s")
 
-    # Build progressbar strings and print the ProgressBar line
-    printf "\rProgress : ${BGBL}|${N}${_done// /${BGBL}$loadBar${N}}${_left// / }${BGBL}|${N} ${_progress}%%"
+# 1.2 Build progressbar strings and print the ProgressBar line
+# 1.2.1 Output example:
+# 1.2.1.1 Progress : [########################################] 100%
+printf "\rProgress : [${_done// /#}${_left// /-}] ${_progress}%%"
+
 }
 
 #https://github.com/fearside/SimpleProgressSpinner
@@ -186,8 +181,8 @@ test_connection() {
             true
         else
             false
-        fi &
-        e_spinner "${B}[*]${N} 检查网络连接"
+        fi #&
+        #e_spinner "${B}[*]${N} 检查网络连接"
     ) && echo " - ${G}网络正常${N}" || {
         echo " - ${R}网络异常${N}"
         false
@@ -258,14 +253,14 @@ pcenter() {
 }
 
 fancy_opening() {
-    header
-    echo -e "\n"
-    NUM=1
-    while [ $NUM -le 50 ]; do
-        ProgressBar $NUM 50
-        NUM=$((NUM + 5))
-        sleep 0.001
-    done
+	header
+	echo -e "\n"
+	NUM=1
+	while [ $NUM -le 50 ]; do
+		ProgressBar $NUM 50
+		NUM=$((NUM + 5))
+		sleep 0.001
+	done
 }
 
 # Display on Header
@@ -391,10 +386,10 @@ exit_sh() {
     echo ""
     echo ""
     cleanup
-    save_logs
-    echo " 日志将被保存至:"
-    echo -e " ${Y}${EXTRALOG}${N}"
-    echo ""
+    # save_logs
+    # echo " 日志将被保存至:"
+    # echo -e " ${Y}${EXTRALOG}${N}"
+    # echo ""
     exit 0
 }
 
@@ -482,7 +477,6 @@ Configure_ARIA2CONF() {
     set_file_prop save-session "${WORKDIR}/aria2.session" "${ARIA2CONF}"
     sed -i "s@/data/data/com.termux/files/home/.aria2/@${WORKDIR}/@" "${ARIA2CONF}"
     set_file_prop rpc-secret "$(date +%s%N | md5sum | head -c 20)" "${ARIA2CONF}"
-    set_file_prop DOWNLOAD_PATH "${DOWNLOADPATH}" "${WORKDIR}/*.sh"
     set_file_prop log "${ARIA2LOG}" "${ARIA2CONF}"
     mktouch ${WORKDIR}/aria2.session
     echo -e "${G}[√]${N} Aria2 配置文件处理完成！"
@@ -523,7 +517,7 @@ Install_aria2() {
     check_mirrors           #2>&1 & e_spinner "${B}[*]${N} 检查镜像源中..."
     Installation_dependency #2>&1 & e_spinner "${B}[*]${N} 开始安装并配置依赖..."
     pkg i aria2 -y          #2>&1 & e_spinner "${B}[*]${N} 开始下载并安装主程序..."
-    Configure_ARIA2CONF & e_spinner "${B}[*]${N} 开始检查配置文件..."
+    Configure_ARIA2CONF     # & e_spinner "${B}[*]${N} 开始检查配置文件..."
     aria2_RPC_port=${aria2_port}
     blue "[*] 开始创建下载目录..."
     check_storage
@@ -775,9 +769,9 @@ Update_bt_tracker() {
     check_installed_status
     check_pid
     if [ -z "$PID" ]; then
-        bash "$HOME/.config/aria2/core/tracker.sh" "${ARIA2CONF}"
+        bash "$HOME/.config/aria2/script/tracker.sh" "${ARIA2CONF}"
     else
-        bash "$HOME/.config/aria2/core/tracker.sh" "${ARIA2CONF}" RPC
+        bash "$HOME/.config/aria2/script/tracker.sh" "${ARIA2CONF}" RPC
     fi
     echo -en "\n\n请回车以继续"
     read -r -n 1 line
