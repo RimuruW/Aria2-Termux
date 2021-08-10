@@ -120,7 +120,7 @@ set_file_prop() {
 
 # https://github.com/fearside/ProgressBar
 # ProgressBar <progress> <total>
-ProgressBar {
+ProgressBar() {
 # Process data
 	let _progress=(${1}*100/${2}*100)/100
 	let _done=(${_progress}*4)/10
