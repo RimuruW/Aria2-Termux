@@ -559,6 +559,8 @@ Stop_aria2() {
     check_pid
     [[ -z ${PID} ]] && red "[!] Aria2 未启动，请检查日志 !" && return 0
     kill -9 "${PID}"
+    blue "[*] 尝试关闭唤醒锁…"
+    termux-wake-unlock
 }
 
 Set_aria2_RPC_passwd() {
