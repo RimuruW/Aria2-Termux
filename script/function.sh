@@ -534,6 +534,7 @@ Install_aria2() {
     Configure_ARIA2CONF 2>${_ATMLOG} &
     e_spinner "${B}[*]${N} 开始检查配置文件..."
     aria2_RPC_port=${aria2_port}
+    echo ""
     blue "[*] 开始创建下载目录..."
     check_storage
     mkdir -p "${DOWNLOADPATH}"
@@ -741,13 +742,14 @@ ${R}[!]${N} 此操作将重置 Aria2 配置文件，所有已设定的配置将�
 
 按任意键继续，按 Ctrl+C 组合键取消"
     read -r -n 1 line
-    Configure_ARIA2CONF
+    Configure_ARIA2CONF 2>${_ATMLOG} &
+    e_spinner "${B}[*]${N} 开始检查配置文件..."
     Read_config
     if [[ ${aria2_port_old} != "${aria2_port}" ]]; then
         aria2_RPC_port=${aria2_port}
         aria2_port=${aria2_port_old}
     fi
-    source "$ATMDIR/core/restart-aria2.sh"
+    source "${ATMGIT}/core/restart-aria2.sh"
 }
 
 Read_config() {
