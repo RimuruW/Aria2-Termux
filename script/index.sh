@@ -31,6 +31,7 @@ while true; do
         ;;
     5)
         source "${ATMGIT}/core/restart-aria2.sh"
+        Step
         ;;
     6)
         Set_aria2
