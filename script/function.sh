@@ -766,19 +766,19 @@ Read_config() {
 }
 
 View_Log() {
-    [[ ! -e ${aria2_log} ]] && echo -e "${R}[!]${N} Aria2 日志文件不存在 !" && return 0
+    [[ ! -e ${ARIA2LOG} ]] && echo -e "${R}[!]${N} Aria2 日志文件不存在 !" && return 0
     echo && echo -e "
 
 ${G}[!]${N} 按 ${G}Ctrl+C${N} 终止查看日志
-如果需要查看完整日志内容，请用 ${G}cat ${aria2_log}${N} 命令。
+如果需要查看完整日志内容，请用 ${G}cat ${ARIA2LOG}${N} 命令。
 
 "
-    tail -f "${aria2_log}"
+    tail -f "${ARIA2LOG}"
 }
 
 Clean_Log() {
-    [[ ! -e ${aria2_log} ]] && echo -e "${R}[!]${N} Aria2 日志文件不存在 !" && echo -en "\n\n请回车以继续" && read -r -n 1 line && return 0
-    echo >"${aria2_log}"
+    [[ ! -e ${ARIA2LOG} ]] && echo -e "${R}[!]${N} Aria2 日志文件不存在 !" && echo -en "\n\n请回车以继续" && read -r -n 1 line && return 0
+    echo >"${ARIA2LOG}"
     echo -e "${G}[√]${N} Aria2 日志已清空 !"
     echo -en "\n\n请回车以继续"
     read -r -n 1 line
