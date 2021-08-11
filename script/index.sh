@@ -34,12 +34,14 @@ while true; do
         ;;
     6)
         Set_aria2
+        Step
         ;;
     7)
         View_Aria2
         ;;
     8)
         View_Log
+        Step
         ;;
     9)
         Clean_Log
@@ -49,9 +51,11 @@ while true; do
         ;;
     11)
         sh_update
+        Step
         ;;
     12)
         Auto_start
+        Step
         ;;
     *)
         echo
