@@ -737,11 +737,11 @@ Reset_ARIA2CONF() {
     Read_config
     aria2_port_old=${aria2_port}
     echo -e "
-${R}[!]${N} 此操作将重新下载 Aria2 配置文件，所有已设定的配置将丢失。
+${R}[!]${N} 此操作将重置 Aria2 配置文件，所有已设定的配置将丢失。
 
 按任意键继续，按 Ctrl+C 组合键取消"
     read -r -n 1 line
-    Download_ARIA2CONF
+    Configure_ARIA2CONF
     Read_config
     if [[ ${aria2_port_old} != "${aria2_port}" ]]; then
         aria2_RPC_port=${aria2_port}

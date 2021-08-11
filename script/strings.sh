@@ -2,6 +2,7 @@
 
 main_menu() {
     header "主菜单"
+    echo ""
     echo -e "
 ${G} 0.${N} 退出
 ——————————————————————
@@ -157,7 +158,7 @@ Auto_start() {
     echo -e "
 ${Y}[!]${N} 受限于 Termux，Aria2 开机自启动需要 Termux 提供相应支持。
 ${Y}[!]${N} 你需要先安装 ${G}Termux:Boot${N} 才可以实现 Termux
-Termux:Boot 下载链接: ${G}https://play.google.com/store/apps/details?id=com.termux.boot${N}
+Termux:Boot 下载链接: ${G}https://f-droid.org/zh_Hans/packages/com.termux.boot/${N}
 
 ${R}[!]${N} 注意，如果你未安装 ${G}Termux:Boot${N}，脚本中任何关于 Aria2 自启动的配置${R}没有任何意义${N}
 "
@@ -175,8 +176,8 @@ ${R}[!]${N} 注意，如果你未安装 ${G}Termux:Boot${N}，脚本中任何关
     else
         if ask "是否开启 Aria2 开机自启动？" "N"; then
             mkdir -p "$HOME/.termux/boot"
-            if [ -f "$WORKDIR/auto-start-aria2" ]; then
-                if cp "$WORKDIR/auto-start-aria2" "$HOME/.termux/boot/auto-start-aria2"; then
+            if [ -f "$ATMGIT/core/auto-start-aria2" ]; then
+                if cp "$ATMGIT/core/auto-start-aria2" "$HOME/.termux/boot/auto-start-aria2"; then
                     echo -e "${G}[√]${N} Aria2 开机自启动已开启！"
                 else
                     echo -e "${R}[!]${N} Aria2 启动开启失败！"
