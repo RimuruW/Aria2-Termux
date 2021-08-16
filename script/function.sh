@@ -357,7 +357,7 @@ sh_update() {
     test_connection || return 1
     mkdir -p ${ATMDIR}/tmp
     echo "${B}[*]${N} 检查更新..."
-    wget -q -T 10 -O "$ATMDIR/tmp/atmrc" "$GITRAW/.atmrc" >> "$_ATMLOG" 2>&1
+    wget -q -T 10 -O "$ATMDIR/tmp/atmrc" "$GITRAW/.atmrc" >>"$_ATMLOG" 2>&1
     sh_new_ver=$(grep 'REL="' "$ATMDIR/tmp/atmrc" | awk -F "=" '{print $NF}' | sed 's/\"//g' | head -1)
     if [ -s "$ATMDIR/tmp/atmrc" ]; then
         if [ "$REL" -lt "$sh_new_ver" ]; then
@@ -497,7 +497,7 @@ Configure_ARIA2CONF() {
 }
 
 Installation_dependency() {
-    echo -e "${B}[*]${N} 开始安装并配置依赖..."
+    # echo -e "${B}[*]${N} 开始安装并配置依赖..."
     apt-get update -y &>/dev/null
     for i in nano ca-certificates findutils jq tar gzip dpkg curl aria2; do
         if apt list --installed 2>/dev/null | grep "$i"; then
@@ -528,9 +528,15 @@ check_installed_status() {
 
 Install_aria2() {
     [[ -e ${aria2c} ]] && echo -e "${R}[!]${N} Aria2 已安装，如需重新安装请在脚本中卸载 Aria2！" && return 1
-    check_mirrors           #2>&1 & e_spinner "${B}[*]${N} 检查镜像源中..."
-    Installation_dependency #2>&1 & e_spinner "${B}[*]${N} 开始安装并配置依赖..."
-    pkg i aria2 -y          #2>&1 & e_spinner "${B}[*]${N} 开始下载并安装主程序..."
+    check_mirrors 2>&1 &
+    e_spinner "${B}[*]${N} 检查镜像源中..."
+    echo ""
+    Installation_dependency 2>&1 &
+    e_spinner "${B}[*]${N} 开始安装并配置依赖..."
+    echo ""
+    pkg i aria2 -y 2>&1 &
+    e_spinner "${B}[*]${N} 开始下载并安装主程序..."
+    echo ""
     Configure_ARIA2CONF 2>${_ATMLOG} &
     e_spinner "${B}[*]${N} 开始检查配置文件..."
     aria2_RPC_port=${aria2_port}
@@ -799,9 +805,9 @@ Update_bt_tracker() {
 Uninstall_aria2() {
     check_installed_status "un"
     if ask "确定要卸载 Aria2 ? " "N"; then
-        apt purge -y aria2
         check_pid
-        [[ -n $PID ]] && kill -9 "${PID}"
+        [[ -n $PID ]] && kill -9 "${PID}" && termux-wake-unlock
+        apt purge -y aria2 2>"${_ATMLOG}"
         Read_config "un"
         rm -rf "${aria2c}"
         rm -rf "${WORKDIR}"
