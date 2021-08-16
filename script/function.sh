@@ -642,7 +642,7 @@ Set_aria2_RPC_port() {
 ${G}[*]${N} RPC 端口修改成功！
 新端口为：${G}${aria2_RPC_port}${N}(配置文件中缺少相关选项参数，已自动加入配置文件底部)"
                 if [[ ${read_123} != "1" ]]; then
-                    source "$ATMDIR/core/restart-aria2.sh"
+                    source "$ATMGIT/core/restart-aria2.sh"
                 fi
             else
                 echo -e "
@@ -656,7 +656,7 @@ ${G}[√]${N} RPC 端口修改成功！
 新端口为：${G}${aria2_RPC_port}${N}
 "
                 if [[ ${read_123} != "1" ]]; then
-                    source "$ATMDIR/core/restart-aria2.sh"
+                    source "$ATMGIT/core/restart-aria2.sh"
                 fi
             else
                 echo -e "
