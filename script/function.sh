@@ -356,7 +356,7 @@ sh_update() {
     echo ""
     test_connection || return 1
     mkdir -p ${ATMDIR}/tmp
-    echo "- 检查更新..."
+    echo " - 检查更新..."
     wget -q -T 10 -O "$ATMDIR/tmp/atmrc" "$GITRAW/.atmrc" >>"$_ATMLOG" 2>&1
     echo ""
     sh_new_ver=$(grep 'REL="' "$ATMDIR/tmp/atmrc" | awk -F "=" '{print $NF}' | sed 's/\"//g' | head -1)
@@ -695,9 +695,9 @@ Set_aria2_RPC_dir() {
     echo -e "
  当前下载目录为: ${G}${aria2_dir_1}${N}
 "
-    echo -en " 请输入新的下载目录(默认: ${download_path}): "
+    echo -en " 请输入新的下载目录(默认: ${DOWNLOADPATH}): "
     read -r aria2_RPC_dir
-    [[ -z "${aria2_RPC_dir}" ]] && aria2_RPC_dir="${download_path}"
+    [[ -z "${aria2_RPC_dir}" ]] && aria2_RPC_dir="${DOWNLOADPATH}"
     mkdir -p "${aria2_RPC_dir}"
     echo
     if [[ "${aria2_dir}" != "${aria2_RPC_dir}" ]]; then
