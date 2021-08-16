@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/data/data/com.termux/files/usr/bin/bash
 #
 # Copyright (c) 2018-2020 P3TERX <https://p3terx.com>
 #
@@ -12,7 +12,7 @@
 #
 
 CHECK_CORE_FILE() {
-    CORE_FILE="$(dirname $0)/core"
+    CORE_FILE="$(dirname "$0")/core"
     if [[ -f "${CORE_FILE}" ]]; then
         . "${CORE_FILE}"
     else
@@ -41,12 +41,13 @@ ${LIGHT_PURPLE_FONT_PREFIX}.aria2 File Path:${FONT_COLOR_SUFFIX} ${DOT_ARIA2_FIL
 OUTPUT_MOVE_LOG() {
     LOG="${MOVE_LOG}"
     LOG_PATH="${MOVE_LOG_PATH}"
+    export LOG LOG_PATH
     OUTPUT_LOG
 }
 
 DEFINITION_PATH() {
     SOURCE_PATH="${TASK_PATH}"
-    if [[ "${DOWNLOAD_DIR}" != "${ARIA2_DOWNLOAD_DIR}" && "${DOWNLOAD_DIR}" =~ "${ARIA2_DOWNLOAD_DIR}" ]]; then
+    if [[ "${DOWNLOAD_DIR}" != "${ARIA2_DOWNLOAD_DIR}" && "${DOWNLOAD_DIR}" =~ ${ARIA2_DOWNLOAD_DIR} ]]; then
         DEST_PATH="${DEST_DIR}${DEST_PATH_SUFFIX%/*}"
     else
         DEST_PATH="${DEST_DIR}"
