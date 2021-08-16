@@ -602,7 +602,7 @@ Set_aria2_RPC_passwd() {
 ${G}[√]${N} RPC 密钥修改成功！
 新密钥为：${G}${aria2_RPC_passwd}${N}(配置文件中缺少相关选项参数，已自动加入配置文件底部)"
                 if [[ ${read_123} != "1" ]]; then
-                    source "$ATMDIR/core/restart-aria2.sh"
+                    source "$ATMGIT/core/restart-aria2.sh"
                 fi
             else
                 echo -e "
@@ -616,7 +616,7 @@ ${R}[!]${N} RPC 密钥修改失败！
 ${G}[√]${N} RPC 密钥修改成功！
 新密钥为：${G}${aria2_RPC_passwd}${N}"
                 if [[ ${read_123} != "1" ]]; then
-                    source "$ATMDIR/core/restart-aria2.sh"
+                    source "$ATMGIT/core/restart-aria2.sh"
                 fi
             else
                 echo -e "
@@ -708,7 +708,7 @@ ${G}[√]${N} 下载目录修改成功！
 新位置为：${G}${aria2_RPC_dir}${N}(配置文件中缺少相关选项参数，已自动加入配置文件底部)
 				"
                 if [[ ${read_123} != "1" ]]; then
-                    source "$ATMDIR/core/restart-aria2.sh"
+                    source "$ATMGIT/core/restart-aria2.sh"
                 fi
             else
                 echo -e "
@@ -725,7 +725,7 @@ ${G}[√]${N} 下载目录修改成功！
 新位置为：${G}${aria2_RPC_dir}${N}
 "
                 if [[ ${read_123} != "1" ]]; then
-                    source "$ATMDIR/core/restart-aria2.sh"
+                    source "$ATMGIT/core/restart-aria2.sh"
                 fi
             else
                 echo -e "
@@ -734,7 +734,7 @@ ${R}[!]${N} 下载目录修改失败！
             fi
         fi
     else
-        echo "${Y}[!]${N} 与旧配置一致，无需修改..."
+        echo -e "${Y}[!]${N} 与旧配置一致，无需修改..."
     fi
 }
 
@@ -743,7 +743,7 @@ Set_aria2_RPC_passwd_port_dir() {
     Set_aria2_RPC_passwd "1"
     Set_aria2_RPC_port "1"
     Set_aria2_RPC_dir "1"
-    source "$ATMDIR/core/restart-aria2.sh"
+    source "$ATMGIT/core/restart-aria2.sh"
 }
 
 Reset_ARIA2CONF() {
@@ -800,9 +800,9 @@ Update_bt_tracker() {
     check_installed_status
     check_pid
     if [ -z "$PID" ]; then
-        bash "${ATMGIT}/script/tracker.sh" "${ARIA2CONF}"
+        bash "${ATMGIT}/script/tracker.sh" "${ARIA2CONF}" 2>${_ATMLOG}
     else
-        bash "${ATMGIT}/script/tracker.sh" "${ARIA2CONF}" RPC
+        bash "${ATMGIT}/script/tracker.sh" "${ARIA2CONF}" RPC 2>${_ATMLOG}
     fi
     echo -en "\n\n请回车以继续"
     read -r -n 1 line
