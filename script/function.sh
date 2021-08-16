@@ -355,8 +355,9 @@ sh_update() {
     echo ""
     echo ""
     test_connection || return 1
-    mkdir -p ${ATMDIR}/tmp
-    echo "${B}[*]${N} 检查更新..."
+    mkdir -p ${ATMDIR}/tmp &
+    e_spinner "${B}[*]${N} 检查更新..."
+    echo ""
     wget -q -T 10 -O "$ATMDIR/tmp/atmrc" "$GITRAW/.atmrc" >>"$_ATMLOG" 2>&1
     sh_new_ver=$(grep 'REL="' "$ATMDIR/tmp/atmrc" | awk -F "=" '{print $NF}' | sed 's/\"//g' | head -1)
     if [ -s "$ATMDIR/tmp/atmrc" ]; then
