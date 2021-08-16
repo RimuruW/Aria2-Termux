@@ -820,7 +820,7 @@ Uninstall_aria2() {
         rm -f "$HOME/.termux/boot/auto-start-aria2"
         echo -e "\n${G}[√]${N} Aria2 卸载完成！\n"
     else
-        echo && echo "${Y}[*]${N} 卸载已取消..." && echo
+        echo && echo -e "${Y}[*]${N} 卸载已取消..." && echo
     fi
     echo -en "\n\n请回车以继续"
     read -r -n 1 line
