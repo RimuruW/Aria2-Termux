@@ -97,7 +97,7 @@ Set_aria2_vim_conf() {
         aria2_dir_2=$(echo "${aria2_dir}" | sed 's/\//\\\//g')
         sed -i "s@^\(DOWNLOAD_PATH='\).*@\1${aria2_dir_2}'@" "${WORKDIR}/*.sh"
     fi
-    source "$ATMDIR/core/restart-aria2.sh"
+    source "$ATMGIT/core/restart-aria2.sh"
 }
 
 View_Aria2() {
