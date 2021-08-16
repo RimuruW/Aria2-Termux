@@ -363,6 +363,17 @@ sh_update() {
     if [ -s "$ATMDIR/tmp/atmrc" ]; then
         if [[ "$REL" -lt "$sh_new_ver" ]]; then
             log_print " - ${Y}发现新版本！${N}"
+            _PWD=$(pwd)
+            cd "$PREFIX/etc/atm/main" || {
+                red "目录跳转失败！" >&2
+                exit 1
+            }
+            git pull -p
+            cp "$PREFIX/etc/atm/main/bin/atm" "$PREFIX/bin/atm"
+            cd "$_PWD" || {
+                red "目录跳转失败！" >&2
+                exit 1
+            }
         else
             log_print " - ${G}您使用的是最新版本。${N}"
         fi
