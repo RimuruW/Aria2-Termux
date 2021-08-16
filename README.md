@@ -1,17 +1,18 @@
  # Aria2-Termux
 ```bash
-bash -c "$(curl -L https://raw.githubusercontent.com/RimuruW/Aria2-Termux/master/aria2.sh)"
+bash -c "$(curl -L https://raw.githubusercontent.com/RimuruW/Aria2-Termux/master/install.sh)"
 ```
 > 化繁为简，让 Aria2 的乐趣触手可及。
 
 ## 简介
 本项目基于 [aria2.sh](https://github.com/P3TERX/aria2.sh)，在原项目的基础上二次修改，结合了 Android 设备上的实际情况，去除原脚本某些在 Android 无法实现或意义不大的功能，并借助 Termux 的优势，尽可能在 Android 实现更好的 Aria2 体验。
 
-项目整合了 Aria2 配置文件、附加功能脚本等文件。
+项目已整合了 Aria2 配置文件、附加功能脚本等文件。
 关于配置文件的详细信息请点击[这里](https://github.com/RimuruW/Aria2-Termux/tree/master/conf)。
 
 ## 功能特性
 
+- 一键安装管理脚本，即使是终端新手也可以轻松上手
 - 简明易用的管理界面，所有管理操作可以在脚本一步完成
 - 完善的多功能支持，支持一键更新 BT Trackers、Aria2 开机自启动
 - 丰富的附加扩展功能，详见[配置文件说明](https://github.com/RimuruW/Aria2-Termux/tree/master/conf)
@@ -21,7 +22,6 @@ bash -c "$(curl -L https://raw.githubusercontent.com/RimuruW/Aria2-Termux/master
 - Android 7.0 - 9.0 (Android 10 以上可能会有一些问题)
 - CPU 架构: AArch64, ARM, i686, x86_64.
 - 至少 200MB 的空闲存储空间
-
 
  **注意：Termux 不支持没有 NEON SIMD 的 ARM 设备，例如 Nvidia Tegra 2 CPUs.**
 
@@ -41,65 +41,47 @@ bash -c "$(curl -L https://raw.githubusercontent.com/RimuruW/Aria2-Termux/master
 ## 使用说明
 
 ### 详细使用文档
-请参阅 [Android 一键安装配置 Aria2](https://qingxu.live/index.php/archives/aria2-for-termux/)
+请参阅 [Android 一键安装配置 Aria2](https://blog.linioi.com/posts/aria2-for-termux/)
 
 ### 快速开始
+
+1. 安装 Termux
+
 ~~请在 [Google Play Store](https://play.google.com/store/apps/details?id=com.termux) 下载并安装 Termux。~~
 
 由于[这些原因](https://github.com/termux/termux-app/issues/1072)，Google Play Store 不再是推荐的下载地址，请在 [F-Droid](https://f-droid.org/packages/com.termux/) 下载 Termux。
 
-1. 为了确保能正常使用，请先安装必需软件包
+2. 安装 Aria2-Termux
+
+从 Aria2-Termux 2.0.0 版本开始，Aria2-Termux 提供一键安装脚本用以安装 Aria2-Termux，你可以在 Termux 中输入如下命令一键安装 Aria2-Termux。
 
 ```bash
-pkg i wget -y
+bash -c "$(curl -L https://raw.githubusercontent.com/RimuruW/Aria2-Termux/master/install.sh)"
 ```
 
-2. 下载脚本
+对于无法正常访问 GitHub 直链的地区，你也可以在 Termux 中输入如下命令执行安装脚本。
 
 ```bash
-wget -N https://raw.githubusercontent.com/RimuruW/Aria2-Termux/master/aria2.sh && chmod +x aria2.sh
+bash -c "$(curl -L  https://cdn.jsdelivr.net/gh/RimuruW/Aria2-Termux@master/install.sh)"
 ```
 
-> 对于国内用户，可以尝试输入下面命令下载脚本
-```bash
-wget -N https://cdn.jsdelivr.net/gh/RimuruW/Aria2-Termux@master/aria2.sh && chmod +x aria2.sh
-```
 
 3. 运行脚本
 
+从 Aria2-Termux 2.0.0 开始，Aria2-Termux 提供全局启动器 `atm` 用以启动 Aria2-Termux。你可以直接在 Termux 输入如下命令启动 Aria2-Termux。
+
 ```bash
-bash aria2.sh
+atm
 ```
 
-4. 选择你要执行的选项
+## 旧版兼容问题
 
-```
-Aria2 一键管理脚本 [v1.0.6]
-            by Qingxu(RimuruW)
+Aria2-Termux 2.0+ 无法保证与 Aria2-Termux 1.0+ 的兼容性，你可能需要手动迁移至 2.0+ 版本。
 
-  0. 退出
- ———————————————————————
-  1. 安装 Aria2
-  2. 卸载 Aria2
- ———————————————————————
-  3. 启动 Aria2
-  4. 停止 Aria2
-  5. 重启 Aria2
- ———————————————————————
-  6. 修改 配置
-  7. 查看 配置
-  8. 查看 日志
-  9. 清空 日志
- ———————————————————————
-  10. 一键更新 BT-Tracker
-  11. 一键更新脚本
-  12. Aria2 开机自启动
- ———————————————————————
+你仍可以通过如下命令下载安装并运行旧版管理脚本。
 
- Aria2 状态: 已安装 | 已启动
- Aria2 开机自启动: 已开启
-
- 请输入数字 [0-12]: 
+```bash
+bash -c "$(curl -L https://raw.githubusercontent.com/RimuruW/Aria2-Termux/master/aria2.sh)"
 ```
 
 ## 其他
@@ -108,26 +90,34 @@ Aria2 一键管理脚本 [v1.0.6]
 
 默认下载目录：`/sdcard/Download`
 
-RPC 密钥：随机生成，可使用选项`6. 修改 配置文件`自定义
+RPC 密钥：随机生成，可在脚本中自定义
 
 支持项目请随手点个`star`，可以让更多的人发现、使用并受益。您的支持是我持续开发维护的动力。
 
 ## 更新日志
 
 > 因学业原因，本项目开发进度将放缓，见谅。
->
-> 新版 Aria2-Termux 正在连夜制作中，我争取八月上旬完成...
+
+### 2021-08-16 v2.0.0 Beta 1
+
+- UI 风格修改
+- 优化安装方式
+- 简化部分不必要的输出
+- 优化 Aria2 的配置管理
 
 ### 2021-07-26 v1.0.6
+
 - 完善镜像源检测
 - 完善 Aria2 的启动管理
 - 修复 Aria2 配置文件的某些错误
 
 ### 2020-11-23 v1.0.5
+
 - 整合配置文件至仓库
 - 更完善的自检测系统
 
 ### 2020-11-15 v1.0.4
+
 - UI 风格微修改
 - 代码结构优化
 - 添加 Aria2 开机自启动 [#2](https://github.com/RimuruW/Aria2-Termux/issues/2)

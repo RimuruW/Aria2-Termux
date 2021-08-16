@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/data/data/com.termux/files/usr/bin/bash
 #
 # Copyright (c) 2018-2020 P3TERX <https://p3terx.com>
 #
@@ -12,7 +12,7 @@
 #
 
 CHECK_CORE_FILE() {
-    CORE_FILE="$(dirname $0)/core"
+    CORE_FILE="$(dirname "$0")/core"
     if [[ -f "${CORE_FILE}" ]]; then
         . "${CORE_FILE}"
     else
