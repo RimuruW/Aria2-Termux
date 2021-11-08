@@ -34,41 +34,40 @@ light() {
     echo -e "${L}$1${N}"
 }
 
+
 ask() {
-    # http://djm.me/ask
-    LIGHT=$(printf '\033[1;96m')
-    RESET=$(printf '\033[0m')
-    while true; do
+	# http://djm.me/ask
+	while true; do
 
-        if [ "${2:-}" = "Y" ]; then
-            prompt="Y/n"
-            default=Y
-        elif [ "${2:-}" = "N" ]; then
-            prompt="y/N"
-            default=N
-        else
-            prompt="y/n"
-            default=
-        fi
+		if [ "${2:-}" = "Y" ]; then
+			prompt="Y/n"
+			default=Y
+		elif [ "${2:-}" = "N" ]; then
+			prompt="y/N"
+			default=N
+		else
+			prompt="y/n"
+			default=
+		fi
 
-        # Ask the question
-        printf '%s\n' "${LIGHT}"
-        printf "[?] "
-        read -r -p "$1 [$prompt] " REPLY
+		# Ask the question
+		printf '%s\n' "${LIGHT}"
+		printf "[?] "
+		read -r -p "$1 [$prompt] " REPLY
 
-        # Default?
-        if [ -z "$REPLY" ]; then
-            REPLY=$default
-        fi
+		# Default?
+		if [ -z "$REPLY" ]; then
+			REPLY=$default
+		fi
 
-        printf '%s\n' "${RESET}"
+		printf '%s\n' "${RESET}"
 
-        # Check if the reply is valid
-        case "$REPLY" in
-        Y* | y*) return 0 ;;
-        N* | n*) return 1 ;;
-        esac
-    done
+		# Check if the reply is valid
+		case "$REPLY" in
+		Y* | y*) return 0 ;;
+		N* | n*) return 1 ;;
+		esac
+	done
 }
 
 # No. of characters in $VER, and $REL
@@ -89,94 +88,17 @@ abort() {
     exit 1
 }
 
-# title_div [-c] <title>
-# based on $div with <title>
-title_div() {
-    [ "$1" == "-c" ] && local character_no=$2 && shift 2
-    [ -z "$1" ] && {
-        local message=
-        no=0
-    } || {
-        local message="$@ "
-        local no="$(echo "$@" | wc -c)"
-    }
-    [ "$character_no" -gt "$no" ] && local extdiv=$((character_no - no)) || {
-        echo "Invalid!"
-        return
-    }
-    echo "${W}$message${N}${Bl}$(printf '%*s' "$extdiv" '' | tr " " "=")${N}"
-}
-
 # set_file_prop <property> <value> <prop.file>
 set_file_prop() {
     if [ -f "$3" ]; then
         if grep -q "$1=" "$3"; then
-            sed -i "s/${1}=.*/${1}=${2}/g" "$3"
+            sed -i "s#${1}=.*#${1}=${2}#g" "$3"
         else
             echo "$1=$2" >>"$3"
         fi
     else
         echo "$3 不存在！"
     fi
-}
-
-# https://github.com/fearside/ProgressBar
-# ProgressBar <progress> <total>
-ProgressBar() {
-    # Determine Screen Size
-    if [[ "$COLUMNS" -le "57" ]]; then
-        local var1=2
-        local var2=20
-    else
-        local var1=4
-        local var2=40
-    fi
-    # Process data
-    local _progress=$(((${1} * 100 / ${2} * 100) / 100))
-    local _done=$(((${_progress} * ${var1}) / 10))
-    local _left=$((${var2} - $_done))
-    # Build progressbar string lengths
-    local _done=$(printf "%${_done}s")
-    local _left=$(printf "%${_left}s")
-
-    # Build progressbar strings and print the ProgressBar line
-    printf "\rProgress : ${BGBL}|${N}${_done// /${BGBL}$loadBar${N}}${_left// / }${BGBL}|${N} ${_progress}%%"
-}
-
-#https://github.com/fearside/SimpleProgressSpinner
-# Spinner <message>
-Spinner() {
-    # Choose which character to show.
-    case ${_indicator} in
-    "|") _indicator="/" ;;
-    "/") _indicator="-" ;;
-    "-") _indicator="\\" ;;
-    "\\") _indicator="|" ;;
-    # Initiate spinner character
-    *) _indicator="\\" ;;
-    esac
-
-    # Print simple progress spinner
-    printf "\r${@} [${_indicator}]"
-}
-
-# cmd & spinner <message>
-e_spinner() {
-    _PID=$!
-    h=0
-    anim='-\|/'
-    while true; do
-        h=$(((h + 1) % 4))
-        sleep 0.02
-        printf "\r${@} [${anim:$h:1}]"
-        grep_PID=$(ps aux | awk '{print $2}' | grep -q ${_PID})
-        if [ -n "$grep_PID" ]; then
-            :
-        else
-            return 0
-        fi
-    done
-    echo ""
 }
 
 check_storage() {
@@ -194,8 +116,7 @@ test_connection() {
             true
         else
             false
-        fi #&
-        #e_spinner "${B}[*]${N} 检查网络连接"
+        fi
     ) && echo -e " - ${G}网络正常${N}" || {
         echo -e " - ${R}网络异常${N}"
         false
@@ -231,28 +152,13 @@ $(export)
 ==============
 
     Aria2:   $logUp" | nc termbin.com 9999 &
-        e_spinner "测试网络连接"
+        blue "测试网络连接"
     ) && echo " - OK" || {
         echo " - 出错"
         false
     }
     e_spinner "上传日志"
     exit
-}
-
-# Print Random
-# Prints a message at random
-# CHANCES - no. of chances <integer>
-# TARGET - target value out of CHANCES <integer>
-prandom() {
-    local CHANCES=2
-    local TARGET=2
-    [ "$1" == "-c" ] && {
-        local CHANCES=$2
-        local TARGET=$3
-        shift 3
-    }
-    [ "$((RANDOM % CHANCES + 1))" -eq "$TARGET" ] && echo "$@"
 }
 
 # Print Center
@@ -265,42 +171,18 @@ pcenter() {
     echo "$(printf '%*s' "${indent}" '') $@"
 }
 
-fancy_opening() {
-    header
-    echo -e "\n"
-    NUM=1
-    while [ $NUM -le 50 ]; do
-        ProgressBar $NUM 50
-        NUM=$((NUM + 5))
-        sleep 0.001
-    done
-}
-
 # Display on Header
 header() {
-    clear
-    midALG=${#1}
-    midALG=$((MDLVAL - midALG))
-    [ $((midALG % 2)) -eq 0 ] || midALG=$((midALG - 1))
-    midALG=$((midALG / 2))
-    SP=$(printf %-${midALG}s " ")
     [ "$DEVMODE" ] || clear
-    light " Aria2 一键管理脚本"
+    pcenter "Aria2 一键管理脚本"
     echo ""
     echo -e " Version: ${Y}${VER}${N}"
     echo -e " by ${Y}Qingxu($AUTHOR)${N}"
     echo ""
-    printf "${C}=%.0s${N}" $(seq "$MDLVAL")
-    echo -e "\n${SP// / }$1"
-    printf "${C}=%.0s${N}" $(seq "$MDLVAL")
-    unset midALG
 }
 
 # Display on Footer
 footer() {
-    var=$((MDLVAL / 2))
-    var=$((MDLVAL / 2 + 1))
-    printf "${C}- %.0s${N}" $(seq $var)
     echo ""
     if [[ -e ${aria2c} ]]; then
         check_pid
@@ -317,7 +199,6 @@ footer() {
     else
         echo -e " Aria2 开机自启动: ${R}未开启${N}"
     fi
-    printf "${C}- %.0s${N}" $(seq $var)
     echo ""
 }
 
@@ -360,7 +241,7 @@ sh_update() {
     echo ""
     wget -q -T 10 -O "$ATMDIR/tmp/atmrc" "$GITRAW/.atmrc" >>"$_ATMLOG" 2>&1
     sh_new_ver=$(grep 'REL="' "$ATMDIR/tmp/atmrc" | awk -F "=" '{print $NF}' | sed 's/\"//g' | head -1)
-    if [ -s "$ATMDIR/tmp/atmrc" ]; then
+    if [ -f "$ATMDIR/tmp/atmrc" ]; then
         if [ "$REL" -lt "$sh_new_ver" ]; then
             log_print " - ${Y}发现新版本！${N}"
         else
@@ -400,11 +281,7 @@ exit_sh() {
     header "祝您有美好的一天 :)"
     echo ""
     echo ""
-    cleanup
-    # save_logs
-    # echo " 日志将被保存至:"
-    # echo -e " ${Y}${EXTRALOG}${N}"
-    # echo ""
+    cleanup 
     exit 0
 }
 
