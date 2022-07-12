@@ -391,10 +391,10 @@ sh_update() {
 
 force_update() {
 	if ask "是否强制更新？" "N"; then
-		echo "${B}[*]${N} 不进行强制更新"
-	else
-		echo "${B}[*]${N} 进行${R}强制更新${N}"
+		echo -e "${B}[*]${N} 进行${R}强制更新${N}"
 		atm -up
+	else
+		echo -e "${B}[*]${N} 不进行强制更新"
 	fi
 }
 
