@@ -21,9 +21,11 @@ ${G} 9.${N} 清空 日志
 ${G} 10.${N} 一键更新 BT-Tracker
 ${G} 11.${N} 一键更新脚本
 ${G} 12.${N} Aria2 开机自启动
+———————————————————————
+${G} 13.${N} 关于脚本
     "
     footer
-    printf "\n 请输入数字 [0-12]: "
+    printf "\n 请输入数字 [0-13]: "
 }
 
 Set_aria2() {
@@ -132,21 +134,32 @@ View_Aria2() {
     if [[ -z "${IPV4}" || -z "${aria2_port}" ]]; then
         AriaNg_URL="null"
     else
-        AriaNg_API="/#!/settings/rpc/set/ws/${LocalIP}/${aria2_port}/jsonrpc/$(echo -n ${aria2_passwd} | base64)"
-        AriaNg_URL="http://mirror-aria2.qingxu.live${AriaNg_API}"
+        AriaNg_API_1="/#!/settings/rpc/set/ws/${LocalIP}/${aria2_port}/jsonrpc/$(echo -n ${aria2_passwd} | base64)"
+	AriaNg_API_2="/#!/settings/rpc/set/ws/127.0.0.1/${aria2_port}/jsonrpc/$(echo -n ${aria2_passwd} | base64)"
+        AriaNg_URL_1="http://mirror-aria2.qingxu.live${AriaNg_API_1}"
+	AriaNg_URL_2="http://mirror-aria2.qingxu.live${AriaNg_API_2}"
     fi
     clear
     echo ""
     header "Aria2 简单配置信息"
     echo ""
     echo -e "
- IPv4 地址\t: ${G}${IPV4}${N}
- IPv6 地址\t: ${G}${IPV6}${N}
- 内网 IP 地址\t: ${G}${LocalIP}${N} 
- RPC 端口\t: ${G}${aria2_port}${N}
- RPC 密钥\t: ${G}${aria2_passwd}${N}
- 下载目录\t: ${G}${aria2_dir}${N}
- AriaNg 链接\t: ${G}${AriaNg_URL}${N}\n"
+ IPv4 地址: ${G}${IPV4}${N}
+ IPv6 地址: ${G}${IPV6}${N}
+ 内网 IP 地址: ${G}${LocalIP}${N} 
+ RPC 端口: ${G}${aria2_port}${N}
+ RPC 密钥: ${G}${aria2_passwd}${N}
+ 下载目录: ${G}${aria2_dir}${N}
+
+ AriaNg 链接
+ - 本机连接 AriaNg：${G}${AriaNg_URL_2}${N}
+ - 区域网内其他设备连接 AriaNg: ${G}${AriaNg_URL_1}${N}
+ 
+ 说明:
+ 1、内网 IP 地址指设备所处区域网的 IP 地址，可以在手机设置中查看该 IP 地址，通常格式为 192.168.x.x
+ 2、AriaNg 为其他开发者为 Aria2 制作的图形化操作界面，你也可以使用其他可视化工具，并使用 Aria2。
+ 3、AriaNg 中对 Aria2 配置的修改${R}只能在该次对话中生效${N}。如果你希望修改持续生效请在脚本中修改配置或者直接修改配置文件。
+ 4、如无其他需求，一般使用第一个 AriaNg 链接即可。\n"
     footer
     echo -en "\n\n请回车以继续" && read -r -n 1 line
 }
@@ -196,9 +209,23 @@ ${R}[!]${N} 请通过脚本重新安装 Aria2 以避免绝大多数可避免的�
 show_about(){
 	header "Aria2-Termux"
 	echo "
-Aria2-Termux Version: $VER $REL
 
-Termux Version: $TERMUX_VERSION
+GitHub Repository:
+${B}https://github.com/RimuruW/Aria2-Termux${N}
+
+Author: ${B}RimuruW${N}
+
+License: ${B}MIT${N}
+
+Tutorial:
+- Recommend: ${B}https://github.com/RimuruW/Aria2-Termux/blob/master/README.md${N}
+
+- For getting started: ${B}https://blog.linioi.com/posts/aria2-for-termux/${N}
+
+
+Aria2-Termux Version: ${B}$VER $REL${N}
+
+Termux Version: ${B}$TERMUX_VERSION${N}
 
 Android Version: 
 $(getprop | grep ro.build.version.release)
@@ -208,5 +235,16 @@ Model:
 $(getprop | grep ro.product.model)
        
 $(getprop | grep ro.product.name)
+
+如果您在使用中出现问题请提交 issues 并在 issue 中描述你的问题，或者提交 pull request 修复这个问题。
+
+你可以先更新脚本再尝试问题是否会复现。
+
+Issues link:
+${B}https://github.com/RimuruW/Aria2-Termux/issues${N}
+
+Pull Requests link:
+${B}https://github.com/RimuruW/Aria2-Termux/pulls${N}
+
 "
 }

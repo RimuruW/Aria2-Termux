@@ -1,8 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
 # Version
-VER='2.0.0'
-REL='202108162047'
+VER='2.0.1'
+REL='202207122139'
 
 # Available variables
 aria2c="$PREFIX/bin/aria2c"
