@@ -58,6 +58,10 @@ while true; do
         Auto_start
         Step
         ;;
+    13)
+	show_about
+	Step
+	;;
     *)
         echo
         echo -e "${R}[!]${N} 请输入正确的数字"
