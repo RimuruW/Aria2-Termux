@@ -381,10 +381,21 @@ sh_update() {
         rm -f "$ATMDIR/tmp/atmrc"
         log_print " - ${R}错误${N}。无法获取更新。"
         log_print " - 文件为空。"
+	force_update
     else
         log_print " - ${R}错误${N}。 未获取更新。"
+	force_update
     fi
     sleep 1
+}
+
+force_update() {
+	if ask "是否强制更新？" "N"; then
+		echo "${B}[*]${N} 不进行强制更新"
+	else
+		echo "${B}[*]${N} 进行${R}强制更新${N}"
+		atm -up
+	fi
 }
 
 cleanup() {

@@ -193,3 +193,20 @@ ${R}[!]${N} 请通过脚本重新安装 Aria2 以避免绝大多数可避免的�
         fi
     fi
 }
+show_about(){
+	header "Aria2-Termux"
+	echo "
+Aria2-Termux Version: $VER $REL
+
+Termux Version: $TERMUX_VERSION
+
+Android Version: 
+$(getprop | grep ro.build.version.release)
+$(getprop | grep ro.build.version.sdk)
+
+Model:
+$(getprop | grep ro.product.model)
+       
+$(getprop | grep ro.product.name)
+"
+}
