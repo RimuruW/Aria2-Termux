@@ -208,7 +208,7 @@ ${R}[!]${N} 请通过脚本重新安装 Aria2 以避免绝大多数可避免的�
 }
 show_about(){
 	header "Aria2-Termux"
-	echo "
+	echo -e "
 
 GitHub Repository:
 ${B}https://github.com/RimuruW/Aria2-Termux${N}
