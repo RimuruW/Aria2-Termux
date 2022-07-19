@@ -2,7 +2,7 @@
 
 # Version
 VER='2.0.1'
-REL='202207122213'
+REL='202207192259'
 
 # Available variables
 aria2c="$PREFIX/bin/aria2c"
