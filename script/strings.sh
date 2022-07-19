@@ -136,8 +136,8 @@ View_Aria2() {
     else
         AriaNg_API_1="/#!/settings/rpc/set/ws/${LocalIP}/${aria2_port}/jsonrpc/$(echo -n ${aria2_passwd} | base64)"
 	AriaNg_API_2="/#!/settings/rpc/set/ws/127.0.0.1/${aria2_port}/jsonrpc/$(echo -n ${aria2_passwd} | base64)"
-        AriaNg_URL_1="http://mirror-aria2.qingxu.live${AriaNg_API_1}"
-	AriaNg_URL_2="http://mirror-aria2.qingxu.live${AriaNg_API_2}"
+        AriaNg_URL_1="http://ariang.linioi.com${AriaNg_API_1}"
+	AriaNg_URL_2="http://ariang.linioi.com${AriaNg_API_2}"
     fi
     clear
     echo ""
@@ -159,7 +159,11 @@ View_Aria2() {
  1、内网 IP 地址指设备所处区域网的 IP 地址，可以在手机设置中查看该 IP 地址，通常格式为 192.168.x.x
  2、AriaNg 为其他开发者为 Aria2 制作的图形化操作界面，你也可以使用其他可视化工具，并使用 Aria2。
  3、AriaNg 中对 Aria2 配置的修改${R}只能在该次对话中生效${N}。如果你希望修改持续生效请在脚本中修改配置或者直接修改配置文件。
- 4、如无其他需求，一般使用第一个 AriaNg 链接即可。\n"
+ 4、如无其他需求，一般使用第一个 AriaNg 链接即可。
+ 5、除非你知道如何配置 AriaNg 证书，否则${R}请勿使用${N} HTTPS 协议连接 AriaNg。
+ 6、如果出现访问 AriaNg 自动跳转 HTTPS 网页且无法手动修改为 HTTP，可以尝试使用 AriaNg 客户端 
+
+ AriaNg Android 客户端链接：${B}https://github.com/Xmader/aria-ng-gui-android/releases${N}\n"
     footer
     echo -en "\n\n请回车以继续" && read -r -n 1 line
 }

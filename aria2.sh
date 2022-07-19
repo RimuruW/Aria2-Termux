@@ -12,8 +12,8 @@ if [ "$(uname -o)" != "Android" ]; then
 	PREFIX=/data/data/com.termux/files/usr
 fi
 
-sh_ver="1.0.6"
-ver_code="20210726"
+sh_ver="1.0.7"
+ver_code="20220719"
 export ver_code
 #PATH=/data/data/com.termux/files/usr/bin
 #export PATH
@@ -579,7 +579,7 @@ View_Aria2() {
         AriaNg_URL="null"
     else
         AriaNg_API="/#!/settings/rpc/set/ws/${LocalIP}/${aria2_port}/jsonrpc/$(echo -n ${aria2_passwd} | base64)"
-        AriaNg_URL="http://mirror-aria2.qingxu.live${AriaNg_API}"
+        AriaNg_URL="http://ariang.linioi.com${AriaNg_API}"
     fi
     clear
     echo -e "\nAria2 简单配置信息：\n
