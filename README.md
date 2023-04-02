@@ -4,6 +4,8 @@ bash -c "$(curl -L https://raw.githubusercontent.com/RimuruW/Aria2-Termux/master
 ```
 > 化繁为简，让 Aria2 的乐趣触手可及。
 
+for an english version, see [the english readme](./README-EN.md)
+
 ## 简介
 本项目基于 [aria2.sh](https://github.com/P3TERX/aria2.sh)，在原项目的基础上二次修改，结合了 Android 设备上的实际情况，去除原脚本某些在 Android 无法实现或意义不大的功能，并借助 Termux 的优势，尽可能在 Android 实现更好的 Aria2 体验。
 
